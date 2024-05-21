@@ -1,0 +1,8 @@
+name: todolist
+env:
+  - name: APP_GRPC_PORT
+    value: 50051
+  - name: APP_DATASOURCE_URI
+    value: mongodb://127.0.0.1:27017
+  - name: APP_DATABASE_NAME
+    value: hono_grpc
