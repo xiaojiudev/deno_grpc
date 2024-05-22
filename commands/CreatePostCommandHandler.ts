@@ -1,11 +1,22 @@
-import { getPostsCollection } from "../model/db.ts";
-import { Post, PostResponse } from "../types/social_media.d.ts";
+import { PostSchema } from "../deps.ts";
+import { Post, PostResponse, getPostsCollection } from "../deps.ts";
 
 export class CreatePostCommandHandler {
     async handle(post: Post): Promise<PostResponse> {
-        const Posts = await getPostsCollection();
-        const insetId = await Posts.insertOne(post);
+        const PostCollection = await getPostsCollection();
+
+        const { title, content, categories } = post;
         
+        const payload: PostSchema = {
+            title,
+            content,
+            categories,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+        }
+
+        const insetId = await PostCollection.insertOne({ ...payload, });
+
         return { success: !!insetId };
     }
 }
