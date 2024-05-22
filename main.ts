@@ -1,9 +1,21 @@
-import { GrpcServer } from "./deps.ts";
-import { connectDB } from "./model/db.ts";
+import {
+    APP_GRPC_PORT,
+    Empty,
+    GrpcServer,
+    KeywordList,
+    Post,
+    PostList,
+    PostRequest,
+    PostResponse,
+    SocialMediaService,
+    UserRequest,
+    connectDB,
+} from "./deps.ts";
 import { CreatePostCommandHandler } from "./commands/CreatePostCommandHandler.ts";
-import { Empty, KeywordList, Post, PostList, PostRequest, PostResponse, SocialMediaService, UserRequest } from "./types/social_media.d.ts";
-import { APP_GRPC_PORT } from "./utils/bootstrap.ts";
-
+import { DeletePostCommandHandler } from "./commands/DeletePostCommandHandler.ts";
+import { UpdatePostCommandHandler } from "./commands/UpdatePostCommandHandler.ts";
+import { GetPostQueryHandler } from "./queries/GetPostQueryHandler.ts";
+import { ListPostQueryHandler } from "./queries/ListPostQueryHandler.ts";
 
 const server = new GrpcServer();
 
@@ -12,9 +24,10 @@ startServer();
 async function startServer(): Promise<void> {
     try {
         await connectDB();
-        await gRPCServer();
+        await initGRPCServer();
         console.log(`gRPC server gonna listen on ${APP_GRPC_PORT} port`);
-        for await (const conn of Deno.listen({ port: APP_GRPC_PORT })) {
+
+        for await (const conn of Deno.listen({ port: APP_GRPC_PORT })) {            
             server.handle(conn);
         }
     } catch (error) {
@@ -22,38 +35,63 @@ async function startServer(): Promise<void> {
     }
 }
 
-async function gRPCServer() {
+async function initGRPCServer() {
 
     const protoPath = new URL("./protos/social_media.proto", import.meta.url);
     const protoFile = await Deno.readTextFile(protoPath);
 
     server.addService<SocialMediaService>(protoFile, {
-        CreatePost: async (call) => {
-            const handler = new CreatePostCommandHandler();
-            return await handler.handle(call);
+        CreatePost: async (request) => {
+            try {
+                const handler = new CreatePostCommandHandler();
+                return await handler.handle(request);
+            } catch (error) {
+                throw error;
+            }
         },
-        GetPost: function (request: PostRequest): Promise<Post> {
+        UpdatePost: async (request: Post): Promise<PostResponse> => {
+            try {
+                const handler = new UpdatePostCommandHandler();
+                return await handler.handle(request);
+            } catch (error) {
+                throw error;
+            }
+        },
+        DeletePost: async (request: PostRequest): Promise<PostResponse> => {
+            try {
+                const handler = new DeletePostCommandHandler();
+                return await handler.handle(request);
+            } catch (error) {
+                throw error;
+            }
+        },
+        GetPost: async (request: PostRequest): Promise<Post> => {
+            try {
+                const handler = new GetPostQueryHandler();
+                return await handler.handle(request);
+            } catch (error) {
+                throw error;
+            }
+        },
+        ListPost: async (request: Empty): Promise<PostList> => {
+            try {
+                const handler = new ListPostQueryHandler();
+                return await handler.handle(request);
+            } catch (error) {
+                throw error;
+            }
+        },
+        ListTrendingPosts: function (_request: Empty): Promise<PostList> {
             throw new Error("Function not implemented.");
         },
-        UpdatePost: function (request: Post): Promise<PostResponse> {
-            throw new Error("Function not implemented.");
-        },
-        DeletePost: function (request: PostRequest): Promise<PostResponse> {
-            throw new Error("Function not implemented.");
-        },
-        ListPost: function (request: Empty): Promise<Empty> {
-            throw new Error("Function not implemented.");
-        },
-        ListTrendingPosts: function (request: Empty): Promise<PostList> {
-            throw new Error("Function not implemented.");
-        },
-        ListTrendingKeywords: function (request: Empty): Promise<KeywordList> {
+        ListTrendingKeywords: function (_request: Empty): Promise<KeywordList> {
             throw new Error("Function not implemented.");
         },
         RecommendPosts: function (request: UserRequest): Promise<PostList> {
             throw new Error("Function not implemented.");
         }
     });
+
 }
 
 
