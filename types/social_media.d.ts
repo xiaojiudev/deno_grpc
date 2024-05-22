@@ -1,25 +1,25 @@
-import { ObjectId } from "../deps.ts";
-
 export interface SocialMediaService {
     CreatePost(request: Post): Promise<PostResponse>;
-    GetPost(request: PostRequest): Promise<Post>;
     UpdatePost(request: Post): Promise<PostResponse>;
     DeletePost(request: PostRequest): Promise<PostResponse>;
-    ListPost(request: Empty): Promise<Empty>;
+    GetPost(request: PostRequest): Promise<Post>;
+    ListPost(request: Empty): Promise<PostList>;
     ListTrendingPosts(request: Empty): Promise<PostList>;
     ListTrendingKeywords(request: Empty): Promise<KeywordList>;
     RecommendPosts(request: UserRequest): Promise<PostList>;
 }
 
 export interface Post {
-    id?: ObjectId
+    _id?: string
     title: string
     content: string
-    tags: string[]
+    categories: string[]
+    createdAt?: string
+    updatedAt?: string
 }
 
 export interface PostRequest {
-    id: ObjectId
+    _id: string
 }
 
 export interface PostResponse {
@@ -38,5 +38,5 @@ export interface KeywordList {
 }
 
 export interface UserRequest {
-    userId: ObjectId
+    userId: string
 }

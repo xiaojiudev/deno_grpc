@@ -4,9 +4,9 @@ package socialmedia;
 
 service SocialMediaService {
     rpc CreatePost(Post) returns (PostResponse) {}
-    rpc GetPost(PostRequest) returns (Post) {}
     rpc UpdatePost(Post) returns (PostResponse) {}
     rpc DeletePost(PostRequest) returns (PostResponse) {}
+    rpc GetPost(PostRequest) returns (Post) {}
     rpc ListPost(Empty) returns (PostList) {}
     rpc ListTrendingPosts(Empty) returns (PostList) {}
     rpc ListTrendingKeywords (Empty) returns (KeywordList) {}
@@ -14,14 +14,16 @@ service SocialMediaService {
 }
 
 message Post {
-    string id = 1;
+    string _id = 1;
     string title = 2;
     string content = 3;
-    repeated string tags = 4;
+    repeated string categories = 4;
+    string createdAt = 5;
+    string updatedAt = 6;
 }
 
 message PostRequest {
-    string id = 1;
+    string _id = 1;
 }
 
 message PostResponse {
