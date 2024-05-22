@@ -1,4 +1,4 @@
-import { Bson, Post, PostResponse, getPostsCollection } from "../deps.ts";
+import { Bson, Post, PostResponse, PostSchema, getPostsCollection } from "../deps.ts";
 
 export class UpdatePostCommandHandler {
     async handle(post: Post): Promise<PostResponse> {
@@ -10,8 +10,15 @@ export class UpdatePostCommandHandler {
         const postId = new Bson.ObjectId(post._id);
         const PostCollection = await getPostsCollection();
 
-        const filter = { _id: postId};
-        const update = { $set: { content: post.content, title: post.title, tags: post.tags } };
+        const payloadUpdate: PostSchema = {
+            content: post.content,
+            title: post.title,
+            categories: post.categories,
+            updatedAt: new Date(),
+        }
+
+        const filter = { _id: postId };
+        const update = { $set: payloadUpdate };
 
         const result = await PostCollection.updateOne(filter, update);
 
