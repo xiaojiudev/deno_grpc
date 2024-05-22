@@ -1,10 +1,17 @@
-import { Post } from "../types/social_media.d.ts";
-import { Database, MongoClient, Collection } from "../deps.ts";
-import { APP_DATABASE_NAME, APP_DATABASE_URI } from "../utils/bootstrap.ts";
+import {Bson, Database, MongoClient, Collection, APP_DATABASE_URI, APP_DATABASE_NAME } from "../deps.ts";
+
+export interface PostSchema {
+    _id?: Bson.ObjectId;
+    title: string
+    content: string
+    categories: string[]
+    createdAt?: Date
+    updatedAt?: Date
+}
 
 let client: MongoClient | null = null;
 let db: Database | null = null;
-let postsCollection: Collection<Post> | null = null;
+let postsCollection: Collection<PostSchema> | null = null;
 
 export const connectDB = async () => {
     if (client && db) {
@@ -34,6 +41,6 @@ export const getPostsCollection = async () => {
     }
 
     const db = await getDB();
-    postsCollection = db.collection<Post>("post");
+    postsCollection = db.collection<PostSchema>("post");
     return postsCollection;
 }
