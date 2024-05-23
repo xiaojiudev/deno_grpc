@@ -1,4 +1,5 @@
-import { Bson, GrpcStatus, GrpcException, Post, PostRequest, getPostsCollection } from "../deps.ts";
+import { Bson, GrpcStatus, GrpcException, Post, PostRequest } from "../deps.ts";
+import { getPostsCollection } from "../model/PostSchema.ts";
 
 export class GetPostQueryHandler {
     async handle(query: PostRequest): Promise<Post> {
@@ -10,7 +11,7 @@ export class GetPostQueryHandler {
         const post = await PostCollection.findOne({ _id: new Bson.ObjectId(query._id) });
 
         if (!post) {
-            throw GrpcException(GrpcStatus.NOT_FOUND, "No post found");
+            return {} as Post;
         }
 
         const mappedData: Post = {

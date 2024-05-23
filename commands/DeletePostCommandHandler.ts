@@ -1,4 +1,5 @@
-import { Bson, PostRequest, PostResponse, getPostsCollection } from "../deps.ts";
+import { getPostsCollection } from "../model/PostSchema.ts";
+import { Bson, PostRequest, PostResponse } from "../deps.ts";
 
 export class DeletePostCommandHandler {
     async handle(post: PostRequest): Promise<PostResponse> {
