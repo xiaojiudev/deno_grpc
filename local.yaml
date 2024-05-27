@@ -6,3 +6,9 @@ env:
     value: mongodb://127.0.0.1:27017
   - name: APP_DATABASE_NAME
     value: hono_grpc
+  - name: APP_ELASTICSEARCH_URI
+    value: http://localhost:9200
+  - name: APP_ELASTICSEARCH_NAME
+    value: elastic
+  - name: APP_ELASTICSEARCH_PW
+    value: elastic
