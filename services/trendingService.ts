@@ -1,4 +1,5 @@
 import { PostSchema, getPostsCollection } from "../model/PostSchema.ts";
+import { connectEs, deleteIndex, getEs } from "../model/es.ts";
 const DECAY_RATE = 0.95;
 
 const event_type_strength = {
@@ -47,5 +48,21 @@ export const updateTrendingScore = async () => {
             { _id: post._id },
             { $set: { trendingScore: trendingScore } }
         );
+
+        const esClient = getEs();
+
+        const { _id, ...newPost } = post;
+
+        await esClient.update({
+            index: "posts",
+            id: _id!.toString(),
+            doc: {
+                id: _id!.toString(),
+                ...newPost,
+                trendingScore: trendingScore
+            },
+            doc_as_upsert: true,
+        });
+
     })
 }
