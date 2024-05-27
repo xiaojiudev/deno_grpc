@@ -4,53 +4,52 @@ import { APP_ELASTICSEARCH_NAME, APP_ELASTICSEARCH_PW, APP_ELASTICSEARCH_URI } f
 type SearchRequest = estypes.SearchRequest;
 type SearchResponse = estypes.SearchResponse;
 type SearchHitResponse = estypes.SearchHit<unknown>[];
+export type SearchHit = estypes.SearchHit<unknown>;
 
 let esClient: Client | null = null;
 
-const connectEs = async (): Promise<Client | null> => {
-    try {
-        if (esClient) {
-            return esClient;
-        }
-
-        esClient = new Client({
-            node: APP_ELASTICSEARCH_URI,
-            auth: {
-                username: APP_ELASTICSEARCH_NAME,
-                password: APP_ELASTICSEARCH_PW,
-            }
-        });
-
-        const resp = await esClient.info();
-        if (resp.name && resp.cluster_name && resp.cluster_uuid) {
-            console.log("Connected to Elasticsearch successfully");
-        }
-
+export const connectEs = async (): Promise<Client> => {
+    if (esClient) {
         return esClient;
-
-    } catch (error) {
-        console.log("Connect to Elasticsearch failed");
-        // console.log(error);
-        return null;
     }
+
+    esClient = new Client({
+        node: APP_ELASTICSEARCH_URI,
+        auth: {
+            username: APP_ELASTICSEARCH_NAME,
+            password: APP_ELASTICSEARCH_PW,
+        }
+    });
+
+    const resp = await esClient.info();
+    if (resp.name && resp.cluster_name && resp.cluster_uuid) {
+        console.log("Connected to Elasticsearch successfully");
+    }
+
+    return esClient;
 };
 
-const createEsIndex = async (indexName: string): Promise<void> => {
-    try {
-        const esClient = await connectEs();
-        if (esClient) {
-            const isExist = await esClient.indices.exists({ index: indexName });
-            if (!isExist) {
-                const result = await esClient.indices.create({ index: indexName });
-                console.log(result);
-            }
-        } else {
-            console.log("Can connect to Elasticsearch");
-        }
-    } catch (error) {
-        console.log("Create Elasticsearch index failed");
-        // console.log(error);
+export const getEs = (): Client => {
+    if (!esClient) {
+        throw new Error("Elasticsearch connection failed");
     }
+
+    return esClient;
+}
+
+const createEsIndex = async (indexName: string): Promise<boolean> => {
+    const esClient = await connectEs();
+    if (esClient) {
+        const isExist = await esClient.indices.exists({ index: indexName });
+        if (!isExist) {
+            const result = await esClient.indices.create({ index: indexName });
+            console.log(result);
+        }
+
+        return true;
+    }
+
+    return false;
 }
 
 export const indexEsDocument = async (index: string, document: any): Promise<void> => {
@@ -71,7 +70,7 @@ export const indexEsDocument = async (index: string, document: any): Promise<voi
                 const result = await esClient.index({
                     index,
                     id: document?.id,
-                    document
+                    document,
                 });
                 console.log(`Indexed document ID: ${result._id}`, result);
             }
@@ -83,6 +82,66 @@ export const indexEsDocument = async (index: string, document: any): Promise<voi
 }
 
 export const queryEs = async (options: SearchRequest): Promise<SearchHitResponse | undefined> => {
+    const esClient = await connectEs();
+    if (esClient) {
+        const searchResult: SearchResponse = await esClient.search({ ...options });
+        const hits = searchResult.hits.hits;
+        return hits;
+    }
+
+    return undefined;
+}
+
+export const deleteIndex = async (indexName: string) => {
+    const esClient = await connectEs();
+    if (esClient) {
+        const result = await esClient.indices.delete({ index: indexName });
+        if (result.acknowledged) {
+            console.log("Delete Index successfully");
+            return true;
+        } else {
+            console.log("Delete Index failed");
+        }
+    }
+    return false;
+}
+
+export const deleteEsDocument = async (indexName: string, id: string) => {
+    const esClient = await connectEs();
+    if (esClient) {
+        const result = await esClient.delete({
+            index: indexName,
+            id: id,
+        });
+
+        if (result.result === "deleted") {
+            return true;
+        }
+    }
+    return false;
+}
+
+export const updateEsDocument = async (indexName: string, id: string, payload: any) => {
+    const esClient = await connectEs();
+
+    if (esClient) {
+        const result = await esClient.update({
+            index: indexName,
+            id,
+            doc: {
+                id,
+                ...payload,
+            },
+            doc_as_upsert: true,
+        });
+
+        if (result.result === "updated") {
+            return true;
+        }
+    }
+
+    return false;
+}
     try {
         const esClient = await connectEs();
         if (esClient) {
