@@ -11,6 +11,7 @@ import {
     UserRequest,
 } from "./deps.ts";
 import { connectDB } from "./model/db.ts";
+import { connectEs, deleteIndex } from "./model/es.ts";
 import { CreatePostCommandHandler } from "./commands/CreatePostCommandHandler.ts";
 import { DeletePostCommandHandler } from "./commands/DeletePostCommandHandler.ts";
 import { UpdatePostCommandHandler } from "./commands/UpdatePostCommandHandler.ts";
@@ -20,20 +21,22 @@ import { getMockPostData } from "./utils/mockDB.ts";
 import { updateTrendingScore } from "./services/trendingService.ts";
 import { ListTrendingPostsQueryHandler } from "./queries/ListTrendingPostsQueryHandler.ts";
 
-const server = new GrpcServer();
+const grpcServer = new GrpcServer();
 
 startServer();
 
 async function startServer(): Promise<void> {
     try {
         await connectDB();
+        await connectEs();
         await getMockPostData();
         await initGRPCServer();
+        appCronJob();
 
         console.log(`gRPC server gonna listen on ${APP_GRPC_PORT} port`);
 
-        for await (const conn of Deno.listen({ port: APP_GRPC_PORT })) {
-            server.handle(conn);
+        for await (const conn of Deno.listen({ port: APP_GRPC_PORT, })) {
+            grpcServer.handle(conn);
         }
 
     } catch (error) {
@@ -44,9 +47,9 @@ async function startServer(): Promise<void> {
 async function initGRPCServer() {
 
     const protoPath = new URL("./protos/social_media.proto", import.meta.url);
-    const protoFile = await Deno.readTextFile(protoPath);
-    
-    server.addService<SocialMediaService>(protoFile, {
+    const protoFile = Deno.readTextFileSync(protoPath);
+
+    grpcServer.addService<SocialMediaService>(protoFile, {
         CreatePost: async (request) => {
             try {
                 const handler = new CreatePostCommandHandler();
@@ -82,7 +85,8 @@ async function initGRPCServer() {
         ListPost: async (request: Empty): Promise<PostList> => {
             try {
                 const handler = new ListPostQueryHandler();
-                return await handler.handle(request);
+                const data = await handler.handle(request);
+                return data;
             } catch (error) {
                 throw error;
             }
@@ -98,15 +102,16 @@ async function initGRPCServer() {
         ListTrendingKeywords: async (_request: Empty): Promise<KeywordList> => {
             throw new Error("Function not implemented.");
         },
-        RecommendPosts: async (request: UserRequest): Promise<PostList> => {
+        RecommendPosts: async (_request: UserRequest): Promise<PostList> => {
             throw new Error("Function not implemented.");
         }
     });
 
+}
+
+function appCronJob() {
     Deno.cron("Update trending scores", { minute: { every: 1 } }, async () => {
         console.log("Updating trending scores...");
         await updateTrendingScore();
     });
 }
-
-
