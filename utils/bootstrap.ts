@@ -15,3 +15,9 @@ export const APP_DATABASE_URI: string = env.find((e) => e.name === "APP_DATASOUR
 
 export const APP_DATABASE_NAME: string = env.find((e) => e.name === "APP_DATABASE_NAME")?.value as string;
 
+export const APP_ELASTICSEARCH_URI: string = env.find((e) => e.name === "APP_ELASTICSEARCH_URI")?.value as string;
+
+export const APP_ELASTICSEARCH_NAME: string = env.find((e) => e.name === "APP_ELASTICSEARCH_NAME")?.value as string;
+
+export const APP_ELASTICSEARCH_PW: string = env.find((e) => e.name === "APP_ELASTICSEARCH_PW")?.value as string;
+
