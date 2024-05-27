@@ -1,23 +1,23 @@
 import { Empty, PostList } from "../deps.ts";
-import { PostSchema, getPostsCollection } from "../model/PostSchema.ts";
+import { queryEs } from "../model/es.ts";
 
 export class ListTrendingPostsQueryHandler {
     async handle(_request: Empty): Promise<PostList> {
-        const PostCollection = await getPostsCollection();
-        const data = await PostCollection.find({})
-            .sort({ trendingScore: -1 })
-            .limit(10)
-            .toArray();
+        const trendingPosts = await queryEs({ index: 'posts', size: 10, sort: [{ "trendingScore": "desc" }] });
 
-        const mappedData = data.map((post: PostSchema) => {
-            return {
-                ...post,
-                _id: post._id?.toString(),
-                createdAt: post.createdAt?.toISOString(),
-                updatedAt: post.updatedAt?.toISOString(),
-            }
-        });
+        if (trendingPosts) {
+            const mappedData = trendingPosts.map((postEs: any) => {
+                const post = postEs._source;
 
-        return { posts: [...mappedData] }
+                return {
+                    ...post,
+                    _id: post.id?.toString(),
+                }
+            });
+
+            return { posts: [...mappedData] }
+        }
+
+        return { posts: [] }
     }
 }
