@@ -1,60 +1,98 @@
-import { Client } from "npm:@elastic/elasticsearch";
+import { Client, estypes } from "npm:@elastic/elasticsearch";
+import { APP_ELASTICSEARCH_NAME, APP_ELASTICSEARCH_PW, APP_ELASTICSEARCH_URI } from "../deps.ts";
 
-// Sample data books
-const dataset = [
-    { "name": "Snow Crash", "author": "Neal Stephenson", "release_date": "1992-06-01", "page_count": 470 },
-    { "name": "Revelation Space", "author": "Alastair Reynolds", "release_date": "2000-03-15", "page_count": 585 },
-    { "name": "1984", "author": "George Orwell", "release_date": "1985-06-01", "page_count": 328 },
-    { "name": "Fahrenheit 451", "author": "Ray Bradbury", "release_date": "1953-10-15", "page_count": 227 },
-    { "name": "Brave New Snow World", "author": "Aldous Huxley", "release_date": "1932-06-01", "page_count": 268 },
-    { "name": "The Handmaid's Tale", "author": "Margaret Atwood", "release_date": "1985-06-01", "page_count": 311 },
-];
+type SearchRequest = estypes.SearchRequest;
+type SearchResponse = estypes.SearchResponse;
+type SearchHitResponse = estypes.SearchHit<unknown>[];
 
-async function connectES() {
+let esClient: Client | null = null;
+
+const connectEs = async (): Promise<Client | null> => {
     try {
-        const client = new Client({
-            node: 'https://b1353349e7dd472baeffd4e64d1ecb0d.us-central1.gcp.cloud.es.io',
+        if (esClient) {
+            return esClient;
+        }
+
+        esClient = new Client({
+            node: APP_ELASTICSEARCH_URI,
             auth: {
-                apiKey: {
-                    id: "xIZcqY8Bo0qdolqZxIOR",
-                    api_key: "loHvss3_SRWK27_rwF_0LA",
-                }
+                username: APP_ELASTICSEARCH_NAME,
+                password: APP_ELASTICSEARCH_PW,
             }
         });
 
-        // API Key should have cluster monitor rights.
-        const resp = await client.info();
-        // console.log(resp);
+        const resp = await esClient.info();
+        if (resp.name && resp.cluster_name && resp.cluster_uuid) {
+            console.log("Connected to Elasticsearch successfully");
+        }
 
-        // Check index exists
-        const isExist = await client.indices.exists({ index: 'books' });
-        if (!isExist) {
-            const result1 = await client.indices.create({ index: 'books' });
+        return esClient;
 
-            console.log(result1);
+    } catch (error) {
+        console.log("Connect to Elasticsearch failed");
+        // console.log(error);
+        return null;
+    }
+};
 
-            for (const doc of dataset) {
-                const result = await client.index({
-                    index: 'books',
-                    document: doc
+const createEsIndex = async (indexName: string): Promise<void> => {
+    try {
+        const esClient = await connectEs();
+        if (esClient) {
+            const isExist = await esClient.indices.exists({ index: indexName });
+            if (!isExist) {
+                const result = await esClient.indices.create({ index: indexName });
+                console.log(result);
+            }
+        } else {
+            console.log("Can connect to Elasticsearch");
+        }
+    } catch (error) {
+        console.log("Create Elasticsearch index failed");
+        // console.log(error);
+    }
+}
+
+export const indexEsDocument = async (index: string, document: any): Promise<void> => {
+    try {
+        const esClient = await connectEs();
+        await createEsIndex(index);
+        if (esClient) {
+            if (document instanceof Array) {
+                for (const doc of document) {
+                    const result = await esClient.index({
+                        index,
+                        id: doc?.id,
+                        document: doc
+                    });
+                    console.log(`Indexed document ID: ${result._id}`, result);
+                }
+            } else if (document instanceof Object) {
+                const result = await esClient.index({
+                    index,
+                    id: document?.id,
+                    document
                 });
                 console.log(`Indexed document ID: ${result._id}`, result);
             }
         }
-
-        // Let's search!
-        const searchResult = await client.search({
-            index: 'books',
-            //q: 'snow', // Query string
-            size: 10, // Get top 10 posts
-            sort: [{ "trendingScore": "desc" }] // sort by page_count descending
-        });
-
-        console.log(searchResult.hits.hits)
-
     } catch (error) {
-        console.error("An error occurred:", error);
+        console.log("Index document failed");
+        // console.log(error);
     }
 }
 
-connectES();
+export const queryEs = async (options: SearchRequest): Promise<SearchHitResponse | undefined> => {
+    try {
+        const esClient = await connectEs();
+        if (esClient) {
+            const searchResult: SearchResponse = await esClient.search({ ...options });
+
+            const hits = searchResult.hits.hits;
+            return hits;
+        }
+    } catch (error) {
+        console.log("Search Es failed");
+        // console.log(error);
+    }
+}
