@@ -1,5 +1,4 @@
-import { Database, MongoClient, Collection, APP_DATABASE_URI, APP_DATABASE_NAME } from "../deps.ts";
-import { PostSchema } from "./PostSchema.ts";
+import { Database, MongoClient, APP_DATABASE_URI, APP_DATABASE_NAME } from "../deps.ts";
 
 let client: MongoClient | null = null;
 let db: Database | null = null;
@@ -13,7 +12,7 @@ export const connectDB = async () => {
 
     await client.connect(APP_DATABASE_URI);
     db = client.database(APP_DATABASE_NAME);
-    console.log("Connected to MongoDB");
+    console.log("Connected to MongoDB successfully");
 
     return { client, db };
 }
