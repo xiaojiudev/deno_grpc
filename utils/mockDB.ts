@@ -1,4 +1,5 @@
 import { PostSchema, getPostsCollection } from "../model/PostSchema.ts";
+import { deleteIndex, getEs } from "../model/es.ts";
 
 const posts: PostSchema[] = [
     {
@@ -149,12 +150,27 @@ const posts: PostSchema[] = [
 
 export const getMockPostData = async () => {
     const PostCollection = await getPostsCollection();
+    const esClient = await getEs();
 
     const existingPostCount = await PostCollection.countDocuments({});
 
     if (existingPostCount === 0) {
         const insetId = await PostCollection.insertMany([...posts]);
         console.log(insetId);
+
+        await deleteIndex("posts");
+        posts.forEach(async (post, index) => {
+            const { _id, ...newPost } = post;
+            await esClient.index({
+                index: "posts",
+                id: insetId.insertedIds[index].toString(),
+                document: {
+                    id: _id!.toString(),
+                    ...newPost
+                },
+            });
+        })
+
         return { success: !!insetId };
     } else {
         return { success: true };
