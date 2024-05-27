@@ -1,5 +1,6 @@
 import { getPostsCollection } from "../model/PostSchema.ts";
 import { Bson, PostRequest, PostResponse } from "../deps.ts";
+import { deleteEsDocument } from "../model/es.ts";
 
 export class DeletePostCommandHandler {
     async handle(post: PostRequest): Promise<PostResponse> {
@@ -19,6 +20,8 @@ export class DeletePostCommandHandler {
             console.log("matched", deleteCount);
             return { success: false }
         }
+
+        await deleteEsDocument("posts", postId.toString());
 
         return { success: true };
     }

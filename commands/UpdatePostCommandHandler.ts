@@ -1,5 +1,6 @@
 import { Bson, Post, PostResponse, } from "../deps.ts";
 import { getPostsCollection } from "../model/PostSchema.ts";
+import { getEs, updateEsDocument } from "../model/es.ts";
 
 export class UpdatePostCommandHandler {
     async handle(post: Post): Promise<PostResponse> {
@@ -28,6 +29,8 @@ export class UpdatePostCommandHandler {
             return { success: false }
         }
 
+        await updateEsDocument("posts", postId!.toString(), { id: postId!.toString(), ...payloadUpdate });
+        
         return { success: true };
     }
 }

@@ -1,5 +1,6 @@
 import { Post, PostResponse, } from "../deps.ts";
 import { PostSchema, getPostsCollection } from "../model/PostSchema.ts";
+import { indexEsDocument } from "../model/es.ts";
 
 export class CreatePostCommandHandler {
     async handle(post: Post): Promise<PostResponse> {
@@ -21,11 +22,15 @@ export class CreatePostCommandHandler {
                 photoExpanded: 0,
                 videoPlayback: 0,
             },
+            trendingScore: 0.0,
             createdAt: new Date(),
             updatedAt: new Date(),
         }
 
         const insetId = await PostCollection.insertOne({ ...payload, });
+        if (insetId) {
+            indexEsDocument("posts", { id: insetId.toString(), ...payload });
+        }
 
         return { success: !!insetId };
     }
