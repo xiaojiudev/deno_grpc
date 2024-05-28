@@ -11,7 +11,7 @@ import {
     UserRequest,
 } from "./deps.ts";
 import { connectDB } from "./model/db.ts";
-import { connectEs, deleteIndex } from "./model/es.ts";
+import { connectEs } from "./model/es.ts";
 import { CreatePostCommandHandler } from "./commands/CreatePostCommandHandler.ts";
 import { DeletePostCommandHandler } from "./commands/DeletePostCommandHandler.ts";
 import { UpdatePostCommandHandler } from "./commands/UpdatePostCommandHandler.ts";
@@ -50,7 +50,7 @@ async function initGRPCServer() {
     const protoFile = Deno.readTextFileSync(protoPath);
 
     grpcServer.addService<SocialMediaService>(protoFile, {
-        CreatePost: async (request) => {
+        CreatePost: async (request: Post): Promise<PostResponse> => {
             try {
                 const handler = new CreatePostCommandHandler();
                 return await handler.handle(request);
