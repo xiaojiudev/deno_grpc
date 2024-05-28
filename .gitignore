@@ -1,3 +1,7 @@
+temp
+MyCertificate.crt
+MyKey.key
+
 # Logs
 logs
 *.log
