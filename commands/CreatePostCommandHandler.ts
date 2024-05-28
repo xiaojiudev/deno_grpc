@@ -8,10 +8,17 @@ export class CreatePostCommandHandler {
 
         const { title, content, categories } = post;
 
+        if (title.trim().length === 0 || content.trim().length === 0) {
+            return {
+                success: false,
+                message: "Title and content are not empty",
+            }
+        }
+
         const payload: PostSchema = {
             title,
             content,
-            categories,
+            categories: categories ?? [],
             interactions: {
                 likes: 0,
                 comments: 0,
@@ -32,6 +39,9 @@ export class CreatePostCommandHandler {
             indexEsDocument("posts", { id: insetId.toString(), ...payload });
         }
 
-        return { success: !!insetId };
+        return {
+            success: !!insetId,
+            message: "Post created successfully",
+        };
     }
 }

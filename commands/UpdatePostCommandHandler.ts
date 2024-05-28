@@ -1,36 +1,55 @@
 import { Bson, Post, PostResponse, } from "../deps.ts";
-import { getPostsCollection } from "../model/PostSchema.ts";
-import { getEs, updateEsDocument } from "../model/es.ts";
+import { InteractionSchema, PostSchema, getPostsCollection } from "../model/PostSchema.ts";
+import { updateEsDocument } from "../model/es.ts";
 
 export class UpdatePostCommandHandler {
     async handle(post: Post): Promise<PostResponse> {
         if (!post._id || !Bson.ObjectId.isValid(post._id.toString())) {
             console.log("Not a valid ID");
-            return { success: false };
+            return {
+                success: false,
+                message: "Post Id is invalid",
+            };
+        }
+
+        if (post.title.trim().length === 0 || post.content.trim().length === 0) {
+            return {
+                success: false,
+                message: "Title and content are not empty",
+            }
         }
 
         const postId = new Bson.ObjectId(post._id);
         const PostCollection = await getPostsCollection();
 
-        const payloadUpdate = {
-            content: post.content,
-            title: post.title,
-            categories: post.categories,
+        const filter = { _id: postId };
+        const postRetrieve = await PostCollection.findOne(filter);
+
+        const payloadUpdate: PostSchema = {
+            title: post.title ?? postRetrieve?.title,
+            content: post.content ?? postRetrieve?.content,
+            categories: post.categories ?? postRetrieve?.categories,
+            interactions: Object.values(post?.interactions as InteractionSchema).length > 0 ?
+                post?.interactions as InteractionSchema
+                : postRetrieve?.interactions as InteractionSchema,
             updatedAt: new Date(),
         }
 
-        const filter = { _id: postId };
         const update = { $set: payloadUpdate };
-
         const result = await PostCollection.updateOne(filter, update);
 
         if (result.matchedCount === 0) {
-            console.log("matched", result.matchedCount);
-            return { success: false }
+            return {
+                success: false,
+                message: "Post not found",
+            }
         }
 
         await updateEsDocument("posts", postId!.toString(), { id: postId!.toString(), ...payloadUpdate });
-        
-        return { success: true };
+
+        return {
+            success: true,
+            message: "Update post successfully",
+        };
     }
 }
