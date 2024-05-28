@@ -6,13 +6,13 @@ export interface PostSchema {
     title: string
     content: string
     categories: string[]
+    interactions: InteractionSchema;
+    trendingScore?: number
     createdAt?: Date
     updatedAt?: Date
-    interactions: Interaction;
-    trendingScore?: number
 }
 
-export interface Interaction {
+export interface InteractionSchema {
     likes: number
     comments: number
     shares: number
