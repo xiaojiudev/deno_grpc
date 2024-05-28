@@ -22,8 +22,10 @@ export const connectEs = async (): Promise<Client> => {
     });
 
     const resp = await esClient.info();
+    const portRunning = esClient.connectionPool.connections[0].url.port;
+        
     if (resp.name && resp.cluster_name && resp.cluster_uuid) {
-        console.log("Connected to Elasticsearch successfully");
+        console.log("Connected to Elasticsearch successfully - port: " + portRunning);
     }
 
     return esClient;
@@ -113,7 +115,7 @@ export const deleteEsDocument = async (indexName: string, id: string) => {
             index: indexName,
             id: id,
         });
-
+        
         if (result.result === "deleted") {
             return true;
         }
