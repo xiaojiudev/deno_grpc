@@ -2,5 +2,38 @@
   "tasks": {
     "start": "deno run --watch --allow-all --unstable-cron main.ts"
   },
-  "unstable": ["cron"]
+  "unstable": ["cron"],
+  "test": {
+    "include": ["/"],
+    "exclude": ["/test/", "/test/*.ts"]
+  },
+  "compilerOptions": {
+    "allowJs": true,
+    "experimentalDecorators": true,
+    "jsx": "react",
+    "strict": true,
+    "lib": [
+      "deno.window",
+      "deno.unstable"
+    ]
+  },
+  "lint": {
+    "include": ["/"],
+    "exclude": ["/test/", "/test/*.ts"],
+    "rules": {
+      "tags": ["recommended"],
+      "include": ["ban-untagged-todo"],
+      "exclude": ["no-unused-vars"]
+    }
+  },
+  "fmt": {
+    "useTabs": true,
+    "lineWidth": 80,
+    "indentWidth": 4,
+    "semiColons": true,
+    "singleQuote": true,
+    "proseWrap": "preserve",
+    "include": ["/"],
+    "exclude": ["/test/", "test/*.ts"]
+  }
 }
