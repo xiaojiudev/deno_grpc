@@ -18,8 +18,21 @@ message Post {
     string title = 2;
     string content = 3;
     repeated string categories = 4;
-    string createdAt = 5;
-    string updatedAt = 6;
+    Interaction interactions = 5;
+    double trendingScore = 6;
+    string createdAt = 7;
+    string updatedAt = 8;
+}
+
+message Interaction {
+    int32 likes = 1;
+    int32 comments = 2;
+    int32 shares = 3;
+    int32 clicked = 4;
+    int32 profileClicked = 5;
+    int32 bookmarked = 6;
+    int32 photoExpanded = 7;
+    int32 videoPlayback = 8;
 }
 
 message PostRequest {
@@ -28,6 +41,7 @@ message PostRequest {
 
 message PostResponse {
     bool success = 1;
+    string message = 2;
 }
 
 message Empty {}

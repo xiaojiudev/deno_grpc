@@ -14,8 +14,21 @@ export interface Post {
     title: string
     content: string
     categories: string[]
+    interactions?: Interaction
+    trendingScore?: number
     createdAt?: string
     updatedAt?: string
+}
+
+export interface Interaction {
+    likes: number
+    comments: number
+    shares: number
+    clicked: number
+    profileClicked: number
+    bookmarked: number
+    photoExpanded: number
+    videoPlayback: number
 }
 
 export interface PostRequest {
@@ -24,6 +37,7 @@ export interface PostRequest {
 
 export interface PostResponse {
     success: boolean
+    message: string
 }
 
 // deno-lint-ignore no-empty-interface
