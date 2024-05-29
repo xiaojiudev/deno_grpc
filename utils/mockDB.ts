@@ -1,5 +1,5 @@
 import { PostSchema, getPostsCollection } from "../model/PostSchema.ts";
-import { deleteIndex, getEs } from "../model/es.ts";
+import { deleteIndex, getEs } from "../db/elasticsearch.ts";
 
 const posts: PostSchema[] = [
     {
@@ -148,7 +148,7 @@ const posts: PostSchema[] = [
     },
 ];
 
-export const getMockPostData = async () => {
+export const getMockPostData = async (): Promise<{ success: boolean }> => {
     const PostCollection = await getPostsCollection();
     const esClient = await getEs();
 
