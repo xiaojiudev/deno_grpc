@@ -12,5 +12,7 @@ export { Bson, ObjectId, Collection } from "https://deno.land/x/mongo@v0.32.0/mo
 
 export * from "./types/social_media.d.ts";
 
+export * from "./types/keyword.d.ts";
+
 export * from "./utils/bootstrap.ts";
 
