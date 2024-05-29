@@ -5,7 +5,7 @@ import { connectDB } from "./db/mongodb.ts";
 import { connectEs } from "./db/elasticsearch.ts";
 import { getMockPostData } from "./utils/mockDB.ts";
 import { updateTrendingScore } from "./services/TrendingService.ts";
-import { getGrpcServer, initGRPCService } from './server.ts';
+import { getGrpcServer, initGRPCService } from './db/grpc.ts';
 
 startServer();
 
