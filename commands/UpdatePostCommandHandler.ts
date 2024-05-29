@@ -1,6 +1,6 @@
 import { Bson, Post, PostResponse, } from "../deps.ts";
 import { InteractionSchema, PostSchema, getPostsCollection } from "../model/PostSchema.ts";
-import { updateEsDocument } from "../model/es.ts";
+import { updateEsDocument } from "../db/elasticsearch.ts";
 
 export class UpdatePostCommandHandler {
     async handle(post: Post): Promise<PostResponse> {
@@ -12,10 +12,10 @@ export class UpdatePostCommandHandler {
             };
         }
 
-        if (post.title.trim().length === 0 || post.content.trim().length === 0) {
+        if (!post.title || !post.content || !post.categories || post.title?.trim().length === 0 || post.content?.trim().length === 0) {
             return {
                 success: false,
-                message: "Title and content are not empty",
+                message: "Title, content, categories are not empty",
             }
         }
 

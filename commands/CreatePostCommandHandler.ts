@@ -1,6 +1,6 @@
 import { Post, PostResponse, } from "../deps.ts";
 import { PostSchema, getPostsCollection } from "../model/PostSchema.ts";
-import { indexEsDocument } from "../model/es.ts";
+import { indexEsDocument } from "../db/elasticsearch.ts";
 
 export class CreatePostCommandHandler {
     async handle(post: Post): Promise<PostResponse> {
@@ -8,7 +8,7 @@ export class CreatePostCommandHandler {
 
         const { title, content, categories } = post;
 
-        if (title.trim().length === 0 || content.trim().length === 0) {
+        if (!title || !content || title?.trim().length === 0 || content?.trim().length === 0) {
             return {
                 success: false,
                 message: "Title and content are not empty",

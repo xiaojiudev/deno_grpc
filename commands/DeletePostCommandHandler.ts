@@ -1,6 +1,6 @@
 import { getPostsCollection } from "../model/PostSchema.ts";
 import { Bson, PostRequest, PostResponse } from "../deps.ts";
-import { deleteEsDocument } from "../model/es.ts";
+import { deleteEsDocument } from "../db/elasticsearch.ts";
 
 export class DeletePostCommandHandler {
     async handle(post: PostRequest): Promise<PostResponse> {
