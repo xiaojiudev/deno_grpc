@@ -1,6 +1,6 @@
-import { KeywordController } from './controllers/KeywordController.ts';
-import { SocialMediaController } from './controllers/SocialMediaController.ts';
-import { GrpcServer } from './deps.ts';
+import { KeywordController } from '../controllers/KeywordController.ts';
+import { SocialMediaController } from '../controllers/SocialMediaController.ts';
+import { GrpcServer } from '../deps.ts';
 
 let grpcServer: GrpcServer | null = null;
 
