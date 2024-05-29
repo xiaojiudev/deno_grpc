@@ -6,7 +6,7 @@ import { GetPostQueryHandler } from '../queries/GetPostQueryHandler.ts';
 import { ListPostQueryHandler } from '../queries/ListPostsQueryHandler.ts';
 import { ListTrendingPostsQueryHandler } from '../queries/ListTrendingPostsQueryHandler.ts';
 import { SearchPostQueryHandler } from '../queries/SearchPostQueryHandler.ts';
-import { getGrpcServer } from '../server.ts';
+import { getGrpcServer } from '../db/grpc.ts';
 
 export class SocialMediaController {
     constructor() {

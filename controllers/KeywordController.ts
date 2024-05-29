@@ -1,5 +1,5 @@
 import { KeywordService, TopKeywordsResponse } from '../deps.ts';
-import { getGrpcServer } from '../server.ts';
+import { getGrpcServer } from '../db/grpc.ts';
 
 export class KeywordController {
     constructor() {
