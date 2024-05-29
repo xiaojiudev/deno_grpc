@@ -1,5 +1,5 @@
 import { Bson, Collection } from "../deps.ts";
-import { getDB } from "./db.ts";
+import { getDB } from '../db/mongodb.ts';
 
 export interface PostSchema {
     _id?: Bson.ObjectId;
