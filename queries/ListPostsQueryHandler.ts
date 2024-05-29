@@ -1,27 +1,36 @@
 import { Empty, Post, PostList, } from "../deps.ts";
 import { PostSchema, getPostsCollection } from "../model/PostSchema.ts";
+import { queryEs } from '../db/elasticsearch.ts';
+import { PostES } from './GetPostQueryHandler.ts';
 
 export class ListPostQueryHandler {
-    async handle(_query: Empty): Promise<PostList> {
-        const PostCollection = await getPostsCollection();
-        const allPosts = await PostCollection.find({}).toArray();
-
-        const mappedData: Post[] = await allPosts.map((post: PostSchema) => {
-            return {
-                _id: post._id?.toString(),
-                title: post.title,
-                content: post.content,
-                categories: post.categories,
-                createdAt: post.createdAt?.toISOString(),
-                updatedAt: post.updatedAt?.toISOString(),
-            }
+    async query(_query: Empty): Promise<PostList> {
+        const postData = await queryEs({
+            index: 'posts',
+            query: {
+                match_all: {},
+            },
+            sort: [{ "trendingScore": "desc" }],
         });
 
-        const result: PostList = {
-            posts: [...mappedData],
-        };
+        if (postData) {
+            // deno-lint-ignore no-explicit-any
+            const mappedData = postData.map((postEs: any) => {
+                const post = postEs._source as PostES;
 
-    
-        return result;
+                return {
+                    _id: post.id?.toString(),
+                    title: post.title,
+                    content: post.content,
+                    categories: post.categories,
+                    createdAt: post.createdAt,
+                    updatedAt: post.updatedAt,
+                }
+            });
+
+            return { posts: [...mappedData] }
+        }
+
+        return { posts: [] }
     }
 }
