@@ -8,6 +8,7 @@ service SocialMediaService {
     rpc DeletePost(PostRequest) returns (PostResponse) {}
     rpc GetPost(PostRequest) returns (Post) {}
     rpc ListPost(Empty) returns (PostList) {}
+    rpc SearchPost(SearchRequest) returns (PostList) {}
     rpc ListTrendingPosts(Empty) returns (PostList) {}
     rpc ListTrendingKeywords (Empty) returns (KeywordList) {}
     rpc RecommendPosts (UserRequest) returns (PostList) {}
@@ -56,5 +57,9 @@ message KeywordList {
 
 message UserRequest {
     string userId = 1;
+}
+
+message SearchRequest {
+    string search = 1;
 }
 
