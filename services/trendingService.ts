@@ -1,5 +1,5 @@
 import { PostSchema, getPostsCollection } from "../model/PostSchema.ts";
-import { connectEs, deleteIndex, getEs } from "../model/es.ts";
+import { getEs } from "../db/elasticsearch.ts";
 const DECAY_RATE = 0.95;
 
 const event_type_strength = {
@@ -35,7 +35,7 @@ const calculateTrendingScrore = (post: PostSchema): number => {
     return trendingScore;
 }
 
-export const updateTrendingScore = async () => {
+export const updateTrendingScore = async (): Promise<void> => {
     const PostCollection = await getPostsCollection();
 
     const posts = await PostCollection.find({}).toArray();
