@@ -23,7 +23,7 @@ export const connectEs = async (): Promise<Client> => {
 
     const resp = await esClient.info();
     const portRunning = esClient.connectionPool.connections[0].url.port;
-        
+
     if (resp.name && resp.cluster_name && resp.cluster_uuid) {
         console.log("Connected to Elasticsearch successfully - port: " + portRunning);
     }
@@ -54,6 +54,7 @@ const createEsIndex = async (indexName: string): Promise<boolean> => {
     return false;
 }
 
+// deno-lint-ignore no-explicit-any
 export const indexEsDocument = async (index: string, document: any): Promise<void> => {
     try {
         const esClient = await connectEs();
@@ -94,7 +95,7 @@ export const queryEs = async (options: SearchRequest): Promise<SearchHitResponse
     return undefined;
 }
 
-export const deleteIndex = async (indexName: string) => {
+export const deleteIndex = async (indexName: string): Promise<boolean> => {
     const esClient = await connectEs();
     if (esClient) {
         const result = await esClient.indices.delete({ index: indexName });
@@ -108,14 +109,14 @@ export const deleteIndex = async (indexName: string) => {
     return false;
 }
 
-export const deleteEsDocument = async (indexName: string, id: string) => {
+export const deleteEsDocument = async (indexName: string, id: string): Promise<boolean> => {
     const esClient = await connectEs();
     if (esClient) {
         const result = await esClient.delete({
             index: indexName,
             id: id,
         });
-        
+
         if (result.result === "deleted") {
             return true;
         }
@@ -123,7 +124,8 @@ export const deleteEsDocument = async (indexName: string, id: string) => {
     return false;
 }
 
-export const updateEsDocument = async (indexName: string, id: string, payload: any) => {
+// deno-lint-ignore no-explicit-any
+export const updateEsDocument = async (indexName: string, id: string, payload: any): Promise<boolean> => {
     const esClient = await connectEs();
 
     if (esClient) {
@@ -143,17 +145,4 @@ export const updateEsDocument = async (indexName: string, id: string, payload: a
     }
 
     return false;
-}
-    try {
-        const esClient = await connectEs();
-        if (esClient) {
-            const searchResult: SearchResponse = await esClient.search({ ...options });
-
-            const hits = searchResult.hits.hits;
-            return hits;
-        }
-    } catch (error) {
-        console.log("Search Es failed");
-        // console.log(error);
-    }
 }
