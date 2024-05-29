@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package keyword;
+
+service KeywordService {
+  rpc GetTopKeywords (TopKeywordsRequest) returns (TopKeywordsResponse);
+}
+
+message TopKeywordsRequest {}
+
+message TopKeywordsResponse {
+  repeated string keywords = 1;
+}
