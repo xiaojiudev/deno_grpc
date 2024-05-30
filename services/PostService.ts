@@ -3,8 +3,8 @@ import { DeletePostCommandHandler } from '../commands/DeletePostCommandHandler.t
 import { UpdatePostCommandHandler } from '../commands/UpdatePostCommandHandler.ts';
 import { Empty, KeywordList, Post, PostList, PostRequest, PostResponse, SearchRequest, SocialMediaService, UserRequest } from '../deps.ts';
 import { GetPostQueryHandler } from '../queries/GetPostQueryHandler.ts';
-import { ListPostQueryHandler } from '../queries/ListPostsQueryHandler.ts';
-import { ListTrendingPostsQueryHandler } from '../queries/ListTrendingPostsQueryHandler.ts';
+import { GetPostsQueryHandler } from '../queries/GetPostsQueryHandler.ts';
+import { GetTrendingPostsQueryHandler } from '../queries/GetTrendingPostsQueryHandler.ts';
 import { SearchPostQueryHandler } from '../queries/SearchPostQueryHandler.ts';
 import { getGrpcServer } from '../db/grpc.ts';
 import { UpdateKeywordSearchCountHandler } from '../commands/UpdateKeywordSearchCountHandler.ts';
@@ -50,7 +50,7 @@ export const initPostService = async () => {
         },
         ListPost: async (request: Empty): Promise<PostList> => {
             try {
-                const queries = new ListPostQueryHandler();
+                const queries = new GetPostsQueryHandler();
                 const data = await queries.handle(request);
                 return data;
             } catch (error) {
@@ -59,7 +59,7 @@ export const initPostService = async () => {
         },
         ListTrendingPosts: async (_request: Empty): Promise<PostList> => {
             try {
-                const queries = new ListTrendingPostsQueryHandler();
+                const queries = new GetTrendingPostsQueryHandler();
                 return await queries.handle(_request);
             } catch (error) {
                 throw error;
@@ -76,7 +76,8 @@ export const initPostService = async () => {
                 const command = new UpdateKeywordSearchCountHandler();
                 command.handle(request);
                 const queries = new SearchPostQueryHandler();
-                return await queries.handle(request);
+                // return await queries.handle(request);
+                return {posts: []}
             } catch (error) {
                 throw error;
             }
