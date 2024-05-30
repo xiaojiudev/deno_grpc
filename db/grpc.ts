@@ -1,6 +1,6 @@
-import { KeywordController } from '../controllers/KeywordController.ts';
-import { SocialMediaController } from '../controllers/SocialMediaController.ts';
 import { GrpcServer } from '../deps.ts';
+import { initPostService } from '../services/PostService.ts';
+import { initKeywordService } from '../services/KeywordService.ts';
 
 let grpcServer: GrpcServer | null = null;
 
@@ -15,7 +15,5 @@ export const getGrpcServer = async (): Promise<GrpcServer> => {
 }
 
 export const initGRPCService = async (): Promise<void> => {
-    await getGrpcServer();
-    new SocialMediaController();
-    new KeywordController();
+    await Promise.all([initPostService(), initKeywordService(),]);
 }
