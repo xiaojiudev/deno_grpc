@@ -3,7 +3,7 @@ import { PostSchema, getPostsCollection } from "../model/PostSchema.ts";
 import { queryEs } from '../db/elasticsearch.ts';
 import { PostES } from './GetPostQueryHandler.ts';
 
-export class ListPostQueryHandler {
+export class GetPostsQueryHandler {
     async handle(_query: Empty): Promise<PostList> {
         const postData = await queryEs({
             index: 'posts',

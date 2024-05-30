@@ -2,9 +2,15 @@ import { Empty, PostList } from "../deps.ts";
 import { queryEs } from "../db/elasticsearch.ts";
 import { PostES } from './GetPostQueryHandler.ts';
 
-export class ListTrendingPostsQueryHandler {
+export class GetTrendingPostsQueryHandler {
     async handle(_request: Empty): Promise<PostList> {
-        const trendingPosts = await queryEs({ index: 'posts', size: 10, sort: [{ "trendingScore": "desc" }] });
+        const trendingPosts = await queryEs({
+            index: 'posts',
+            size: 10,
+            sort: [
+                { "trendingScore": "desc" },
+            ],
+        });
 
         if (trendingPosts) {
             // deno-lint-ignore no-explicit-any
