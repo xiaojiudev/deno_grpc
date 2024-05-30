@@ -1,5 +1,8 @@
 import { PostSchema, getPostsCollection } from "../model/PostSchema.ts";
 import { getEs } from "../db/elasticsearch.ts";
+import { getWordBagCollection } from '../model/WordBagSchema.ts';
+import { indexEsDocument } from '../db/elasticsearch.ts';
+import { deleteIndex } from '../db/elasticsearch.ts';
 const DECAY_RATE = 0.95;
 
 const event_type_strength = {
@@ -65,4 +68,27 @@ export const updateTrendingScore = async (): Promise<void> => {
         });
 
     })
+}
+
+export const syncWordBagToEs = async (): Promise<void> => {
+    const WordBagCollection = await getWordBagCollection();
+    const data = await WordBagCollection.find({}).toArray();
+    data.forEach(async (word) => {
+        const payload = {
+            id: word._id?.toString()!,
+            word: word.word,
+            dateCount: word.dateCount,
+            totalCount: word.totalCount,
+        }
+
+        const esClient = getEs();
+        // await esClient.indices.delete({ index: "wordbag" });
+        await esClient.update({
+            index: "wordbag",
+            id: payload.id,
+            doc: payload,
+            doc_as_upsert: true,
+        });
+    })
+
 }
