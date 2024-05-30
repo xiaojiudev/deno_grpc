@@ -1,5 +1,6 @@
 import { getGrpcServer } from '../db/grpc.ts';
 import { KeywordService, TopKeywordsRequest, TopKeywordsResponse } from '../deps.ts';
+import { GetTopKeywordQueryHandler } from '../queries/GetTopKeywordQueryHandler.ts';
 
 export const initKeywordService = async () => {
     const grpcServer = await getGrpcServer();
@@ -10,7 +11,8 @@ export const initKeywordService = async () => {
 
     grpcServer.addService<KeywordService>(keywordProtoFile, {
         GetTopKeywords: async (request: TopKeywordsRequest): Promise<TopKeywordsResponse> => {
-            return { keywords: [] };
+            const queries = new GetTopKeywordQueryHandler();
+            return await queries.handle(request);
         }
     });
 }
