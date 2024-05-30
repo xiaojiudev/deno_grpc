@@ -7,7 +7,7 @@ export interface PostES extends Post {
 }
 
 export class GetPostQueryHandler {
-    async query(query: PostRequest): Promise<Post> {
+    async handle(query: PostRequest): Promise<Post> {
         if (!query._id || !Bson.ObjectId.isValid(query._id)) {
             throw Error("Invalid ID")
         }

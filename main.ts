@@ -7,9 +7,7 @@ import { getMockPostData } from "./utils/mockDB.ts";
 import { updateTrendingScore } from "./services/TrendingService.ts";
 import { getGrpcServer, initGRPCService } from './db/grpc.ts';
 
-startServer();
-
-async function startServer(): Promise<void> {
+const startServer = async (): Promise<void> => {
     try {
         await connectDB();
         await connectEs();
@@ -28,9 +26,11 @@ async function startServer(): Promise<void> {
     }
 }
 
-function appCronJob(): void {
+const appCronJob = (): void => {
     Deno.cron("Update trending scores", { minute: { every: 1 } }, async () => {
         console.log("Updating trending scores...");
         await updateTrendingScore();
     });
 }
+
+startServer();

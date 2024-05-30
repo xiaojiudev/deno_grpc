@@ -3,7 +3,7 @@ import { queryEs } from "../db/elasticsearch.ts";
 import { PostES } from './GetPostQueryHandler.ts';
 
 export class ListTrendingPostsQueryHandler {
-    async query(_request: Empty): Promise<PostList> {
+    async handle(_request: Empty): Promise<PostList> {
         const trendingPosts = await queryEs({ index: 'posts', size: 10, sort: [{ "trendingScore": "desc" }] });
 
         if (trendingPosts) {

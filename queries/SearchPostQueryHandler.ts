@@ -3,7 +3,7 @@ import { queryEs } from '../db/elasticsearch.ts';
 import { PostES } from './GetPostQueryHandler.ts';
 
 export class SearchPostQueryHandler {
-    async query(request: SearchRequest): Promise<PostList> {
+    async handle(request: SearchRequest): Promise<PostList> {
         const searchRequest = request?.search ?? "";
         const queryString = searchRequest.trim();
 
