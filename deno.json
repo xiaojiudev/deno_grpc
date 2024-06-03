@@ -1,44 +1,44 @@
 {
-  "tasks": {
-    "start": "deno run --watch --allow-all --unstable-cron main.ts",
-    "gen-proto": "deno task gen-post-proto & deno task gen-key-proto & deno task gen-user-proto",
-    "gen-post-proto": "deno run --allow-read https://deno.land/x/grpc_basic@0.4.7/gen/dts.ts ./protos/social_media.proto > ./types/social_media.d.ts",
-    "gen-key-proto": "deno run --allow-read https://deno.land/x/grpc_basic@0.4.7/gen/dts.ts ./protos/keyword.proto > ./types/keyword.d.ts",
-    "gen-user-proto": "deno run --allow-read https://deno.land/x/grpc_basic@0.4.7/gen/dts.ts ./protos/user.proto > ./types/user.d.ts",
-    "unit-test": "deno test --allow-all test/unit",
-    "e2e-test": "deno test --allow-all test/e2e"
-  },
-  "unstable": ["cron"],
-  "test": {
-    "include": ["test/"]
-  },
-  "compilerOptions": {
-    "allowJs": true,
-    "experimentalDecorators": true,
-    "jsx": "react",
-    "strict": true,
-    "lib": [
-      "deno.window",
-      "deno.unstable"
-    ]
-  },
-  "lint": {
-    "include": ["/"],
-    "exclude": ["/test/", "/test/*.ts"],
-    "rules": {
-      "tags": ["recommended"],
-      "include": ["ban-untagged-todo"],
-      "exclude": ["no-unused-vars"]
-    }
-  },
-  "fmt": {
-    "useTabs": true,
-    "lineWidth": 80,
-    "indentWidth": 4,
-    "semiColons": true,
-    "singleQuote": true,
-    "proseWrap": "preserve",
-    "include": ["/"],
-    "exclude": ["/test/", "test/*.ts"]
-  }
+	"tasks": {
+		"start": "deno run --watch --allow-all --unstable-cron main.ts",
+		"gen-proto": "deno task gen-post-proto & deno task gen-key-proto & deno task gen-user-proto",
+		"gen-post-proto": "deno run --allow-read https://deno.land/x/grpc_basic@0.4.7/gen/dts.ts ./protos/social_media.proto > ./types/social_media.d.ts",
+		"gen-key-proto": "deno run --allow-read https://deno.land/x/grpc_basic@0.4.7/gen/dts.ts ./protos/keyword.proto > ./types/keyword.d.ts",
+		"gen-user-proto": "deno run --allow-read https://deno.land/x/grpc_basic@0.4.7/gen/dts.ts ./protos/user.proto > ./types/user.d.ts",
+		"unit-test": "deno test --allow-all test/unit",
+		"e2e-test": "deno test --allow-all test/e2e"
+	},
+	"unstable": ["cron"],
+	"test": {
+		"include": ["./test/"]
+	},
+	"compilerOptions": {
+		"allowJs": true,
+		"experimentalDecorators": true,
+		"jsx": "react",
+		"strict": true,
+		"lib": [
+			"deno.window",
+			"deno.unstable"
+		]
+	},
+	"lint": {
+		"include": ["./"],
+		"exclude": ["./test/", "./test/*.ts"],
+		"rules": {
+			"tags": ["recommended"],
+			"include": ["ban-untagged-todo"],
+			"exclude": ["no-unused-vars"]
+		}
+	},
+	"fmt": {
+		"useTabs": true,
+		"lineWidth": 100,
+		"indentWidth": 4,
+		"semiColons": true,
+		"singleQuote": false,
+		"proseWrap": "preserve",
+		"include": ["./"],
+		"exclude": ["./test/", "./test/*.ts"]
+	}
 }
