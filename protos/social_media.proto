@@ -16,13 +16,14 @@ service SocialMediaService {
 
 message Post {
     string _id = 1;
-    string title = 2;
-    string content = 3;
-    repeated string categories = 4;
-    Interaction interactions = 5;
-    double trendingScore = 6;
-    string createdAt = 7;
-    string updatedAt = 8;
+    string userId = 2;
+    string title = 3;
+    string content = 4;
+    repeated string categories = 5;
+    Interaction interactions = 6;
+    double trendingScore = 7;
+    string createdAt = 8;
+    string updatedAt = 9;
 }
 
 message Interaction {
