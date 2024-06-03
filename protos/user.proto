@@ -4,7 +4,6 @@ package user;
 
 service UserService {
     rpc CreateUser(CreateUserRequest) returns (CreateUserResponse){}
-    rpc RecommendPosts(EmptyRequest) returns (PostRecommendationResponse){}
 }
 
 message User {
@@ -30,11 +29,5 @@ message CreateUserRequest {
 message CreateUserResponse {
     bool success = 1;
     string message = 2;
-}
-
-message EmptyRequest {}
-
-message PostRecommendationResponse {
-    repeated string postId = 1;
 }
 
