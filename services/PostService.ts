@@ -101,8 +101,8 @@ export const initPostService = async () => {
 				const command = new UpdateKeywordSearchCountHandler();
 				command.handle(request);
 				const queries = new SearchPostQueryHandler();
-				// return await queries.handle(request);
-				return { posts: [] };
+				return await queries.handle(request);
+				// return { posts: [] };
 			} catch (error) {
 				throw error;
 			}

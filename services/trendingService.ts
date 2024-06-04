@@ -79,6 +79,8 @@ export const syncWordBagToEs = async (): Promise<void> => {
 			totalCount: word.totalCount,
 		};
 
+		console.log(`wordbag ${word.word} - ${word.totalCount}`);
+		
 		const esClient = getEs();
 		// await esClient.indices.delete({ index: "wordbag" });
 		await esClient.update({
