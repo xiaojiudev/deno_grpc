@@ -20,8 +20,7 @@ This project using Hono framework to write GRPC api service with CQRS model to s
 
 - Additionally, the post's popularity needs to decrease overtime. I calculate the difference between the post's creation date and the current time, then apply an exponential decay using a **DECAY_RATE**. I call this the `DECAY SCORE`. Overall, to calculate trending score, I use the simple equation: 
 
-<code>**Trending Score** = **Interaction Score** / **Decay Score**<code>
-
+<code>**Trending Score** = **Interaction Score** / **Decay Score**</code>
 
 Event weights: 
 
@@ -34,7 +33,7 @@ Event weights:
     isShared: 0.9
     isCommented: 1.0
 
- DECAY RATE = 0.95
+DECAY RATE = 0.95
 
 - *Note: I also use Deno.CronJob to calculate post's trending score every 30 minutes and sync the data into MongoDB and Elasticsearch. This will be helpfull when retrieving the top hot posts through the Elasticsearch Service.*
 
