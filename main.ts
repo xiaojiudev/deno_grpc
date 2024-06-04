@@ -10,7 +10,7 @@ const startServer = async (): Promise<void> => {
 		await connectDB();
 		await connectEs();
 		await getMockPostData();
-		const grpcServer = await getGrpcServer();
+		const grpcServer = getGrpcServer();
 		await initGRPCService();
 		appCronJob();
 
