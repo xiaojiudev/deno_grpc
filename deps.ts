@@ -29,8 +29,6 @@ export { assertObjectMatch } from "https://deno.land/std@0.224.0/assert/assert_o
 
 export * from "./types/social_media.d.ts";
 
-export * from "./types/keyword.d.ts";
-
 export * from "./types/user.d.ts";
 
 export * from "./utils/bootstrap.ts";
