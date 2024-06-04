@@ -57,10 +57,7 @@ const createEsIndex = async (indexName: string): Promise<boolean> => {
 };
 
 // deno-lint-ignore no-explicit-any
-export const indexEsDocument = async (
-	index: string,
-	document: any,
-): Promise<void> => {
+export const indexEsDocument = async (index: string, document: any,): Promise<void> => {
 	try {
 		const esClient = await connectEs();
 		await createEsIndex(index);
@@ -94,11 +91,15 @@ export const queryEs = async (
 ): Promise<SearchHitResponse | undefined> => {
 	const esClient = await connectEs();
 	if (esClient) {
-		const searchResult: SearchResponse = await esClient.search({
-			...options,
-		});
-		const hits = searchResult.hits.hits;
-		return hits;
+		try {
+			const searchResult: SearchResponse = await esClient.search({
+				...options,
+			});
+			const hits = searchResult.hits.hits;
+			return hits;
+		} catch (error) {
+			console.log("Search error: " + error);
+		}
 	}
 
 	return undefined;
@@ -137,11 +138,7 @@ export const deleteEsDocument = async (
 };
 
 // deno-lint-ignore no-explicit-any
-export const updateEsDocument = async (
-	indexName: string,
-	id: string,
-	payload: any,
-): Promise<boolean> => {
+export const updateEsDocument = async (indexName: string, id: string, payload: any,): Promise<boolean> => {
 	const esClient = await connectEs();
 
 	if (esClient) {
