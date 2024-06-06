@@ -7,8 +7,42 @@ export class GetTrendingPostsQueryHandler {
 		const trendingPosts = await queryEs({
 			index: "posts",
 			size: 10,
+			query: {
+				function_score: {
+					score_mode: "multiply",
+					boost_mode: "multiply",
+					functions: [
+						{
+							gauss: {
+								"createdAt": {
+									origin: 'now/d',
+									scale: '7d',
+									decay: 0.5,
+								}
+							},
+						},
+					],
+					query: {
+						bool: {
+							should: [
+								{
+									term: { "createdAt": 'now/d', }
+								},
+								{
+									range: {
+										"createdAt": {
+											gte: "now-7d/d",
+											lte: "now/d"
+										}
+									},
+								},
+							]
+						}
+					}
+				}
+			},
 			sort: [
-				{ "trendingScore": "desc" },
+				{ "trendingScore": "desc", "createdAt": "desc" },
 			],
 		});
 
