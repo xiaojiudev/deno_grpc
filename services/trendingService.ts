@@ -15,11 +15,15 @@ const event_type_strength = {
 	isCommented: 1.0,
 };
 
+const sigmoid = (x: number): number => {
+	return 1 / (1 + Math.exp(-x / 999));
+}
+
 const calculateTrendingScrore = (post: PostSchema): number => {
 	const currentTime = new Date().getTime();
 	const postTime = post.createdAt?.getTime() || 0;
 
-	const timeDifference = (currentTime - postTime) / (1000 * 60 * 60);
+	const timeDifference = (currentTime - postTime) / (1000 * 60 * 60 * 24);
 
 	let interactionScore = 0;
 
@@ -32,14 +36,13 @@ const calculateTrendingScrore = (post: PostSchema): number => {
 	interactionScore += post.interactions.photoExpanded * event_type_strength.isPhotoExpanded;
 	interactionScore += post.interactions.videoPlayback * event_type_strength.isVideoPlayback;
 
-	const trendingScore = interactionScore / Math.pow(timeDifference + 1, DECAY_RATE);
-
-	return trendingScore;
+	const trendingScore = interactionScore * Math.exp(-DECAY_RATE * timeDifference);
+	
+	return sigmoid(trendingScore);
 };
 
 export const updateTrendingScore = async (): Promise<void> => {
 	const PostCollection = await getPostsCollection();
-
 	const posts = await PostCollection.find({}).toArray();
 
 	posts.forEach(async (post, index) => {
@@ -80,9 +83,8 @@ export const syncWordBagToEs = async (): Promise<void> => {
 		};
 
 		console.log(`wordbag ${word.word} - ${word.totalCount}`);
-		
+
 		const esClient = getEs();
-		// await esClient.indices.delete({ index: "wordbag" });
 		await esClient.update({
 			index: "wordbag",
 			id: payload.id,
