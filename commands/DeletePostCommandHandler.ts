@@ -1,32 +1,28 @@
-import { getPostsCollection } from "../model/PostSchema.ts";
-import { Bson, PostRequest, PostResponse } from "../deps.ts";
-import { deleteEsDocument } from "../db/elasticsearch.ts";
+import { PostCollection } from "../model/PostSchema.ts";
+import { PostRequest, PostResponse, mongoose, validObjectId } from "../deps.ts";
+import { deleteEsDocumentById } from "../db/elasticsearch.ts";
 
 export class DeletePostCommandHandler {
 	async handle(post: PostRequest): Promise<PostResponse> {
-		if (!post._id || !Bson.ObjectId.isValid(post._id.toString())) {
-			console.log("Not a valid ID");
+		if (!post.id || !validObjectId(post.id.toString())) {
 			return {
 				success: false,
 				message: "Post Id is invalid",
 			};
 		}
 
-		const postId = new Bson.ObjectId(post._id);
-		const PostCollection = await getPostsCollection();
+		const postId = new mongoose.Types.ObjectId(post.id);
 
-		const filter = { _id: postId };
-
-		const deleteCount = await PostCollection.deleteOne(filter);
-
-		if (deleteCount === 0) {
+		const docRes = await PostCollection.deleteOne({_id: postId});
+		
+		if (docRes.deletedCount === 0) {
 			return {
 				success: false,
 				message: "Post not found",
 			};
 		}
 
-		await deleteEsDocument("posts", postId.toString());
+		await deleteEsDocumentById("posts", postId.toString());
 
 		return {
 			success: true,

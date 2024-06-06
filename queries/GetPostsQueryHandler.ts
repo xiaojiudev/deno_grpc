@@ -1,7 +1,6 @@
 import { Empty, Post, PostList } from "../deps.ts";
-import { getPostsCollection, PostSchema } from "../model/PostSchema.ts";
+import { IPost } from "../model/PostSchema.ts";
 import { queryEs } from "../db/elasticsearch.ts";
-import { PostES } from "./GetPostQueryHandler.ts";
 
 export class GetPostsQueryHandler {
 	async handle(_query: Empty): Promise<PostList> {
@@ -10,23 +9,23 @@ export class GetPostsQueryHandler {
 			query: {
 				match_all: {},
 			},
-			sort: [{ "trendingScore": "desc" }],
+			// sort: [{ "trendingScore": "desc" }],
 		});
 
+		console.log(postData);
+		
 		if (postData) {
 			// deno-lint-ignore no-explicit-any
 			const mappedData = postData.map((postEs: any) => {
-				const post = postEs._source as PostES;
+				const post = postEs._source as IPost;
 
 				return {
-					_id: post.id?.toString(),
+					id: post.id?.toString(),
+					userId: post.user.toString(),
 					title: post.title,
 					content: post.content,
-					categories: post.categories,
-					createdAt: post.createdAt,
-					updatedAt: post.updatedAt,
-				};
-			});
+				} as Post;
+			});			
 
 			return { posts: [...mappedData] };
 		}

@@ -1,6 +1,5 @@
 import { bcrypt, CreateUserRequest, CreateUserResponse } from "../deps.ts";
-import { UserInteractionSchema } from "../model/UserSchema.ts";
-import { getUsersCollection, UserSchema } from "../model/UserSchema.ts";
+import { UserCollection } from "../model/UserSchema.ts";
 
 export class CreateUserCommandHandler {
 	async handle(request: CreateUserRequest): Promise<CreateUserResponse> {
@@ -31,7 +30,6 @@ export class CreateUserCommandHandler {
 			};
 		}
 
-		const UserCollection = await getUsersCollection();
 		const existingUser = await UserCollection.findOne({
 			username: username,
 		});
@@ -46,19 +44,17 @@ export class CreateUserCommandHandler {
 		const salt = await bcrypt.genSalt(8);
 		const pwHash = await bcrypt.hash(password, salt);
 
-		const payload: UserSchema = {
+		const payload = {
 			username,
 			password: pwHash,
-			favoriteCategories: [],
-			interactions: {} as UserInteractionSchema,
 		};
 
-		const insetId = await UserCollection.insertOne({ ...payload });
-
+		const insetId = await UserCollection.create({ ...payload });
+		const res = insetId.toClient();
 		if (insetId) {
 			return {
 				success: true,
-				message: "User created successfully",
+				message: `User created successfully ${res.id}`,
 			};
 		}
 

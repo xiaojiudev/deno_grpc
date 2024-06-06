@@ -1,18 +1,14 @@
 import { APP_GRPC_PORT } from "./deps.ts";
 import { connectDB } from "./db/mongodb.ts";
-import { connectEs } from "./db/elasticsearch.ts";
-import { getMockPostData } from "./utils/mockDB.ts";
-import { syncWordBagToEs, updateTrendingScore } from "./services/TrendingService.ts";
 import { getGrpcServer, initGRPCService } from "./db/grpc.ts";
+import { connectEs } from "./db/elasticsearch.ts";
 
 const startServer = async (): Promise<void> => {
 	try {
 		await connectDB();
 		await connectEs();
-		await getMockPostData();
 		const grpcServer = getGrpcServer();
 		await initGRPCService();
-		appCronJob();
 
 		console.log(`gRPC server gonna listen on ${APP_GRPC_PORT} port`);
 
@@ -23,18 +19,6 @@ const startServer = async (): Promise<void> => {
 		console.log("Start server failed!", error);
 		Deno.exit();
 	}
-};
-
-const appCronJob = (): void => {
-	Deno.cron("Update trending scores", { minute: { every: 1 } }, async () => {
-		console.log("Updating trending scores...");
-		await updateTrendingScore();
-	});
-
-	Deno.cron("Sync WordBag to Elasticsearch", { minute: { every: 1 } }, async () => {
-		console.log("Sync WordBag data to Es...");
-		await syncWordBagToEs();
-	});
 };
 
 startServer();

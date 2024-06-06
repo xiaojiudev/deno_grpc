@@ -12,7 +12,7 @@ export {
 
 export { Database, MongoClient } from "https://deno.land/x/mongo@v0.32.0/mod.ts";
 
-export { Bson, Collection, ObjectId } from "https://deno.land/x/mongo@v0.32.0/mod.ts";
+// export { Bson, Collection, ObjectId } from "https://deno.land/x/mongo@v0.32.0/mod.ts";
 
 export * as bcrypt from "https://deno.land/x/bcrypt@v0.4.1/mod.ts";
 
@@ -32,3 +32,14 @@ export * from "./types/social_media.d.ts";
 export * from "./types/user.d.ts";
 
 export * from "./utils/bootstrap.ts";
+
+import mongoose from 'npm:mongoose@8.4.1';
+
+export { mongoose }
+
+export const validObjectId = (id: string): boolean => {
+	return mongoose.Types.ObjectId.isValid(id);
+}
+
+
+

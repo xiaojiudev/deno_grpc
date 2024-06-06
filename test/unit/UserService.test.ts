@@ -1,7 +1,7 @@
 import { ObjectId } from 'https://deno.land/x/web_bson@v0.3.0/mod.js';
 import { CreateUserCommandHandler } from '../../commands/CreateUserCommandHandler.ts';
 import { connectDB } from '../../db/mongodb.ts';
-import { afterEach, beforeEach } from '../../deps.ts';
+import { PostResponse, afterEach, beforeEach } from '../../deps.ts';
 import {
 	assertEquals,
 	assertObjectMatch,

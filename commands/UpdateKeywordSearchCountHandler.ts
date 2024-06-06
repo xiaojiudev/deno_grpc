@@ -13,6 +13,7 @@ export class UpdateKeywordSearchCountHandler {
 			.toLocaleLowerCase()
 			.split(" ")
 			.filter((e, index, self) => e && self.indexOf(e) === index) // remove empty, null, undefind and duplicate elements
+			.filter((e) => !Number.isFinite(parseFloat(e)))
 			.filter((e) => !stopwordsArr.includes(e)); // remove stopwords like a, an, the, and, ...
 
 		if (searchString === "" || searchArr.length === 0) {

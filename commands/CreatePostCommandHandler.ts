@@ -1,13 +1,13 @@
-import { ObjectId, Post, PostResponse } from "../deps.ts";
-import { getPostsCollection, PostSchema } from "../model/PostSchema.ts";
+import { Post, PostResponse, mongoose, validObjectId } from "../deps.ts";
+import { IPost, PostCollection } from "../model/PostSchema.ts";
 import { indexEsDocument } from "../db/elasticsearch.ts";
-import { getUsersCollection } from "../model/UserSchema.ts";
+import { UserCollection } from "../model/UserSchema.ts";
 
 export class CreatePostCommandHandler {
 	async handle(post: Post): Promise<PostResponse> {
-		const { userId, title, content, categories } = post;
+		const { userId, title, content } = post;
 
-		if (!userId || !ObjectId.isValid(userId)) {
+		if (!userId || !validObjectId(userId)) {
 			return {
 				success: false,
 				message: "User ID not valid",
@@ -21,12 +21,7 @@ export class CreatePostCommandHandler {
 			};
 		}
 
-		const PostCollection = await getPostsCollection();
-		const UserCollection = await getUsersCollection();
-
-		const existingUser = await UserCollection.findOne({
-			_id: new ObjectId(userId),
-		});
+		const existingUser = await UserCollection.findById(userId);		
 
 		if (!existingUser) {
 			return {
@@ -35,33 +30,21 @@ export class CreatePostCommandHandler {
 			};
 		}
 
-		const payload: PostSchema = {
-			_id: new ObjectId(),
+		const payload:IPost = {
 			title,
 			content,
-			userId: existingUser._id!,
-			categories: categories ?? [],
-			interactions: {
-				likes: 0,
-				comments: 0,
-				shares: 0,
-				clicked: 0,
-				profileClicked: 0,
-				bookmarked: 0,
-				photoExpanded: 0,
-				videoPlayback: 0,
-			},
-			trendingScore: 0.0,
-			createdAt: new Date(),
-			updatedAt: new Date(),
+			user: new mongoose.Types.ObjectId(existingUser.getId()),
 		};
-
-		const insetId = await PostCollection.insertOne({ ...payload });
-		if (insetId) {
-			indexEsDocument("posts", { id: insetId.toString(), ...payload });
+		
+		const insetDoc = await PostCollection.create({ ...payload });
+		console.log(insetDoc);
+		
+		if (insetDoc) {
+			indexEsDocument("posts", {...insetDoc.toClient() });
 			return {
-				success: !!insetId,
+				success: !!insetDoc,
 				message: "Post created successfully",
+				postId: insetDoc.getId(),
 			};
 		}
 

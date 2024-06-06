@@ -7,43 +7,28 @@ service SocialMediaService {
     rpc UpdatePost(Post) returns (PostResponse) {}
     rpc DeletePost(PostRequest) returns (PostResponse) {}
     rpc GetPost(PostRequest) returns (Post) {}
-    rpc ListPost(Empty) returns (PostList) {}
+    rpc GetPosts(Empty) returns (PostList) {}
     rpc SearchPost(SearchRequest) returns (PostList) {}
-    rpc ListTrendingPosts(Empty) returns (PostList) {}
-    rpc ListTrendingKeywords (Empty) returns (KeywordList) {}
+    rpc GetTrendingPosts(Empty) returns (PostList) {}
+    rpc GetTrendingKeywords (Empty) returns (KeywordList) {}
     rpc RecommendPosts (UserRequest) returns (PostList) {}
 }
 
 message Post {
-    string _id = 1;
-    string userId = 2;
-    string title = 3;
-    string content = 4;
-    repeated string categories = 5;
-    Interaction interactions = 6;
-    double trendingScore = 7;
-    string createdAt = 8;
-    string updatedAt = 9;
-}
-
-message Interaction {
-    int32 likes = 1;
-    int32 comments = 2;
-    int32 shares = 3;
-    int32 clicked = 4;
-    int32 profileClicked = 5;
-    int32 bookmarked = 6;
-    int32 photoExpanded = 7;
-    int32 videoPlayback = 8;
+    string id = 1;
+    required string userId = 2;
+    required string title = 3;
+    required string content = 4;
 }
 
 message PostRequest {
-    string _id = 1;
+    required string id = 1;
 }
 
 message PostResponse {
-    bool success = 1;
-    string message = 2;
+    required bool success = 1;
+    required string message = 2;
+    string postId = 3;
 }
 
 message Empty {}
@@ -57,10 +42,10 @@ message KeywordList {
 }
 
 message UserRequest {
-    string userId = 1;
+    required string userId = 1;
 }
 
 message SearchRequest {
-    string search = 1;
+    required string search = 1;
 }
 

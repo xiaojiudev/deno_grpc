@@ -7,27 +7,19 @@ service UserService {
 }
 
 message User {
-    string _id = 1;
-    string username = 2;
-    string password = 3;
-    repeated string favoriteCategories = 4;
-    UserInteraction userInteraction = 5;
-    repeated string recommendedPosts = 6;
-}
-
-message UserInteraction {
-    repeated string likedPosts = 1;
-    repeated string bookmarkedPosts = 2;
-    repeated string clickedPosts = 3;
+    string id = 1;
+    required string username = 2;
+    required string password = 3;
+    string createdAt = 4;
 }
 
 message CreateUserRequest {
-    string username = 1;
-    string password = 2;
+    required string username = 1;
+    required string password = 2;
 }
 
 message CreateUserResponse {
-    bool success = 1;
-    string message = 2;
+    required bool success = 1;
+    required string message = 2;
 }
 

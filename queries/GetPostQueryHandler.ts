@@ -1,15 +1,11 @@
-import { Bson, GrpcException, GrpcStatus, Post, PostRequest } from "../deps.ts";
-import { getPostsCollection } from "../model/PostSchema.ts";
+import { Post, PostRequest, validObjectId } from "../deps.ts";
 import { queryEs } from "../db/elasticsearch.ts";
-
-export interface PostES extends Post {
-	id: string;
-}
+import { IPost } from "../model/PostSchema.ts";
 
 export class GetPostQueryHandler {
 	async handle(query: PostRequest): Promise<Post> {
-		if (!query._id || !Bson.ObjectId.isValid(query._id)) {
-			throw Error("Invalid ID");
+		if (!query.id || !validObjectId(query.id)) {
+			// throw Error("Invalid ID");
 		}
 
 		const postQuery = await queryEs({
@@ -17,20 +13,29 @@ export class GetPostQueryHandler {
 			query: {
 				query_string: {
 					fields: ["id"],
-					query: query._id,
+					query: query.id,
 				},
 			},
 		});
 
-		if (postQuery) {
-			const postData = postQuery[0]._source as PostES;
-
-			return {
-				...postData,
-				_id: postData.id,
-			};
+		const result = {
+			id: '',
+			userId: '',
+			title: '',
+			content: ''
 		}
 
-		return {} as Post;
+		if (postQuery) {
+			const postData = postQuery[0]._source as IPost;
+
+			return {
+				id: postData.id?.toString(),
+				userId: postData.user.toString(),
+				title: postData.title,
+				content: postData.content
+			}
+		}
+
+		return result;
 	}
 }

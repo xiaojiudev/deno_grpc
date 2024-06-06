@@ -15,8 +15,8 @@ export const getGrpcServer = (): GrpcServer => {
 };
 
 export const initGRPCService = async (): Promise<void> => {
-	await Promise.all([
-		initPostService(),
+	await Promise.all([	
 		initUserService(),
+		initPostService(),
 	]);
 };

@@ -1,29 +1,44 @@
-import { Bson, Collection } from "../deps.ts";
-import { getDB } from "../db/mongodb.ts";
+import { mongoose } from "../deps.ts";
 
-export interface UserSchema {
-	_id?: Bson.ObjectId;
-	username: string;
-	password: string;
-	favoriteCategories: string[];
-	interactions: UserInteractionSchema;
-	recommendedPosts?: Bson.ObjectId[];
+const Schema = mongoose.Schema;
+const ObjectId = Schema.ObjectId;
+
+export interface IUser {
+    id?: mongoose.Types.ObjectId;
+    username: string;
+    password: string;
+    createdAt?: Date;
 }
 
-export interface UserInteractionSchema {
-	likedPosts: Bson.ObjectId[];
-	bookmarkedPosts: Bson.ObjectId[];
-	clickedPosts: Bson.ObjectId[];
+interface IUserMethods {
+    toClient(): IUser;
+    getId(): string;
 }
 
-let usersCollection: Collection<UserSchema> | null = null;
+type UserModel = mongoose.Model<IUser, {}, IUserMethods>;
 
-export const getUsersCollection = async () => {
-	if (usersCollection) {
-		return usersCollection;
-	}
+const UserSchema = new Schema<IUser, UserModel, IUserMethods>({
+    id: { type: ObjectId },
+    username: { type: String, required: true, },
+    password: { type: String, required: true, },
+    createdAt: { type: Date, default: Date.now },
+});
 
-	const db = await getDB();
-	usersCollection = db.collection<UserSchema>("users");
-	return usersCollection;
-};
+UserSchema.method('toClient', function () {
+    const { _id, ...obj } = this.toObject();
+    const newObj = obj;
+    newObj.id = _id;
+    return newObj;
+});
+
+UserSchema.method('getId', function () {
+    return this.toObject()._id.toString();
+});
+
+UserSchema.set('toJSON', {
+    virtuals: true,
+});
+
+UserSchema.set('toObject', { virtuals: true })
+
+export const UserCollection = mongoose.model('User', UserSchema);

@@ -119,7 +119,25 @@ export const deleteIndex = async (indexName: string): Promise<boolean> => {
 	return false;
 };
 
-export const deleteEsDocument = async (
+export const deleteEsDocuments = async (
+	indexName: string,
+): Promise<boolean> => {
+	const esClient = await connectEs();
+	if (esClient) {
+		const result = await esClient.deleteByQuery({
+			index: indexName,
+			query: {
+				match_all: {}
+			}
+		});
+		
+		return true;
+		
+	}
+	return false;
+};
+
+export const deleteEsDocumentById = async (
 	indexName: string,
 	id: string,
 ): Promise<boolean> => {

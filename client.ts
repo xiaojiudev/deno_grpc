@@ -8,9 +8,9 @@ const clientA = getClient<SocialMediaService>({
 	serviceName: "SocialMediaService",
 });
 
-// await clientA
-//     .ListPost({})
-//     .then(data => console.log("All posts", data));
+await clientA
+    .GetPosts({})
+    .then(data => console.log("All posts", data));
 
 // await clientA
 //     .ListTrendingPosts({})
@@ -20,12 +20,12 @@ const clientA = getClient<SocialMediaService>({
 //     .SearchPost({ search: "Category B" })
 //     .then(data => console.log("Search results", data));
 
-await clientA
-	.ListTrendingKeywords({})
-	.then((data) => console.log("Top 10 hot keyword", data));
+// await clientA
+// 	.ListTrendingKeywords({})
+// 	.then((data) => console.log("Top 10 hot keyword", data));
 
-await clientA
-	.RecommendPosts({userId: "665d7484f89adaa511c994c9"})
-	.then((data) => console.log("Recommend posts", data));
+// await clientA
+// 	.RecommendPosts({userId: "665d7484f89adaa511c994c9"})
+// 	.then((data) => console.log("Recommend posts", data));
 
 clientA.close();

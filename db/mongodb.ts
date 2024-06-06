@@ -1,31 +1,15 @@
-import { APP_DATABASE_NAME, APP_DATABASE_URI, Database, MongoClient } from "../deps.ts";
+import { APP_DATABASE_NAME, APP_DATABASE_URI, mongoose, } from "../deps.ts";
 
-interface ConnectDB {
-	client: MongoClient;
-	mongoDb: Database;
-}
+export const connectDB = async (): Promise<void> => {
+	const options = {
+		dbName: APP_DATABASE_NAME,
+	};
 
-let client: MongoClient | null = null;
-let mongoDb: Database | null = null;
-
-export const connectDB = async (): Promise<ConnectDB> => {
-	if (client && mongoDb) {
-		return { client, mongoDb };
-	}
-
-	client = new MongoClient();
-
-	await client.connect(APP_DATABASE_URI);
-	mongoDb = client.database(APP_DATABASE_NAME);
-	console.log("Connected to MongoDB successfully");
-
-	return { client, mongoDb };
-};
-
-export const getDB = (): Database => {
-	if (!mongoDb) {
-		throw new Error("Database connection failed");
-	}
-
-	return mongoDb;
+	await mongoose.connect(APP_DATABASE_URI, options as mongoose.ConnectOptions)
+		.then((info) => {
+			console.log(`Connected to Mongo Database on ${info.connection.port}`);
+		})
+		.catch((err) => {
+			console.log("Not Connected to Database ERROR! ", err);
+		});
 };
