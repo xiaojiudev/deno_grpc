@@ -1,5 +1,5 @@
 import { CreateUserCommandHandler } from "../commands/CreateUserCommandHandler.ts";
-import { getGrpcServer } from "../db/grpc.ts";
+import { getGrpcServer } from "./grpc.ts";
 import { CreateUserRequest, CreateUserResponse, UserService } from "../deps.ts";
 
 export const initUserService = async () => {
