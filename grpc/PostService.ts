@@ -9,12 +9,13 @@ import {
     SocialMediaService,
     UserRequest,
 } from "../deps.ts";
-import { getGrpcServer } from "../db/grpc.ts";
+import { getGrpcServer } from "./grpc.ts";
 import { CreatePostCommandHandler } from "../commands/CreatePostCommandHandler.ts";
 import { DeletePostCommandHandler } from "../commands/DeletePostCommandHandler.ts";
 import { UpdatePostCommandHandler } from "../commands/UpdatePostCommandHandler.ts";
 import { GetPostQueryHandler } from "../queries/GetPostQueryHandler.ts";
 import { GetPostsQueryHandler } from "../queries/GetPostsQueryHandler.ts";
+import { GetTrendingPostsQueryHandler } from "../queries/GetTrendingPostsQueryHandler.ts";
 
 export const initPostService = async () => {
     const grpcServer = await getGrpcServer();
@@ -71,7 +72,12 @@ export const initPostService = async () => {
             throw new Error("Function not implemented.");
         },
         GetTrendingPosts: async (request: Empty): Promise<PostList> => {
-            throw new Error("Function not implemented.");
+            try {
+                const queries = new GetTrendingPostsQueryHandler();
+                return await queries.handle(request);
+            } catch (error) {
+                throw error;
+            }
         },
         GetTrendingKeywords: async (request: Empty): Promise<KeywordList> => {
             throw new Error("Function not implemented.");
