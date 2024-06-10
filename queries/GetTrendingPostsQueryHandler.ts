@@ -1,6 +1,8 @@
-import { Empty, PostList } from "../deps.ts";
+import { Empty, Post, PostList } from "../deps.ts";
 import { queryEs } from "../db/elasticsearch.ts";
-import { PostES } from "./GetPostQueryHandler.ts";
+// import { PostES } from "./GetPostQueryHandler.ts";
+import { POST_INDEX } from "../constant/index.ts";
+import { IPost } from "../model/PostSchema.ts";
 
 export class GetTrendingPostsQueryHandler {
 	async handle(_request: Empty): Promise<PostList> {
@@ -49,12 +51,15 @@ export class GetTrendingPostsQueryHandler {
 		if (trendingPosts) {
 			// deno-lint-ignore no-explicit-any
 			const mappedData = trendingPosts.map((postEs: any) => {
-				const post = postEs._source as PostES;
-
-				return {
-					...post,
-					_id: post.id?.toString(),
+				const post = postEs._source as IPost;
+				const { categories, interactions, createdAt, updatedAt, trendingScore, user, ...remainData } = post;
+				const result: Post = {
+					...remainData,
+					id: remainData.id!.toString(),
+					userId: user.toString(),
 				};
+
+				return result;
 			});
 
 			return { posts: [...mappedData] };
