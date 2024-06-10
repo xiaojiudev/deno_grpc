@@ -9,7 +9,7 @@ export class GetPostQueryHandler {
 		}
 
 		const postQuery = await queryEs({
-			index: "posts",
+			index: POST_INDEX,
 			query: {
 				query_string: {
 					fields: ["id"],
