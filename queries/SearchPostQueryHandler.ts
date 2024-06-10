@@ -1,6 +1,7 @@
 import { PostList, SearchRequest } from "../deps.ts";
 import { queryEs } from "../db/elasticsearch.ts";
 import { PostES } from "./GetPostQueryHandler.ts";
+import { POST_INDEX } from "../constant/index.ts";
 
 export class SearchPostQueryHandler {
 	async handle(request: SearchRequest): Promise<PostList> {
@@ -8,7 +9,7 @@ export class SearchPostQueryHandler {
 		const queryString = searchRequest.trim();
 
 		const postQueries = await queryEs({
-			index: "posts",
+			index: POST_INDEX,
 			query: {
 				multi_match: {
 					fields: ["title", "content", "categories"],
