@@ -5,7 +5,7 @@ import { PostES } from "./GetPostQueryHandler.ts";
 export class GetTrendingPostsQueryHandler {
 	async handle(_request: Empty): Promise<PostList> {
 		const trendingPosts = await queryEs({
-			index: "posts",
+			index: POST_INDEX,
 			size: 10,
 			query: {
 				function_score: {
