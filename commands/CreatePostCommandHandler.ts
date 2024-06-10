@@ -2,6 +2,7 @@ import { Post, PostResponse, mongoose, validObjectId } from "../deps.ts";
 import { IPost, PostCollection } from "../model/PostSchema.ts";
 import { indexEsDocument } from "../db/elasticsearch.ts";
 import { UserCollection } from "../model/UserSchema.ts";
+import { POST_INDEX } from "../constant/index.ts";
 
 export class CreatePostCommandHandler {
 	async handle(post: Post): Promise<PostResponse> {
@@ -11,6 +12,7 @@ export class CreatePostCommandHandler {
 			return {
 				success: false,
 				message: "User ID not valid",
+				postId: undefined,
 			};
 		}
 
@@ -18,6 +20,7 @@ export class CreatePostCommandHandler {
 			return {
 				success: false,
 				message: "Title and content are not empty",
+				postId: undefined,
 			};
 		}
 
@@ -27,6 +30,7 @@ export class CreatePostCommandHandler {
 			return {
 				success: false,
 				message: "User not found",
+				postId: undefined,
 			};
 		}
 
@@ -37,10 +41,9 @@ export class CreatePostCommandHandler {
 		};
 		
 		const insetDoc = await PostCollection.create({ ...payload });
-		console.log(insetDoc);
 		
 		if (insetDoc) {
-			indexEsDocument("posts", {...insetDoc.toClient() });
+			indexEsDocument(POST_INDEX, {...insetDoc.toClient() });
 			return {
 				success: !!insetDoc,
 				message: "Post created successfully",
@@ -51,6 +54,7 @@ export class CreatePostCommandHandler {
 		return {
 			success: false,
 			message: "Something went wrong",
+			postId: undefined,
 		};
 	}
 }
