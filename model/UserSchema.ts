@@ -1,7 +1,4 @@
-import { mongoose } from "../deps.ts";
-
-const Schema = mongoose.Schema;
-const ObjectId = Schema.ObjectId;
+import { ObjectId, Schema, mongoose } from "../deps.ts";
 
 export interface IUser {
     id?: mongoose.Types.ObjectId;
@@ -41,4 +38,4 @@ UserSchema.set('toJSON', {
 
 UserSchema.set('toObject', { virtuals: true })
 
-export const UserCollection = mongoose.model('User', UserSchema);
+export const UserCollection = mongoose.model('Users', UserSchema);
