@@ -1,18 +1,16 @@
 import { Empty, Post, PostList } from "../deps.ts";
 import { IPost } from "../model/PostSchema.ts";
 import { queryEs } from "../db/elasticsearch.ts";
+import { POST_INDEX } from "../constant/index.ts";
 
 export class GetPostsQueryHandler {
 	async handle(_query: Empty): Promise<PostList> {
 		const postData = await queryEs({
-			index: "posts",
+			index: POST_INDEX,
 			query: {
 				match_all: {},
 			},
-			// sort: [{ "trendingScore": "desc" }],
 		});
-
-		console.log(postData);
 		
 		if (postData) {
 			// deno-lint-ignore no-explicit-any
