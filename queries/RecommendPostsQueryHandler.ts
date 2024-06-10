@@ -1,3 +1,4 @@
+import { POST_INDEX } from "../constant/index.ts";
 import { queryEs } from "../db/elasticsearch.ts";
 import { ObjectId } from "../deps.ts";
 import { PostList, UserRequest } from "../deps.ts";
@@ -25,7 +26,7 @@ export class RecommendPostsQueryHandler {
 
 		for (const category of userCategories) {
 			const postsQueryRes = await queryEs({
-				index: "posts",
+				index: POST_INDEX,
 				size: 10,
 				query: {
 					match_phrase: {
@@ -65,7 +66,7 @@ export class RecommendPostsQueryHandler {
 
 		for (const postId of top10PostIds) {
 			const postQueryRes = await queryEs({
-				index: "posts",
+				index: POST_INDEX,
 				size: 1,
 				query: {
 					term: { _id: postId },
