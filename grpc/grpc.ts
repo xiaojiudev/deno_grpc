@@ -1,6 +1,6 @@
 import { GrpcServer } from "../deps.ts";
-import { initPostService } from "../services/PostService.ts";
-import { initUserService } from "../services/UserService.ts";
+import { initPostService } from "./PostService.ts";
+import { initUserService } from "./UserService.ts";
 
 let grpcServer: GrpcServer | null = null;
 
