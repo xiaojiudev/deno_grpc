@@ -37,9 +37,12 @@ import mongoose from 'npm:mongoose@8.4.1';
 
 export { mongoose }
 
+export const Schema = mongoose.Schema;
+
+export const ObjectId = Schema.ObjectId;
+
+export type ObjectIdType = mongoose.Types.ObjectId;
+
 export const validObjectId = (id: string): boolean => {
 	return mongoose.Types.ObjectId.isValid(id);
 }
-
-
-
