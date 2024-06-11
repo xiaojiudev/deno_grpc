@@ -198,8 +198,8 @@ export const getMockPostData = async (): Promise<{ success: boolean }> => {
             };
         });
 
-        const postDocs = await PostCollection.insertMany([...postData], { includeResultMetadata: true });        
-        
+        const postDocs = await PostCollection.insertMany([...postData], { includeResultMetadata: true });
+
         const MONGO_POST_CREATE = !!postDocs;
         let ES_POST_CREATE = true;
 
@@ -210,6 +210,7 @@ export const getMockPostData = async (): Promise<{ success: boolean }> => {
                 id: postDocs[index]._id.toString(),
                 document: {
                     ...remainData,
+                    trendingScore: postDocs[index]?.trendingScore,
                     id: postDocs[index]._id.toString(),
                     user: postDocs[index].user.toString(),
                 },
