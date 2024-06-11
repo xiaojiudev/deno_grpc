@@ -43,7 +43,7 @@ export class CreatePostCommandHandler {
 		const insetDoc = await PostCollection.create({ ...payload });
 		
 		if (insetDoc) {
-			indexEsDocument(POST_INDEX, {...insetDoc.toClient() });
+			await indexEsDocument(POST_INDEX, { ...insetDoc.toClient() });
 			return {
 				success: !!insetDoc,
 				message: "Post created successfully",
