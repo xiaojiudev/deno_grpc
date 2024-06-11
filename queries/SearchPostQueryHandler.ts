@@ -13,8 +13,8 @@ export class SearchPostQueryHandler {
 			query: {
 				multi_match: {
 					fields: ["title", "content", "categories"],
-					type: "phrase",
 					query: queryString,
+					fuzziness: "AUTO" // Fuzzy search
 				},
 			},
 			size: 10,
