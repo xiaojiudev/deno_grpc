@@ -38,4 +38,4 @@ UserSchema.set('toJSON', {
 
 UserSchema.set('toObject', { virtuals: true })
 
-export const UserCollection = mongoose.model('Users', UserSchema);
+export const UserCollection = mongoose.model('Users', UserSchema, 'users');
