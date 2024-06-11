@@ -24,7 +24,7 @@ export class CreatePostCommandHandler {
 			};
 		}
 
-		const existingUser = await UserCollection.findById(userId);		
+		const existingUser = await UserCollection.findById(userId);
 
 		if (!existingUser) {
 			return {
@@ -34,14 +34,14 @@ export class CreatePostCommandHandler {
 			};
 		}
 
-		const payload:IPost = {
+		const payload: IPost = {
 			title,
 			content,
 			user: new mongoose.Types.ObjectId(existingUser.getId()),
 		};
-		
+
 		const insetDoc = await PostCollection.create({ ...payload });
-		
+
 		if (insetDoc) {
 			await indexEsDocument(POST_INDEX, { ...insetDoc.toClient() });
 			return {
