@@ -69,5 +69,5 @@ PostSchema.set('toJSON', {
 
 PostSchema.set('toObject', { virtuals: true })
 
-export const PostCollection = mongoose.model('Posts', PostSchema);
+export const PostCollection = mongoose.model('Posts', PostSchema, 'posts');
 
