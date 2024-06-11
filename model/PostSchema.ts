@@ -5,8 +5,8 @@ export interface IPost {
     user: mongoose.Types.ObjectId;
     title: string;
     content: string;
-    categories: string[];
-    interactions: IPostInteraction;
+    categories?: string[];
+    interactions?: IPostInteraction;
     trendingScore?: number;
     createdAt?: Date;
     updatedAt?: Date;
