@@ -182,9 +182,12 @@ export const getMockPostData = async (): Promise<{ success: boolean }> => {
         users.forEach((user) => userIdArr.push(user._id!));
     }
 
-    const postEsCount = await esClient.count({ index: POST_INDEX });
-    if (existingPostCount !== postEsCount.count) {
-        await clearAllMocks();
+    const existIndex = await esClient.indices.exists({ index: POST_INDEX });
+    if (existIndex) {
+        const postEsCount = await esClient.count({ index: POST_INDEX });
+        if (existingPostCount !== postEsCount.count) {
+            await clearAllMocks();
+        }
     }
 
     if (existingPostCount === 0) {
