@@ -1,7 +1,7 @@
-import { PostList, SearchRequest } from "../deps.ts";
+import { Post, PostList, SearchRequest } from "../deps.ts";
 import { queryEs } from "../db/elasticsearch.ts";
-import { PostES } from "./GetPostQueryHandler.ts";
 import { POST_INDEX } from "../constant/index.ts";
+import { IPost } from "../model/PostSchema.ts";
 
 export class SearchPostQueryHandler {
 	async handle(request: SearchRequest): Promise<PostList> {
@@ -24,12 +24,14 @@ export class SearchPostQueryHandler {
 		if (postQueries) {
 			// deno-lint-ignore no-explicit-any
 			const mappedData = postQueries.map((postEs: any) => {
-				const post = postEs._source as PostES;
+				const post = postEs._source as IPost;
 
 				return {
-					...post,
-					_id: post.id?.toString(),
-				};
+					id: post.id?.toString(),
+					userId: post.user.toString(),
+					title: post.title,
+					content: post.content,
+				} as Post;
 			});
 
 			return { posts: [...mappedData] };
