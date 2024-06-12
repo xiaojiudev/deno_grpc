@@ -2,7 +2,7 @@ import { ObjectIdType, mongoose } from "../deps.ts";
 import { getEs } from "../db/elasticsearch.ts";
 import { IUser, UserCollection } from "../model/UserSchema.ts";
 import { IPost, PostCollection } from "../model/PostSchema.ts";
-import { POST_INDEX } from "../constant/index.ts";
+import { POST_INDEX, QUERY_INDEX } from "../constant/index.ts";
 
 const users: IUser[] = [
     {
@@ -240,5 +240,6 @@ const clearAllMocks = async () => {
     const esClient = await getEs();
     await PostCollection.deleteMany({});
     await esClient.deleteByQuery({ index: POST_INDEX, query: { match_all: {} } });
+    await esClient.deleteByQuery({ index: QUERY_INDEX, query: { match_all: {} } });
     console.log("Clear all mock data");
 }
