@@ -82,7 +82,7 @@ export const indexEsDocument = async (index: string, document: any,): Promise<vo
 		}
 	} catch (error) {
 		console.log("Index document failed");
-		// console.log(error);
+		console.log(error);
 	}
 };
 
