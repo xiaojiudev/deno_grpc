@@ -1,9 +1,12 @@
 import { Client, estypes } from "npm:@elastic/elasticsearch";
 import { APP_ELASTICSEARCH_NAME, APP_ELASTICSEARCH_PW, APP_ELASTICSEARCH_URI } from "../deps.ts";
+import { POST_INDEX } from "../constant/index.ts";
 
 type SearchRequest = estypes.SearchRequest;
 type SearchResponse = estypes.SearchResponse;
 type SearchHitResponse = estypes.SearchHit<unknown>[];
+export type IndicesIndexSettings = estypes.IndicesIndexSettings;
+export type MappingTypeMapping = estypes.MappingTypeMapping;
 export type SearchHit = estypes.SearchHit<unknown>;
 
 let esClient: Client | null = null;
@@ -41,12 +44,12 @@ export const getEs = (): Client => {
 	return esClient;
 };
 
-const createEsIndex = async (indexName: string): Promise<boolean> => {
+const createEsIndex = async (indexName: string, settings?: IndicesIndexSettings, mappings?: MappingTypeMapping): Promise<boolean> => {
 	const esClient = await connectEs();
 	if (esClient) {
 		const isExist = await esClient.indices.exists({ index: indexName });
 		if (!isExist) {
-			const result = await esClient.indices.create({ index: indexName });
+			const result = await esClient.indices.create({ index: indexName, settings: settings, mappings: mappings },);
 			console.log(result);
 		}
 
@@ -57,10 +60,10 @@ const createEsIndex = async (indexName: string): Promise<boolean> => {
 };
 
 // deno-lint-ignore no-explicit-any
-export const indexEsDocument = async (index: string, document: any,): Promise<void> => {
+export const indexEsDocument = async (index: string, document: any, settings?: IndicesIndexSettings, mappings?: MappingTypeMapping): Promise<void> => {
 	try {
 		const esClient = await connectEs();
-		await createEsIndex(index);
+		await createEsIndex(index, settings, mappings);
 		if (esClient) {
 			if (document instanceof Array) {
 				for (const doc of document) {
