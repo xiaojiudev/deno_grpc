@@ -130,9 +130,9 @@ export const deleteEsDocuments = async (
 				match_all: {}
 			}
 		});
-		
+
 		return true;
-		
+
 	}
 	return false;
 };
