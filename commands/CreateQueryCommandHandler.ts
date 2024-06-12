@@ -19,6 +19,7 @@ export class CreateSearchCommandHandler {
 
 		const payload: IQuery = {
 			queryString: searchBeauty,
+			// queryDate: new Date(new Date().getMilliseconds() - Math.random()*(1e+12))
 		}
 
 		const insertDoc = await QueryCollection.create({ ...payload });
