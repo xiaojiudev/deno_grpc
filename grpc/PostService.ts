@@ -18,6 +18,7 @@ import { GetPostsQueryHandler } from "../queries/GetPostsQueryHandler.ts";
 import { GetTrendingPostsQueryHandler } from "../queries/GetTrendingPostsQueryHandler.ts";
 import { CreateSearchCommandHandler } from "../commands/CreateQueryCommandHandler.ts";
 import { SearchPostQueryHandler } from "../queries/SearchPostQueryHandler.ts";
+import { GetTopKeywordQueryHandler } from "../queries/GetTopKeywordQueryHandler.ts";
 
 export const initPostService = async () => {
     const grpcServer = await getGrpcServer();
@@ -89,7 +90,12 @@ export const initPostService = async () => {
             }
         },
         GetTrendingKeywords: async (request: Empty): Promise<KeywordList> => {
-            throw new Error("Function not implemented.");
+            try {
+                const queries = new GetTopKeywordQueryHandler();
+                return await queries.handle(request);
+            } catch (error) {
+                throw error;
+            }
         },
         RecommendPosts: async (request: UserRequest): Promise<PostList> => {
             throw new Error("Function not implemented.");
