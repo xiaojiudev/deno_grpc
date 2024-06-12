@@ -67,7 +67,7 @@ export const indexEsDocument = async (index: string, document: any,): Promise<vo
 					const result = await esClient.index({
 						index,
 						id: doc?.id,
-						document: doc?.document,
+						document: doc,
 					});
 					console.log(`Indexed document ID: ${result._id}`, result);
 				}
@@ -75,7 +75,7 @@ export const indexEsDocument = async (index: string, document: any,): Promise<vo
 				const result = await esClient.index({
 					index,
 					id: document?.id,
-					document:document?.document,
+					document: document,
 				});
 				console.log(`Indexed document ID: ${result._id}`, result);
 			}
