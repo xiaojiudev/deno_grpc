@@ -19,7 +19,6 @@ export class CreateSearchCommandHandler {
 
 		const payload: IQuery = {
 			queryString: searchBeauty,
-			queryCount: 1
 		}
 
 		const insertDoc = await QueryCollection.create({ ...payload });
