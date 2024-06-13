@@ -10,13 +10,21 @@ export {
 	Status as GrpcStatus,
 } from "https://deno.land/x/grpc_basic@0.4.7/error.ts";
 
-export { Database, MongoClient } from "https://deno.land/x/mongo@v0.32.0/mod.ts";
+export {
+	Database,
+	MongoClient,
+} from "https://deno.land/x/mongo@v0.32.0/mod.ts";
 
 // export { Bson, Collection, ObjectId } from "https://deno.land/x/mongo@v0.32.0/mod.ts";
 
 export * as bcrypt from "https://deno.land/x/bcrypt@v0.4.1/mod.ts";
 
-export { afterEach, beforeEach, describe, it } from "https://deno.land/std@0.224.0/testing/bdd.ts";
+export {
+	afterEach,
+	beforeEach,
+	describe,
+	it,
+} from "https://deno.land/std@0.224.0/testing/bdd.ts";
 
 export {
 	assertArrayIncludes,
@@ -33,9 +41,9 @@ export * from "./types/user.d.ts";
 
 export * from "./utils/bootstrap.ts";
 
-import mongoose from 'npm:mongoose@8.4.1';
+import mongoose from "npm:mongoose@8.4.1";
 
-export { mongoose }
+export { mongoose };
 
 export const Schema = mongoose.Schema;
 
@@ -45,4 +53,4 @@ export type ObjectIdType = mongoose.Types.ObjectId;
 
 export const validObjectId = (id: string): boolean => {
 	return mongoose.Types.ObjectId.isValid(id);
-}
+};
