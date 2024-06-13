@@ -1,4 +1,4 @@
-import { Post, PostResponse, mongoose, validObjectId } from "../deps.ts";
+import { mongoose, Post, PostResponse, validObjectId } from "../deps.ts";
 import { PostCollection } from "../model/PostSchema.ts";
 import { updateEsDocument } from "../db/elasticsearch.ts";
 
@@ -19,10 +19,12 @@ export class UpdatePostCommandHandler {
 			};
 		}
 
-		if (!post.title
-			|| !post.content
-			|| post.title.trim().length === 0
-			|| post.content.trim().length === 0) {
+		if (
+			!post.title ||
+			!post.content ||
+			post.title.trim().length === 0 ||
+			post.content.trim().length === 0
+		) {
 			return {
 				success: false,
 				message: "Title, content, categories are not empty",
@@ -46,18 +48,22 @@ export class UpdatePostCommandHandler {
 			title: post.title ?? postRetrieve?.title,
 			content: post.content ?? postRetrieve?.content,
 			updatedAt: new Date(),
-		}
+		};
 
-		const docRes = await PostCollection.findOneAndUpdate(filter, payloadUpdate, { includeResultMetadata: true });
+		const docRes = await PostCollection.findOneAndUpdate(
+			filter,
+			payloadUpdate,
+			{ includeResultMetadata: true },
+		);
 
 		if (!docRes.ok) {
 			return {
 				success: false,
 				message: "Post not found",
 			};
-		}		
+		}
 
-		const postUpdatedData = docRes.value?.toClient();		
+		const postUpdatedData = docRes.value?.toClient();
 
 		await updateEsDocument("posts", postId.toString(), {
 			...postUpdatedData,

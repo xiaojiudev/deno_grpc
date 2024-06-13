@@ -18,7 +18,8 @@ export class CreateUserCommandHandler {
 		if (!usernameRegex.test(username)) {
 			return {
 				success: false,
-				message: "Username required 6-16 characters, only letters and numbers are allowed",
+				message:
+					"Username required 6-16 characters, only letters and numbers are allowed",
 			};
 		}
 

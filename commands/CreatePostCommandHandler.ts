@@ -1,4 +1,4 @@
-import { Post, PostResponse, mongoose, validObjectId } from "../deps.ts";
+import { mongoose, Post, PostResponse, validObjectId } from "../deps.ts";
 import { IPost, PostCollection } from "../model/PostSchema.ts";
 import { indexEsDocument } from "../db/elasticsearch.ts";
 import { UserCollection } from "../model/UserSchema.ts";
@@ -16,7 +16,10 @@ export class CreatePostCommandHandler {
 			};
 		}
 
-		if (!title || !content || title?.trim().length === 0 || content?.trim().length === 0) {
+		if (
+			!title || !content || title?.trim().length === 0 ||
+			content?.trim().length === 0
+		) {
 			return {
 				success: false,
 				message: "Title and content are not empty",

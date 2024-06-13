@@ -3,7 +3,7 @@ import { indexEsDocument } from "../db/elasticsearch.ts";
 import { SearchRequest } from "../deps.ts";
 import { IQuery, QueryCollection } from "../model/QuerySchema.ts";
 
-export class CreateSearchCommandHandler {
+export class CreateQueryCommandHandler {
 	async handle(searchRequest: SearchRequest): Promise<void> {
 		const searchString = searchRequest?.search ?? "";
 		const searchBeauty = searchString.trim()
@@ -15,12 +15,11 @@ export class CreateSearchCommandHandler {
 		if (searchBeauty === "") {
 			return;
 		}
-		console.log(searchBeauty);
-
+		
 		const payload: IQuery = {
 			queryString: searchBeauty,
 			// queryDate: new Date(new Date().getMilliseconds() - Math.random()*(1e+12))
-		}
+		};
 
 		const insertDoc = await QueryCollection.create({ ...payload });
 
