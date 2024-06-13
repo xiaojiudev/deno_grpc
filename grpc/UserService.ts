@@ -9,7 +9,9 @@ export const initUserService = async () => {
 	const userProtoFile = Deno.readTextFileSync(userProtoPath);
 
 	grpcServer.addService<UserService>(userProtoFile, {
-		CreateUser: async (request: CreateUserRequest): Promise<CreateUserResponse> => {
+		CreateUser: async (
+			request: CreateUserRequest,
+		): Promise<CreateUserResponse> => {
 			const command = new CreateUserCommandHandler();
 			return await command.handle(request);
 		},
