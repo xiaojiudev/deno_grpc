@@ -17,10 +17,10 @@ export class GetTrendingPostsQueryHandler {
 						{
 							gauss: {
 								"createdAt": {
-									origin: 'now/d',
-									scale: '7d',
+									origin: "now/d",
+									scale: "7d",
 									decay: 0.5,
-								}
+								},
 							},
 						},
 					],
@@ -28,20 +28,20 @@ export class GetTrendingPostsQueryHandler {
 						bool: {
 							should: [
 								{
-									term: { "createdAt": 'now/d', }
+									term: { "createdAt": "now/d" },
 								},
 								{
 									range: {
 										"createdAt": {
 											gte: "now-7d/d",
-											lte: "now/d"
-										}
+											lte: "now/d",
+										},
 									},
 								},
-							]
-						}
-					}
-				}
+							],
+						},
+					},
+				},
 			},
 			sort: [
 				{ "trendingScore": "desc", "createdAt": "desc" },
@@ -52,7 +52,15 @@ export class GetTrendingPostsQueryHandler {
 			// deno-lint-ignore no-explicit-any
 			const mappedData = trendingPosts.map((postEs: any) => {
 				const post = postEs._source as IPost;
-				const { categories, interactions, createdAt, updatedAt, trendingScore, user, ...remainData } = post;
+				const {
+					categories,
+					interactions,
+					createdAt,
+					updatedAt,
+					trendingScore,
+					user,
+					...remainData
+				} = post;
 				const result: Post = {
 					...remainData,
 					id: remainData.id!.toString(),

@@ -14,7 +14,7 @@ export class SearchPostQueryHandler {
 				multi_match: {
 					fields: ["title", "content", "categories"],
 					query: queryString,
-					fuzziness: "AUTO" // Fuzzy search
+					fuzziness: "AUTO", // Fuzzy search
 				},
 			},
 			size: 10,

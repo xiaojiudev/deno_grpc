@@ -11,7 +11,7 @@ export class GetPostsQueryHandler {
 				match_all: {},
 			},
 		});
-		
+
 		if (postData) {
 			// deno-lint-ignore no-explicit-any
 			const mappedData = postData.map((postEs: any) => {
@@ -23,7 +23,7 @@ export class GetPostsQueryHandler {
 					title: post.title,
 					content: post.content,
 				} as Post;
-			});			
+			});
 
 			return { posts: [...mappedData] };
 		}

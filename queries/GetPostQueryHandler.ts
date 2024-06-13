@@ -20,11 +20,11 @@ export class GetPostQueryHandler {
 		});
 
 		const result = {
-			id: '',
-			userId: '',
-			title: '',
-			content: ''
-		}
+			id: "",
+			userId: "",
+			title: "",
+			content: "",
+		};
 
 		if (postQuery) {
 			const postData = postQuery[0]._source as IPost;
@@ -33,8 +33,8 @@ export class GetPostQueryHandler {
 				id: postData.id?.toString(),
 				userId: postData.user.toString(),
 				title: postData.title,
-				content: postData.content
-			}
+				content: postData.content,
+			};
 		}
 
 		return result;
