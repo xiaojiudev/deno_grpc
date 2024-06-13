@@ -1,6 +1,10 @@
+// deno-lint-ignore-file no-explicit-any
 import { Client, estypes } from "npm:@elastic/elasticsearch";
-import { APP_ELASTICSEARCH_NAME, APP_ELASTICSEARCH_PW, APP_ELASTICSEARCH_URI } from "../deps.ts";
-import { POST_INDEX } from "../constant/index.ts";
+import {
+	APP_ELASTICSEARCH_NAME,
+	APP_ELASTICSEARCH_PW,
+	APP_ELASTICSEARCH_URI,
+} from "../deps.ts";
 
 type SearchRequest = estypes.SearchRequest;
 type SearchResponse = estypes.SearchResponse;
@@ -44,12 +48,20 @@ export const getEs = (): Client => {
 	return esClient;
 };
 
-const createEsIndex = async (indexName: string, settings?: IndicesIndexSettings, mappings?: MappingTypeMapping): Promise<boolean> => {
+const createEsIndex = async (
+	indexName: string,
+	settings?: IndicesIndexSettings,
+	mappings?: MappingTypeMapping,
+): Promise<boolean> => {
 	const esClient = await connectEs();
 	if (esClient) {
 		const isExist = await esClient.indices.exists({ index: indexName });
 		if (!isExist) {
-			const result = await esClient.indices.create({ index: indexName, settings: settings, mappings: mappings },);
+			const result = await esClient.indices.create({
+				index: indexName,
+				settings: settings,
+				mappings: mappings,
+			});
 			console.log(result);
 		}
 
@@ -59,8 +71,12 @@ const createEsIndex = async (indexName: string, settings?: IndicesIndexSettings,
 	return false;
 };
 
-// deno-lint-ignore no-explicit-any
-export const indexEsDocument = async (index: string, document: any, settings?: IndicesIndexSettings, mappings?: MappingTypeMapping): Promise<void> => {
+export const indexEsDocument = async (
+	index: string,
+	document: any,
+	settings?: IndicesIndexSettings,
+	mappings?: MappingTypeMapping,
+): Promise<void> => {
 	try {
 		const esClient = await connectEs();
 		await createEsIndex(index, settings, mappings);
@@ -130,12 +146,11 @@ export const deleteEsDocuments = async (
 		const result = await esClient.deleteByQuery({
 			index: indexName,
 			query: {
-				match_all: {}
-			}
+				match_all: {},
+			},
 		});
 
 		return true;
-
 	}
 	return false;
 };
@@ -157,9 +172,11 @@ export const deleteEsDocumentById = async (
 	}
 	return false;
 };
-
-// deno-lint-ignore no-explicit-any
-export const updateEsDocument = async (indexName: string, id: string, payload: any,): Promise<boolean> => {
+export const updateEsDocument = async (
+	indexName: string,
+	id: string,
+	payload: any,
+): Promise<boolean> => {
 	const esClient = await connectEs();
 
 	if (esClient) {
