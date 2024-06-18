@@ -2,15 +2,18 @@ import sys
 import numpy as np
 import pandas as pd
 from sklearn.metrics.pairwise import cosine_similarity
+import os.path
 
 
-def recommend_posts(user_id, file_path="./dataset.data", top_n=3):
+def recommend_posts(user_id, file_path, top_n=3):
     # Define the column names for the dataset.
     header = ['user_id', 'category', 'liked', 'timestamp']
 
-    # Load the dataset from a file, specifying that columns are separated by tabs and
-    # assigning the column names defined earlier.
-    dataset = pd.read_csv(file_path, sep='\t', names=header)
+    # Load the dataset from a file, separated by tabs and assigning the column names defined earlier
+    if os.path.isfile(file_path):
+        dataset = pd.read_csv(file_path, sep='\t', names=header)
+    else:
+        dataset = pd.read_csv("./test.data", sep='\t', names=header)
 
     # Replace missing values ('?') with NaN and then fill NaN with 0
     dataset['liked'] = pd.to_numeric(dataset['liked'], errors='coerce').fillna(0)
@@ -39,7 +42,7 @@ def recommend_posts(user_id, file_path="./dataset.data", top_n=3):
 
     recommended_result = []
 
-    # Display recommendations
+    # Append result into recommended_result array
     for item in recommended_items:
         if user_interactions[item] != 1:
             item_id = item + 1
@@ -48,11 +51,15 @@ def recommend_posts(user_id, file_path="./dataset.data", top_n=3):
     return recommended_result
 
 
-if __name__ == "__main__":
-    if len(sys.argv) < 2:
-        print("Please provide a user_id as an argument.")
-        sys.exit(1)
+# if __name__ == "__main__":
+#     if len(sys.argv) < 2:
+#         print("Please provide a user_id as an argument.")
+#         sys.exit(1)
+#
+#     user_id = int(sys.argv[1])
+#     dataset_path = (sys.argv[2])
+#     recommend_top_n = int(sys.argv[3])
+#     recommendations = recommend_posts(user_id, dataset_path, recommend_top_n)
+#     print("Recommended Items: ", recommendations)
 
-    user_id = int(sys.argv[1])
-    recommendations = recommend_posts(user_id)
-    print("Recommended Items: ", recommendations)
+print(recommend_posts("c", ""))
