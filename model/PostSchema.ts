@@ -1,11 +1,12 @@
 import { mongoose, ObjectId, Schema } from "../deps.ts";
+import { CategoryCollection } from "./CategorySchema.ts";
 
 export interface IPost {
 	id?: mongoose.Types.ObjectId;
 	user: mongoose.Types.ObjectId;
 	title: string;
 	content: string;
-	categories?: string[];
+	categories?: mongoose.Types.ObjectId[];
 	interactions?: IPostInteraction;
 	trendingScore?: number;
 	createdAt?: Date;
@@ -36,7 +37,7 @@ const PostSchema = new Schema<IPost, PostModel, IPostMethods>({
 	user: { type: mongoose.Types.ObjectId, ref: "Users" },
 	title: { type: String, required: true },
 	content: { type: String, required: true },
-	categories: [{ type: String, required: false }],
+	categories: [{ type: mongoose.Types.ObjectId, ref: "Categories", required: false }],
 	interactions: {
 		likes: { type: Number, default: 0 },
 		comments: { type: Number, default: 0 },
@@ -68,5 +69,28 @@ PostSchema.set("toJSON", {
 });
 
 PostSchema.set("toObject", { virtuals: true });
+
+PostSchema.post("save", async function (doc) {
+	console.log('POST SAVE HOOK');
+
+	if (doc.categories && doc.categories.length > 0) {
+		await CategoryCollection.updateMany(
+			{ _id: { $in: doc.categories } },
+			{ $addToSet: { posts: doc._id } }
+		);
+	}
+});
+
+PostSchema.post("insertMany", function (docs) {
+	console.log('POST SAVE MANY HOOK');
+	docs.forEach(async (doc) => {
+		if (doc.categories && doc.categories.length > 0) {
+			await CategoryCollection.updateMany(
+				{ _id: { $in: doc.categories } },
+				{ $addToSet: { posts: doc._id } }
+			);
+		}
+	});
+});
 
 export const PostCollection = mongoose.model("Posts", PostSchema, "posts");

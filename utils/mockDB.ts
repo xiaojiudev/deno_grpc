@@ -3,7 +3,10 @@ import { getEs } from "../db/elasticsearch.ts";
 import { IUser, UserCollection } from "../model/UserSchema.ts";
 import { IPost, PostCollection } from "../model/PostSchema.ts";
 import { POST_INDEX, QUERY_INDEX } from "../constant/index.ts";
-import { UserFavoriteCollection } from "../model/UserFavoriteSchema.ts";
+import { CategoryCollection, ICategory } from "../model/CategorySchema.ts";
+
+const userIdArr: ObjectIdType[] = [];
+const categoryArr: ICategory[] = [];
 
 const users: IUser[] = [
 	{
@@ -54,7 +57,6 @@ const samplePosts: IPost[] = [
 	{
 		title: "Post 1",
 		content: "Content for Post 1",
-		categories: ["Category A", "Category B"],
 		interactions: {
 			likes: 146,
 			comments: 0,
@@ -72,7 +74,6 @@ const samplePosts: IPost[] = [
 	{
 		title: "Post 2",
 		content: "Content for Post 2",
-		categories: ["Category C"],
 		interactions: {
 			likes: 1000,
 			comments: 50,
@@ -90,7 +91,6 @@ const samplePosts: IPost[] = [
 	{
 		title: "Post 3",
 		content: "Content for Post 3",
-		categories: ["Category A", "Category D"],
 		interactions: {
 			likes: 500,
 			comments: 10,
@@ -108,7 +108,6 @@ const samplePosts: IPost[] = [
 	{
 		title: "Post 4",
 		content: "Content for Post 4",
-		categories: ["Category B", "Category D"],
 		interactions: {
 			likes: 2000,
 			comments: 200,
@@ -126,7 +125,6 @@ const samplePosts: IPost[] = [
 	{
 		title: "Post 5",
 		content: "Content for Post 5",
-		categories: ["Category C", "Category D"],
 		interactions: {
 			likes: 11253,
 			comments: 253,
@@ -144,7 +142,6 @@ const samplePosts: IPost[] = [
 	{
 		title: "Post 6",
 		content: "Content for Post 6",
-		categories: ["Category C", "Category D"],
 		interactions: {
 			likes: 5640,
 			comments: 95,
@@ -162,7 +159,6 @@ const samplePosts: IPost[] = [
 	{
 		title: "Post 7",
 		content: "Content for Post 7",
-		categories: ["Category C", "Category D"],
 		interactions: {
 			likes: 5280,
 			comments: 308,
@@ -180,7 +176,6 @@ const samplePosts: IPost[] = [
 	{
 		title: "Post 8",
 		content: "Content for Post 8",
-		categories: ["Category E", "Category A"],
 		interactions: {
 			likes: 17000,
 			comments: 1400,
@@ -197,35 +192,57 @@ const samplePosts: IPost[] = [
 	},
 ];
 
-export const getMockPostData = async (): Promise<{ success: boolean }> => {
-	const esClient = await getEs();
+export const getMockPostData = async () => {
+	await mockUserData();
+	await mockCategoryData();
+	await mockPostData();
+};
 
+
+const mockUserData = async () => {
 	const existingUserCount = await UserCollection.countDocuments({});
-	const existingPostCount = await PostCollection.countDocuments({});
-
-	const userIdArr: ObjectIdType[] = [];
 
 	if (existingUserCount === 0) {
 		const userDocs = await UserCollection.insertMany([...users]);
 		userDocs.forEach((user) => userIdArr.push(user._id));
+		console.log("Mocked user's data successfully");
 	} else {
 		const users = await UserCollection.find({});
 		users.forEach((user) => userIdArr.push(user._id!));
+		console.log("User's data have already mocked");
+	}
+}
+
+const mockCategoryData = async () => {
+	const existingCateCount = await CategoryCollection.countDocuments({});
+
+	if (existingCateCount === 0) {
+		const completeCategories = categories.map((category) => {
+			const numOfItems = Math.floor(Math.random() * userIdArr.length);
+			const userArr = userIdArr
+				.sort(() => Math.random() - Math.random())
+				.slice(0, numOfItems);
+
+			return {
+				...category,
+				users: [...userArr]
+			}
+		});
+
+		const cateDocs = await CategoryCollection.insertMany([...completeCategories]);
+		cateDocs.forEach((cate) => categoryArr.push(cate.toClient()));
+		console.log("Mocked cate's data successfully");
+	} else {
+		const categories = await CategoryCollection.find({});
+		categories.forEach((cate) => categoryArr.push(cate.toClient()));
+		console.log("Cate's data have already mocked");
 	}
 
-	userIdArr.forEach(async (userId) => {
-		const existDoc = await UserFavoriteCollection.exists({ user: userId });
+}
 
-		if (!existDoc) {
-			const numOfItems = Math.floor(Math.random() * categories.length);
-			const cateArr = categories.sort(() => Math.random() - Math.random())
-				.slice(0, numOfItems)
-				.map((e) => e.name);
-
-			await UserFavoriteCollection.create({ user: userId, favCategories: cateArr });
-			console.log("Mock user_favorites successfully");
-		}
-	});
+const mockPostData = async () => {
+	const esClient = await getEs();
+	const existingPostCount = await PostCollection.countDocuments({});
 
 	const existIndex = await esClient.indices.exists({ index: POST_INDEX });
 	if (existIndex) {
@@ -237,9 +254,17 @@ export const getMockPostData = async (): Promise<{ success: boolean }> => {
 
 	if (existingPostCount === 0) {
 		const postData: IPost[] = samplePosts.map((post) => {
+			const numOfItems = Math.floor(Math.random() * categoryArr.length);
+			const cateIdArr = categoryArr
+				.sort(() => Math.random() - Math.random())
+				.slice(0, numOfItems)
+				.filter(c => c && c?.id)
+				.map(c => c.id!)
+
 			return {
 				...post,
 				user: userIdArr[Math.floor(Math.random() * userIdArr.length)],
+				categories: [...cateIdArr],
 			};
 		});
 
@@ -276,13 +301,13 @@ export const getMockPostData = async (): Promise<{ success: boolean }> => {
 			console.log(`ES_POST_CREATE: ${ES_POST_CREATE}`);
 			return { success: false };
 		}
-		console.log("Mock data to MongoDB & Elasticsearch successfully!");
+		console.log("Mock post's data to MongoDB & Elasticsearch successfully!");
 		return { success: MONGO_POST_CREATE && ES_POST_CREATE };
 	} else {
-		console.log("Mock data have already been mocked!");
+		console.log("Post's data have already been mocked!");
 		return { success: true };
 	}
-};
+}
 
 const clearAllMocks = async () => {
 	const esClient = await getEs();

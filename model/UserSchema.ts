@@ -4,6 +4,7 @@ export interface IUser {
 	id?: mongoose.Types.ObjectId;
 	username: string;
 	password: string;
+	favCategories?: mongoose.Types.ObjectId[];
 	createdAt?: Date;
 }
 
@@ -19,6 +20,7 @@ const UserSchema = new Schema<IUser, UserModel, IUserMethods>({
 	id: { type: ObjectId },
 	username: { type: String, required: true },
 	password: { type: String, required: true },
+	favCategories: [{ type: String, ref: "Categories", required: false }],
 	createdAt: { type: Date, default: Date.now },
 });
 
