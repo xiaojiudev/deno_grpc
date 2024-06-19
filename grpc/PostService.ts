@@ -21,6 +21,7 @@ import {
 	GetPostsQueryHandler,
 	GetTopKeywordQueryHandler,
 	GetTrendingPostsQueryHandler,
+	RecommendPostsQueryHandler,
 	SearchPostQueryHandler,
 } from "../queries/index.ts";
 
@@ -102,7 +103,12 @@ export const initPostService = async () => {
 			}
 		},
 		RecommendPosts: async (request: UserRequest): Promise<PostList> => {
-			throw new Error("Function not implemented.");
+			try {
+				const queries = new RecommendPostsQueryHandler();
+				return await queries.handle(request);
+			} catch (error) {
+				throw error;
+			}
 		},
 	});
 };
