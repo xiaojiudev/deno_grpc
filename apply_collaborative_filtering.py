@@ -1,3 +1,4 @@
+import json
 import sys
 import time
 
@@ -83,10 +84,15 @@ if __name__ == "__main__":
         print("Please provide a user_id as an argument.")
         sys.exit(1)
 
-    user_id = str(sys.argv[1])
-    dataset_path = str(sys.argv[2])
-    recommend_top_n = int(sys.argv[3])
-    recommendations = recommend_posts(user_id, dataset_path, recommend_top_n)
-    print("Recommended Items: ", recommendations)
+    dataset_path = str(sys.argv[1])
+    categories = json.loads(sys.argv[2])
+    user_id = str(sys.argv[3])
+    recommend_top_n = int(sys.argv[4])
+    recommendations = recommend_posts(dataset_path, categories, user_id, recommend_top_n)
+    print(json.dumps(recommendations))
 
-# print(recommend_posts("c", "./test.data"))
+# categories = ['cate1', 'cate2', 'cate3', 'cate4', ]
+# print(recommend_posts("./test.data", categories, "c"))
+# print(recommend_posts("./test1.data", categories, "c"))
+# print(recommend_posts("./dataset.data", categories, "3"))
+# print(recommend_posts("./dataset1.data", categories, "3"))
