@@ -4,7 +4,7 @@ import { CSVWriter } from "jsr:@vslinko/csv@1.0.2";
 export const saveUserFavLog = async () => {
     const userDocs = await UserCollection.find({});
 
-    const f = await Deno.open("./user_fav.data", {
+    const f = await Deno.open("./dataset/user_fav.data", {
         write: true,
         create: true,
         truncate: true,
