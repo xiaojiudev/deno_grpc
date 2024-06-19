@@ -28,7 +28,8 @@ def recommend_posts(file_path: str, categories_dataset: List[str], user_id: str,
     dataset['liked'] = pd.to_numeric(dataset['liked'], errors='coerce').fillna(0)
 
     unique_users = dataset['user_id'].unique()
-    unique_categories = dataset['category'].unique()
+    if user_id not in unique_users:
+        return []
 
     # Create a DataFrame to ensure every user has an entry for every category
     all_combinations = pd.MultiIndex.from_product([unique_users, categories_dataset], names=['user_id', 'category'])
