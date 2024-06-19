@@ -64,8 +64,8 @@ def recommend_posts(file_path: str, categories_dataset: List[str], user_id: str,
 
     item_scores = user_interactions.dot(item_similarity)
 
-    # Sort items by score and recommend the top-n
-    recommended_items = np.argsort(item_scores)[::-1][:top_n]
+    # Sort items by score and recommend the top-n + 1, because the first element is the same post and always is 1
+    recommended_items = np.argsort(item_scores)[::-1][:top_n+1]
 
     recommended_result = []
 
