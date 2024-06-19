@@ -1,14 +1,34 @@
-const PYTHON3_ENV_PATH = "C:/Program Files/Python36/python.exe";
-const FILE_EXEC_PATH = "./apply_collaborative_filtering.py";
-const DATASET_PATH = "./test.data";
-const DEFAULT_RECOMMEND_TOP_N = "3";
-const USER_ID = "c";
+export interface RequestAgrs {
+    DATASET_PATH: string;
+    CATEGORY_LIST: string[];
+    USER_ID: string;
+    RECOMMEND_TOP_N: number;
+}
 
+const PYTHON3_ENV_PATH: string = "C:/Program Files/Python36/python.exe";
+const FILE_EXEC_PATH: string = "./apply_collaborative_filtering.py";
 
-const command = new Deno.Command(PYTHON3_ENV_PATH, {
-    args: [FILE_EXEC_PATH, USER_ID, DATASET_PATH, DEFAULT_RECOMMEND_TOP_N],
-});
-const { code, stdout, stderr } = await command.output();
+export const getRecommendationPosts = async (request: RequestAgrs) => {
+    const { DATASET_PATH, CATEGORY_LIST, USER_ID, RECOMMEND_TOP_N } = request;
+    const mappedAgrs = [
+        FILE_EXEC_PATH,
+        DATASET_PATH,
+        JSON.stringify(CATEGORY_LIST),
+        USER_ID.toString(),
+        RECOMMEND_TOP_N.toString(),
+    ];
 
-console.log(new TextDecoder().decode(stdout));
-console.log(new TextDecoder().decode(stderr));
+    const options: Deno.CommandOptions = {
+        args: [...mappedAgrs],
+    }
+
+    const command = new Deno.Command(PYTHON3_ENV_PATH, options);
+    const { code, stdout, stderr } = await command.output();
+    const result: string[] = JSON.parse(new TextDecoder().decode(stdout));
+    const errorMessage: string = new TextDecoder().decode(stderr);
+    console.log(errorMessage);
+
+    return result;
+}
+
+// console.log(await getRecommendationPosts({FILE_EXEC_PATH, DATASET_PATH, CATEGORY_LIST, USER_ID, RECOMMEND_TOP_N}));
