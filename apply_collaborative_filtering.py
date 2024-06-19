@@ -8,10 +8,9 @@ import os.path
 from typing import List
 
 
-def recommend_posts(user_id: str, file_path: str, categories_dataset: List[str], top_n=3) -> List[str]:
+def recommend_posts(file_path: str, categories_dataset: List[str], user_id: str, top_n=3) -> List[str]:
     # Define the column names for the dataset.
     header_name = ['user_id', 'category', 'liked', 'timestamp']
-    # categories_dataset = ['cate1', 'cate2', 'cate3', 'cate4']
 
     # Load the dataset from a file, separated by tabs and assigning the column names defined earlier
     if os.path.isfile(file_path):
