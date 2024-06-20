@@ -1,4 +1,4 @@
-import { mongoose, ObjectIdType } from "../deps.ts";
+import { bcrypt, mongoose, ObjectIdType } from "../deps.ts";
 import { getEs } from "../db/elasticsearch.ts";
 import { IUser, UserCollection } from "../model/UserSchema.ts";
 import { IPost, PostCollection } from "../model/PostSchema.ts";
@@ -7,19 +7,21 @@ import { CategoryCollection, ICategory } from "../model/CategorySchema.ts";
 
 const userIdArr: ObjectIdType[] = [];
 const categoryArr: ICategory[] = [];
+const salt = await bcrypt.genSalt(8);
+const pwHash = await bcrypt.hash("admin123", salt);
 
 const users: IUser[] = [
 	{
 		username: "xiaojiu123",
-		password: "admin123",
+		password: pwHash,
 	},
 	{
 		username: "lyphat99",
-		password: "admin123",
+		password: pwHash,
 	},
 	{
 		username: "username3",
-		password: "admin123",
+		password: pwHash,
 	},
 ];
 
