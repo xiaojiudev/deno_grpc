@@ -37,8 +37,4 @@ QuerySchema.set("toJSON", {
 
 QuerySchema.set("toObject", { virtuals: true });
 
-export const QueryCollection = mongoose.model(
-	"Queries",
-	QuerySchema,
-	"queries",
-);
+export const QueryCollection = mongoose.model("Queries", QuerySchema, "queries");
