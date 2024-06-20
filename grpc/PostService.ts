@@ -1,6 +1,6 @@
-import { getGrpcServer } from "./grpc.ts";
 import {
 	Empty,
+	GrpcServer,
 	KeywordList,
 	Post,
 	PostList,
@@ -25,16 +25,11 @@ import {
 	SearchPostQueryHandler,
 } from "../queries/index.ts";
 
-export const initPostService = async () => {
-	const grpcServer = await getGrpcServer();
-
-	const postProtoPath = new URL(
-		"../protos/social_media.proto",
-		import.meta.url,
-	);
+export const initPostService = (grpcServerInstance: GrpcServer) => {
+	const postProtoPath = new URL("../protos/social_media.proto", import.meta.url);
 	const postProtoFile = Deno.readTextFileSync(postProtoPath);
 
-	grpcServer.addService<SocialMediaService>(postProtoFile, {
+	grpcServerInstance.addService<SocialMediaService>(postProtoFile, {
 		CreatePost: async (request: Post): Promise<PostResponse> => {
 			try {
 				const command = new CreatePostCommandHandler();

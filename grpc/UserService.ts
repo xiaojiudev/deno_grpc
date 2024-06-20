@@ -1,17 +1,12 @@
 import { CreateUserCommandHandler } from "../commands/CreateUserCommandHandler.ts";
-import { getGrpcServer } from "./grpc.ts";
-import { CreateUserRequest, CreateUserResponse, UserService } from "../deps.ts";
+import { CreateUserRequest, CreateUserResponse, GrpcServer, UserService } from "../deps.ts";
 
-export const initUserService = async () => {
-	const grpcServer = await getGrpcServer();
-
+export const initUserService = (grpcServerInstance: GrpcServer) => {
 	const userProtoPath = new URL("../protos/user.proto", import.meta.url);
 	const userProtoFile = Deno.readTextFileSync(userProtoPath);
 
-	grpcServer.addService<UserService>(userProtoFile, {
-		CreateUser: async (
-			request: CreateUserRequest,
-		): Promise<CreateUserResponse> => {
+	grpcServerInstance.addService<UserService>(userProtoFile, {
+		CreateUser: async (request: CreateUserRequest): Promise<CreateUserResponse> => {
 			const command = new CreateUserCommandHandler();
 			return await command.handle(request);
 		},
