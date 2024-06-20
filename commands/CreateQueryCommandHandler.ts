@@ -4,7 +4,7 @@ import { SearchRequest } from "../deps.ts";
 import { IQuery, QueryCollection } from "../model/QuerySchema.ts";
 
 export class CreateQueryCommandHandler {
-	async handle(searchRequest: SearchRequest): Promise<void> {
+	public async handle(searchRequest: SearchRequest): Promise<void> {
 		const searchString = searchRequest?.search ?? "";
 		const searchBeauty = searchString.trim()
 			.toLocaleLowerCase()
@@ -18,7 +18,6 @@ export class CreateQueryCommandHandler {
 		
 		const payload: IQuery = {
 			queryString: searchBeauty,
-			// queryDate: new Date(new Date().getMilliseconds() - Math.random()*(1e+12))
 		};
 
 		const insertDoc = await QueryCollection.create({ ...payload });
