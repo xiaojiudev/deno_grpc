@@ -12,28 +12,33 @@ export type SearchHit = estypes.SearchHit<unknown>;
 let esClient: Client | null = null;
 
 export const connectEs = async (): Promise<Client> => {
-	if (esClient) {
+	try {
+		if (esClient) {
+			return esClient;
+		}
+
+		esClient = new Client({
+			node: APP_ELASTICSEARCH_URI,
+			auth: {
+				username: APP_ELASTICSEARCH_NAME,
+				password: APP_ELASTICSEARCH_PW,
+			},
+		});
+
+		const resp = await esClient.info();
+		const portRunning = esClient.connectionPool.connections[0].url.port;
+
+		if (resp.name && resp.cluster_name && resp.cluster_uuid) {
+			console.log(
+				"Connected to Elasticsearch successfully - port: " + portRunning,
+			);
+		}
+
 		return esClient;
+	} catch (error) {
+		console.log("Connected to Elasticsearch ERROR");
+		throw error;
 	}
-
-	esClient = new Client({
-		node: APP_ELASTICSEARCH_URI,
-		auth: {
-			username: APP_ELASTICSEARCH_NAME,
-			password: APP_ELASTICSEARCH_PW,
-		},
-	});
-
-	const resp = await esClient.info();
-	const portRunning = esClient.connectionPool.connections[0].url.port;
-
-	if (resp.name && resp.cluster_name && resp.cluster_uuid) {
-		console.log(
-			"Connected to Elasticsearch successfully - port: " + portRunning,
-		);
-	}
-
-	return esClient;
 };
 
 export const getEs = (): Client => {
