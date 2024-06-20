@@ -10,6 +10,7 @@ const FILE_EXEC_PATH: string = "./python/apply_collaborative_filtering.py";
 
 export const getRecommendationPosts = async (request: RequestAgrs) => {
     const { DATASET_PATH, CATEGORY_LIST, USER_ID, RECOMMEND_TOP_N } = request;
+
     const mappedAgrs = [
         FILE_EXEC_PATH,
         DATASET_PATH,
@@ -24,11 +25,11 @@ export const getRecommendationPosts = async (request: RequestAgrs) => {
 
     const command = new Deno.Command(PYTHON3_ENV_PATH, options);
     const { code, stdout, stderr } = await command.output();
+
     const result: string[] = JSON.parse(new TextDecoder().decode(stdout));
+    
     const errorMessage: string = new TextDecoder().decode(stderr);
     console.log(errorMessage);
 
     return result;
 }
-
-// console.log(await getRecommendationPosts({FILE_EXEC_PATH, DATASET_PATH, CATEGORY_LIST, USER_ID, RECOMMEND_TOP_N}));
