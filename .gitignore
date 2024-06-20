@@ -1,6 +1,8 @@
-sample_code.py
-sample_collaborative_filtering.py
-another_approach.py
+temp
+dataset/dataset.data
+dataset/dataset1.data
+dataset/test.data
+dataset/test1.data
 .idea
 ml-100k
 temp
