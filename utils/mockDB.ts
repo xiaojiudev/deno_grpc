@@ -195,9 +195,15 @@ const samplePosts: IPost[] = [
 ];
 
 export const getMockPostData = async () => {
-	await mockUserData();
-	await mockCategoryData();
-	await mockPostData();
+	try {
+		await mockUserData();
+		await mockCategoryData();
+		await mockPostData();
+	} catch (error) {
+		await clearAllMocks();
+		console.log("Mock data ERROR");
+		throw error;
+	}
 };
 
 
