@@ -295,6 +295,7 @@ const mockPostData = async () => {
 					user: postDocs[index].user.toString(),
 				},
 			});
+
 			if (res.result !== "created") {
 				ES_POST_CREATE = false;
 			}
