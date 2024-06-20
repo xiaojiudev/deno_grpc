@@ -319,15 +319,23 @@ const mockPostData = async () => {
 }
 
 const clearAllMocks = async () => {
-	const esClient = await getEs();
-	await PostCollection.deleteMany({});
-	await esClient.deleteByQuery({
-		index: POST_INDEX,
-		query: { match_all: {} },
-	});
-	await esClient.deleteByQuery({
-		index: QUERY_INDEX,
-		query: { match_all: {} },
-	});
+	const esClient = getEs();
+	await Promise.all([
+		UserCollection.deleteMany({}),
+		CategoryCollection.deleteMany({}),
+		PostCollection.deleteMany({}),
+	]);
+
+	await Promise.all([
+		esClient.deleteByQuery({
+			index: POST_INDEX,
+			query: { match_all: {} },
+		}),
+		esClient.deleteByQuery({
+			index: QUERY_INDEX,
+			query: { match_all: {} },
+		}),
+	]);
+	
 	console.log("Clear all mock data");
 };
