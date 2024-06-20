@@ -249,7 +249,7 @@ const mockCategoryData = async () => {
 }
 
 const mockPostData = async () => {
-	const esClient = await getEs();
+	const esClient = getEs();
 	const existingPostCount = await PostCollection.countDocuments({});
 
 	const existIndex = await esClient.indices.exists({ index: POST_INDEX });
