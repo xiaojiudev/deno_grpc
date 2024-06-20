@@ -1,14 +1,10 @@
 // deno-lint-ignore-file no-explicit-any
 import { Client, estypes } from "npm:@elastic/elasticsearch";
-import {
-	APP_ELASTICSEARCH_NAME,
-	APP_ELASTICSEARCH_PW,
-	APP_ELASTICSEARCH_URI,
-} from "../deps.ts";
+import { APP_ELASTICSEARCH_NAME, APP_ELASTICSEARCH_PW, APP_ELASTICSEARCH_URI } from "../deps.ts";
 
-type SearchRequest = estypes.SearchRequest;
-type SearchResponse = estypes.SearchResponse;
-type SearchHitResponse = estypes.SearchHit<unknown>[];
+export type SearchRequest = estypes.SearchRequest;
+export type SearchResponse = estypes.SearchResponse;
+export type SearchHitResponse = estypes.SearchHit<unknown>[];
 export type IndicesIndexSettings = estypes.IndicesIndexSettings;
 export type MappingTypeMapping = estypes.MappingTypeMapping;
 export type SearchHit = estypes.SearchHit<unknown>;
