@@ -30,7 +30,7 @@ export class RecommendPostsQueryHandler {
 
 		const categoryIds = recommendPostsRes.map((c) => new mongoose.Types.ObjectId(c));
 
-		const esClient = await getEs();
+		const esClient = getEs();
 		const aggregationData = await esClient.search({
 			index: 'posts',
 			size: 10,
