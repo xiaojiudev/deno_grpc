@@ -1,7 +1,7 @@
 ## Project Descriptions
 
 This project using Deno to write GRPC api service with CQRS model to support social networks with keyword suggestion or hot posts feature
-*Hono framework doesn't support Deno.listen until now*
+*Hono framework hasn't supported Deno.listen for listen a connection yet*
 
 1. Api CRUD posts (title: string, content: string, tags:[string],...)
 2. Research the algorithm to calculate the increase or decrease in trend of an posts or keyword (trend must gradually decrease over time)
@@ -68,11 +68,17 @@ WordBagSchema:
 
 My Strategies:
 
-    + Popularity based (post's trending score) 
-    + Classification based (post category & user favorite)
-
+    + Item-Item based collaborative filtering
 _Updating soon..._
 
 ## Tech Stack
 
-- Deno, gRPC, CQRS pattern, MongoDB, Elasticsearch, Typescript, etc
+- Deno, gRPC, CQRS pattern, Mongoose/MongoDB, Elasticsearch, Typescript, etc
+
+## Note
+**Deno hasn't supported grpc server error/status response yet! See issues here:** 
+- [Deno v1.44 only supports the client APIs](https://github.com/denoland/deno/issues/23714).
+- [Add support for gRPC](https://github.com/denoland/deno/issues/3326).
+
+**Hono framework hasn't supported Deno.listen for listen a connection yet! See issues here:**
+- [Does Hono support for gRPC server/client with Deno runtime?](https://github.com/orgs/honojs/discussions/2903).
