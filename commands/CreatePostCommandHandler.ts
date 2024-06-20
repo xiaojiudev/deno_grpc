@@ -1,11 +1,45 @@
-import { mongoose, Post, PostResponse, validObjectId } from "../deps.ts";
-import { IPost, PostCollection } from "../model/PostSchema.ts";
-import { indexEsDocument } from "../db/elasticsearch.ts";
-import { UserCollection } from "../model/UserSchema.ts";
 import { POST_INDEX } from "../constant/index.ts";
+import { UserCollection } from "../model/UserSchema.ts";
+import { indexEsDocument } from "../db/elasticsearch.ts";
+import { IPost, PostCollection } from "../model/PostSchema.ts";
+import { mongoose, Post, PostResponse, validObjectId } from "../deps.ts";
 
 export class CreatePostCommandHandler {
-	async handle(post: Post): Promise<PostResponse> {
+	public async handle(post: Post): Promise<PostResponse> {
+		const { userId, title, content } = post;
+
+		const checkValidPostRes = await this.checkValidPost(post);
+
+		if (!checkValidPostRes.success) {
+			return checkValidPostRes;
+		}
+
+		const payload: IPost = {
+			title,
+			content,
+			user: new mongoose.Types.ObjectId(userId),
+		};
+
+		const insetDoc = await PostCollection.create({ ...payload });
+
+		if (insetDoc) {
+			await indexEsDocument(POST_INDEX, { ...insetDoc.toClient() });
+
+			return {
+				success: !!insetDoc,
+				message: "Post created successfully",
+				postId: insetDoc.getId(),
+			};
+		}
+
+		return {
+			success: false,
+			message: "Something went wrong",
+			postId: undefined,
+		};
+	}
+
+	private async checkValidPost(post: Post) {
 		const { userId, title, content } = post;
 
 		if (!userId || !validObjectId(userId)) {
@@ -16,10 +50,7 @@ export class CreatePostCommandHandler {
 			};
 		}
 
-		if (
-			!title || !content || title?.trim().length === 0 ||
-			content?.trim().length === 0
-		) {
+		if (!title || !content || title?.trim().length === 0 || content?.trim().length === 0) {
 			return {
 				success: false,
 				message: "Title and content are not empty",
@@ -37,26 +68,9 @@ export class CreatePostCommandHandler {
 			};
 		}
 
-		const payload: IPost = {
-			title,
-			content,
-			user: new mongoose.Types.ObjectId(existingUser.getId()),
-		};
-
-		const insetDoc = await PostCollection.create({ ...payload });
-
-		if (insetDoc) {
-			await indexEsDocument(POST_INDEX, { ...insetDoc.toClient() });
-			return {
-				success: !!insetDoc,
-				message: "Post created successfully",
-				postId: insetDoc.getId(),
-			};
-		}
-
 		return {
-			success: false,
-			message: "Something went wrong",
+			success: true,
+			message: "Post is valid",
 			postId: undefined,
 		};
 	}
