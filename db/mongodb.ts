@@ -1,9 +1,9 @@
 import { APP_DATABASE_NAME, APP_DATABASE_URI, mongoose } from "../deps.ts";
 
 export const connectDB = async (): Promise<void> => {
-	const options = {
-		dbName: APP_DATABASE_NAME,
-	};
+const configOptions = {
+	dbName: APP_DATABASE_NAME,
+} as mongoose.ConnectOptions;
 
 	await mongoose.connect(APP_DATABASE_URI, options as mongoose.ConnectOptions)
 		.then((info) => {
