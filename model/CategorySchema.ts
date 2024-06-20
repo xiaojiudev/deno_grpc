@@ -45,7 +45,7 @@ CategorySchema.set("toJSON", {
 CategorySchema.set("toObject", { virtuals: true });
 
 CategorySchema.post("save", async function (doc) {
-    console.log('POST SAVE HOOK');
+    console.log('POST SAVE CATEGORY HOOK');
 
     if (doc.users && doc.users.length > 0) {
         await UserCollection.updateMany(
@@ -56,7 +56,7 @@ CategorySchema.post("save", async function (doc) {
 });
 
 CategorySchema.post("insertMany", function (docs) {
-    console.log('POST SAVE MANY HOOK');
+    console.log('POST SAVE MANY CATEGORIES HOOK');
     docs.forEach(async (doc) => {
         if (doc.users && doc.users.length > 0) {
             await UserCollection.updateMany(
