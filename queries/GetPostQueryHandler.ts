@@ -6,7 +6,12 @@ import { POST_INDEX } from "../constant/index.ts";
 export class GetPostQueryHandler {
 	async handle(query: PostRequest): Promise<Post> {
 		if (!query.id || !validObjectId(query.id)) {
-			// throw Error("Invalid ID");
+			/*
+			Deno hasn't supported grpc server error/status response yet!
+			https://github.com/denoland/deno/issues/23714
+			https://github.com/denoland/deno/issues/3326 
+			*/
+			// throw new Error("Invalid ID");
 		}
 
 		const postQuery = await queryEs({
