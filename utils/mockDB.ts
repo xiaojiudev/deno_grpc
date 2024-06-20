@@ -217,7 +217,7 @@ const mockUserData = async () => {
 	} else {
 		const users = await UserCollection.find({});
 		users.forEach((user) => userIdArr.push(user._id!));
-		console.log("User's data have already mocked");
+		console.log("User's data has already mocked");
 	}
 }
 
@@ -243,7 +243,7 @@ const mockCategoryData = async () => {
 	} else {
 		const categories = await CategoryCollection.find({});
 		categories.forEach((cate) => categoryArr.push(cate.toClient()));
-		console.log("Cate's data have already mocked");
+		console.log("Cate's data has already mocked");
 	}
 
 }
@@ -309,10 +309,10 @@ const mockPostData = async () => {
 			console.log(`ES_POST_CREATE: ${ES_POST_CREATE}`);
 			return { success: false };
 		}
-		console.log("Mock post's data to MongoDB & Elasticsearch successfully!");
+		console.log("Mock post's data successfully!");
 		return { success: MONGO_POST_CREATE && ES_POST_CREATE };
 	} else {
-		console.log("Post's data have already been mocked!");
+		console.log("Post's data has already mocked!");
 		return { success: true };
 	}
 }
