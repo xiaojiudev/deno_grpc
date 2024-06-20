@@ -1,10 +1,12 @@
 import { UserCollection } from "../model/UserSchema.ts";
 import { CSVWriter } from "jsr:@vslinko/csv@1.0.2";
 
+const USER_FAVORITE_DATASET_PATH = "./dataset/user_fav.data";
+
 export const saveUserFavLog = async () => {
     const userDocs = await UserCollection.find({});
 
-    const f = await Deno.open("./dataset/user_fav.data", {
+    const f = await Deno.open(USER_FAVORITE_DATASET_PATH, {
         write: true,
         create: true,
         truncate: true,
@@ -17,6 +19,7 @@ export const saveUserFavLog = async () => {
 
     for (const user of userDocs) {
         const { id, favCategories } = user.toClient();
+        
         if (id && favCategories) {
             for (const category of favCategories) {
                 await writer.writeCell(id.toString());
