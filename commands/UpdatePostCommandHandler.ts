@@ -3,7 +3,58 @@ import { PostCollection } from "../model/PostSchema.ts";
 import { updateEsDocument } from "../db/elasticsearch.ts";
 
 export class UpdatePostCommandHandler {
-	async handle(post: Post): Promise<PostResponse> {
+	public async handle(post: Post): Promise<PostResponse> {
+		const checkValidPostRes = this.checkValidPost(post);
+
+		if (!checkValidPostRes.success) {
+			return checkValidPostRes;
+		}
+
+		const postId = new mongoose.Types.ObjectId(post.id);
+		const userId = new mongoose.Types.ObjectId(post.userId);
+
+		const filter = { _id: postId, user: userId };
+		const postRetrieve = await PostCollection.findOne(filter);
+
+		if (!postRetrieve) {
+			return {
+				success: false,
+				message: "Post not found",
+			};
+		}
+
+		const payloadUpdate = {
+			title: post.title ?? postRetrieve?.title,
+			content: post.content ?? postRetrieve?.content,
+			updatedAt: new Date(),
+		};
+
+		const updatedPost = await PostCollection.findOneAndUpdate(
+			filter,
+			payloadUpdate,
+			{ includeResultMetadata: true },
+		);
+
+		if (!updatedPost.ok) {
+			return {
+				success: false,
+				message: "Post not found",
+			};
+		}
+
+		const mappedPostData = updatedPost.value?.toClient();
+
+		await updateEsDocument("posts", postId.toString(), {
+			...mappedPostData,
+		});
+
+		return {
+			success: true,
+			message: "Update post successfully",
+		};
+	}
+
+	private checkValidPost(post: Post): PostResponse {
 		if (!post.userId || !validObjectId(post.userId)) {
 			return {
 				success: false,
@@ -31,47 +82,10 @@ export class UpdatePostCommandHandler {
 			};
 		}
 
-		const postId = new mongoose.Types.ObjectId(post.id);
-		const userId = new mongoose.Types.ObjectId(post.userId);
-
-		const filter = { _id: postId, user: userId };
-		const postRetrieve = await PostCollection.findOne(filter);
-
-		if (!postRetrieve) {
-			return {
-				success: false,
-				message: "Post not found",
-			};
-		}
-
-		const payloadUpdate = {
-			title: post.title ?? postRetrieve?.title,
-			content: post.content ?? postRetrieve?.content,
-			updatedAt: new Date(),
-		};
-
-		const docRes = await PostCollection.findOneAndUpdate(
-			filter,
-			payloadUpdate,
-			{ includeResultMetadata: true },
-		);
-
-		if (!docRes.ok) {
-			return {
-				success: false,
-				message: "Post not found",
-			};
-		}
-
-		const postUpdatedData = docRes.value?.toClient();
-
-		await updateEsDocument("posts", postId.toString(), {
-			...postUpdatedData,
-		});
 
 		return {
 			success: true,
-			message: "Update post successfully",
-		};
+			message: "Post is valid"
+		}
 	}
 }
