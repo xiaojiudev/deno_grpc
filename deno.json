@@ -24,7 +24,7 @@
 	},
 	"lint": {
 		"include": ["./"],
-		"exclude": ["./test/", "./test/*.ts"],
+		"exclude": ["./idea", "./vscode", "./dataset", "./ml-100k", "./python", "./temp"],
 		"rules": {
 			"tags": ["recommended"],
 			"include": ["ban-untagged-todo"],
@@ -39,6 +39,6 @@
 		"singleQuote": false,
 		"proseWrap": "preserve",
 		"include": ["./"],
-		"exclude": ["./test/", "./test/*.ts"]
+		"exclude": ["./idea", "./vscode", "./dataset", "./ml-100k", "./python", "./temp"]
 	}
 }
