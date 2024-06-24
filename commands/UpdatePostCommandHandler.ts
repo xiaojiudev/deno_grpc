@@ -32,7 +32,7 @@ export class UpdatePostCommandHandler {
 		const updatedPost = await PostCollection.findOneAndUpdate(
 			filter,
 			payloadUpdate,
-			{ includeResultMetadata: true },
+			{ new: true, includeResultMetadata: true },
 		);
 
 		if (!updatedPost.ok) {
