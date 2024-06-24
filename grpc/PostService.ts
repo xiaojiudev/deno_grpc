@@ -54,7 +54,7 @@ export const initPostService = (grpcServerInstance: GrpcServer) => {
 				throw error;
 			}
 		},
-		GetPost: async (request: PostRequest): Promise<Post> => {
+		GetPost: async (request: PostRequest): Promise<PostResponse> => {
 			try {
 				const queries = new GetPostQueryHandler();
 				return await queries.handle(request);
