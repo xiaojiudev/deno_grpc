@@ -40,8 +40,8 @@ describe("Unit Test - User service", () => {
 		await closeDBConnection();
 	});
 
-	describe("Unit test for save user operation", () => {
-		it("givenEmptyRequest_whenSaveUser_thenReturnFailedObject", async () => {
+	describe("Unit test for create user operation", () => {
+		it("givenEmptyRequest_whenCreateUser_thenReturnFailedObject", async () => {
 			const request = {} as CreateUserRequest;
 			const actualRes = await command.handle(request);
 
@@ -52,7 +52,7 @@ describe("Unit Test - User service", () => {
 			assertObjectMatch(actualRes, expected);
 		});
 
-		it("givenInvalidUsername_whenSaveUser_thenReturnFailedObject", async () => {
+		it("givenInvalidUsername_whenCreateUser_thenReturnFailedObject", async () => {
 			const request: CreateUserRequest = {
 				username: "1",
 				password: "password",
@@ -66,7 +66,7 @@ describe("Unit Test - User service", () => {
 			assertObjectMatch(actualRes, expected);
 		});
 
-		it("givenInvalidPassword_whenSaveUser_thenReturnFailedObject", async () => {
+		it("givenInvalidPassword_whenCreateUser_thenReturnFailedObject", async () => {
 			const request: CreateUserRequest = {
 				username: "username",
 				password: "123",
@@ -81,7 +81,7 @@ describe("Unit Test - User service", () => {
 			assertObjectMatch(actualRes, expected);
 		});
 
-		it("givenExistingUsername_whenSaveUser_thenReturnFailedObject", async () => {
+		it("givenExistingUsername_whenCreateUser_thenReturnFailedObject", async () => {
 			const request: CreateUserRequest = {
 				username: "username",
 				password: "password123",
@@ -105,7 +105,7 @@ describe("Unit Test - User service", () => {
 			}
 		});
 
-		it("givenUserRequest_whenSaveUser_thenSavedUser", async () => {
+		it("givenUserRequest_whenCreateUser_thenCreatedUser", async () => {
 			const request: CreateUserRequest = {
 				username: "username",
 				password: "password123",
