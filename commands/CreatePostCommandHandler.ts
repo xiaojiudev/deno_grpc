@@ -28,7 +28,12 @@ export class CreatePostCommandHandler {
 			return {
 				success: !!insetDoc,
 				message: "Post created successfully",
-				postId: insetDoc.getId(),
+				post: {
+					id: insetDoc.getId(),
+					userId: insetDoc.get('user').toString(),
+					title: insetDoc.get('title'),
+					content: insetDoc.get('content'),
+				},
 			};
 		}
 
