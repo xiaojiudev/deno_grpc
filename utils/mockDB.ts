@@ -1,5 +1,5 @@
 import { bcrypt, mongoose, ObjectIdType } from "../deps.ts";
-import { getEs } from "../db/elasticsearch.ts";
+import { createEsIndex, getEs } from "../db/elasticsearch.ts";
 import { IUser, UserCollection } from "../model/UserSchema.ts";
 import { IPost, PostCollection } from "../model/PostSchema.ts";
 import { POST_INDEX, QUERY_INDEX } from "../constant/index.ts";
@@ -196,6 +196,7 @@ const samplePosts: IPost[] = [
 
 export const getMockPostData = async () => {
 	try {
+		await clearAllMocks();
 		await mockUserData();
 		await mockCategoryData();
 		await mockPostData();
@@ -205,7 +206,6 @@ export const getMockPostData = async () => {
 		throw error;
 	}
 };
-
 
 const mockUserData = async () => {
 	const existingUserCount = await UserCollection.countDocuments({});
@@ -251,14 +251,6 @@ const mockCategoryData = async () => {
 const mockPostData = async () => {
 	const esClient = getEs();
 	const existingPostCount = await PostCollection.countDocuments({});
-
-	const existIndex = await esClient.indices.exists({ index: POST_INDEX });
-	if (existIndex) {
-		const postEsCount = await esClient.count({ index: POST_INDEX });
-		if (existingPostCount !== postEsCount.count) {
-			await clearAllMocks();
-		}
-	}
 
 	if (existingPostCount === 0) {
 		const postData: IPost[] = samplePosts.map((post) => {
