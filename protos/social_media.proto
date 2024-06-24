@@ -6,7 +6,7 @@ service SocialMediaService {
     rpc CreatePost(Post) returns (PostResponse) {}
     rpc UpdatePost(Post) returns (PostResponse) {}
     rpc DeletePost(PostRequest) returns (PostResponse) {}
-    rpc GetPost(PostRequest) returns (Post) {}
+    rpc GetPost(PostRequest) returns (PostResponse) {}
     rpc GetPosts(Empty) returns (PostList) {}
     rpc SearchPost(SearchRequest) returns (PostList) {}
     rpc GetTrendingPosts(Empty) returns (PostList) {}
@@ -28,7 +28,7 @@ message PostRequest {
 message PostResponse {
     required bool success = 1;
     required string message = 2;
-    string postId = 3;
+    Post post = 3;
 }
 
 message Empty {}
