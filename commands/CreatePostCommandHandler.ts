@@ -35,7 +35,6 @@ export class CreatePostCommandHandler {
 		return {
 			success: false,
 			message: "Something went wrong",
-			postId: undefined,
 		};
 	}
 
@@ -46,7 +45,6 @@ export class CreatePostCommandHandler {
 			return {
 				success: false,
 				message: "User ID not valid",
-				postId: undefined,
 			};
 		}
 
@@ -54,7 +52,6 @@ export class CreatePostCommandHandler {
 			return {
 				success: false,
 				message: "Title and content are not empty",
-				postId: undefined,
 			};
 		}
 
@@ -64,14 +61,12 @@ export class CreatePostCommandHandler {
 			return {
 				success: false,
 				message: "User not found",
-				postId: undefined,
 			};
 		}
 
 		return {
 			success: true,
-			message: "Post is valid",
-			postId: undefined,
+			message: "Post is valid"
 		};
 	}
 }
