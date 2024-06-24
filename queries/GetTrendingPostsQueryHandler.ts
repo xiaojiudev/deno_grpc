@@ -13,17 +13,6 @@ export class GetTrendingPostsQueryHandler {
 				function_score: {
 					score_mode: "multiply",
 					boost_mode: "multiply",
-					functions: [
-						{
-							gauss: {
-								"createdAt": {
-									origin: "now/d",
-									scale: "7d",
-									decay: 0.5,
-								},
-							},
-						},
-					],
 					query: {
 						bool: {
 							should: [
@@ -41,6 +30,17 @@ export class GetTrendingPostsQueryHandler {
 							],
 						},
 					},
+					functions: [
+						{
+							gauss: {
+								"createdAt": {
+									origin: "now/d",
+									scale: "7d",
+									decay: 0.5,
+								},
+							},
+						},
+					],
 				},
 			},
 			sort: [
