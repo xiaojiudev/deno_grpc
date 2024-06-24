@@ -49,7 +49,17 @@ export const getEs = (): Client => {
 	return esClient;
 };
 
-const createEsIndex = async (
+export const closeEsConnection = async (): Promise<void> => {
+	const client = getEs();
+	if (client) {		
+		
+		// clearTimeout();
+		await client.close();
+		console.log("Closed Elasticsearch connection successfully");
+	}
+}
+
+export const createEsIndex = async (
 	indexName: string,
 	settings?: IndicesIndexSettings,
 	mappings?: MappingTypeMapping,
