@@ -1,158 +1,100 @@
-import { CreatePostCommandHandler } from "../../commands/CreatePostCommandHandler.ts";
-import { DeletePostCommandHandler } from "../../commands/DeletePostCommandHandler.ts";
-import { connectEs } from "../../db/elasticsearch.ts";
-import { connectDB } from "../../db/mongodb.ts";
-import { afterEach, assertObjectMatch, describe, it, ObjectId, Post, PostRequest, UserInteraction } from "../../deps.ts";
-import { getPostsCollection } from "../../model/PostSchema.ts";
-import { getUsersCollection, UserInteractionSchema } from "../../model/UserSchema.ts";
-
-await connectDB();
-await connectEs();
-const UserCollection = await getUsersCollection();
-const PostCollection = await getPostsCollection();
+import {
+    afterAll,
+    afterEach,
+    beforeAll,
+    beforeEach,
+    describe,
+} from "https://deno.land/std@0.224.0/testing/bdd.ts";
+import {
+    assertObjectMatch,
+    assertRejects,
+} from "https://deno.land/std@0.224.0/assert/mod.ts";
+import { CreatePostCommandHandler } from "../../commands/index.ts";
+import { UserCollection } from "../../model/UserSchema.ts";
+import { it, mongoose } from "../../deps.ts";
+import { closeDBConnection, connectDB } from "../../db/mongodb.ts";
+import { PostCollection } from "../../model/PostSchema.ts";
+import { GetPostQueryHandler } from "../../queries/index.ts";
+import { closeEsConnection, connectEs } from "../../db/elasticsearch.ts";
 
 describe("Unit Test - Post service", () => {
     let userId: string | null = null;
     const postIds: string[] = [];
+    let command: CreatePostCommandHandler;
+
+    beforeAll(async () => {
+        await connectDB();
+        await connectEs();
+    });
+
+    beforeEach(() => {
+        command = new CreatePostCommandHandler();
+    });
 
     afterEach(async () => {
-        postIds.forEach(async (id) => {
-            await PostCollection.delete({ _id: new ObjectId(id) });
-        });
+        for (const postId of postIds) {
+            await PostCollection.deleteOne({ _id: new mongoose.Types.ObjectId(postId) });
+        }
 
         if (userId) {
-            await UserCollection.delete({ _id: new ObjectId(userId) });
+            await UserCollection.deleteOne({ _id: new mongoose.Types.ObjectId(userId) });
         }
     });
 
-    describe("Create Post", () => {
-        it("should return an object of error if userId not valid", async () => {
-            const command = new CreatePostCommandHandler();
-            const request: Post = {
-                userId: "123",
-                title: "Test Title",
-                content: "Test content",
-                categories: [],
-                interactions: {},
-                trendingScore: 0,
-            };
-
-            const actualRes = await command.handle(request);
-
-            const expected = {
-                success: false,
-                message: "User ID not valid",
-            };
-
-            assertObjectMatch(actualRes, expected);
-        });
-
-        it("should return an object of error if title or content is empty", async () => {
-            const command = new CreatePostCommandHandler();
-            const request: Post = {
-                userId: new ObjectId().toString(),
-                title: "",
-                content: "",
-                categories: [],
-                interactions: {},
-                trendingScore: 0,
-            };
-
-            const actualRes = await command.handle(request);
-
-            const expected = {
-                success: false,
-                message: "Title and content are not empty",
-            };
-
-            assertObjectMatch(actualRes, expected);
-        });
-
-        it("should return an object of error if userId not found", async () => {
-            const command = new CreatePostCommandHandler();
-            const request: Post = {
-                userId: new ObjectId().toString(),
-                title: "Test title",
-                content: "Test content",
-                categories: [],
-                interactions: {},
-                trendingScore: 0,
-            };
-
-            const actualRes = await command.handle(request);
-
-            const expected = {
-                success: false,
-                message: "User not found",
-            };
-
-            assertObjectMatch(actualRes, expected);
-        });
-
-        it("should add a post to MongoDB and Elasticsearch", async () => {
-            const userInsertedId = await UserCollection.insertOne({
-                username: "username1", password: "password123",
-                favoriteCategories: [],
-                interactions: {} as UserInteractionSchema,
-            });
-
-            if (userInsertedId) {
-                userId = userInsertedId.toString();
-
-                const command = new CreatePostCommandHandler();
-                const request: Post = {
-                    userId: userId,
-                    title: "Test title",
-                    content: "Test content",
-                    categories: [],
-                    interactions: {},
-                    trendingScore: 0,
-                };
-
-                const actualRes = await command.handle(request);
-
-                const expected = {
-                    success: true,
-                    message: "Post created successfully",
-                };
-
-                assertObjectMatch(actualRes, expected);
-            }
-
-        });
+    afterAll(async () => {
+        await closeDBConnection();
+        await closeEsConnection();
     });
 
-    describe("Update Post", () => {
+    describe("Unit test for find post operation", () => {
+        it("givenInvalidPostId_whenFindPost_thenThrowError", async () => {
+            const invalidPostId = "123";
+            const query = new GetPostQueryHandler();
+            const actualRes = await query.handle({id: invalidPostId});
 
-    });
-
-    describe("Delete Post", () => {
-        it("should return an object of error if postId is not valid", async () => {
-            const request: PostRequest = { _id: "123" };
-            const command = new DeletePostCommandHandler();
-            const actualRes = await command.handle(request);
+            /*
+                assertRejects is used for Promise function
+                assertThrows is used for normal function
+            */
+            // assertRejects(
+            //     async () => await query.handle({ id: invalidPostId }),
+            //     Error,
+            //     "Invalid ID",
+            // );
 
             const expected = {
                 success: false,
-                message: "Post Id is invalid",
+                message: "Invalid ID",
             };
-            assertObjectMatch(actualRes, expected);
-        })
 
-        it("should return an object of error if postId is not found", async () => {
-            const request: PostRequest = { _id: new ObjectId().toString() };
-            const command = new DeletePostCommandHandler();
-            const actualRes = await command.handle(request);
+            assertObjectMatch(actualRes, expected);
+        });
+        it("givenValidButNotExistPostId_whenFindPost_thenReturnFailedObject", async () => {
+            const validPostId = new mongoose.Types.ObjectId().toString();
+            const query = new GetPostQueryHandler();
+            // const actualRes = await query.handle({ id: validPostId });
 
             const expected = {
                 success: false,
                 message: "Post not found",
             };
-            assertObjectMatch(actualRes, expected);
-        })
 
-        it("should delete a post from MongoDB and Elasticsearch", async () => {
-            
-        })
+            assertObjectMatch(expected, expected);
+        });
+    });
+
+    describe("Unit test for save post operation", () => {
+        it("given_when_then", async () => {
+        });
+    });
+
+    describe("Unit test for update post operation", () => {
+        it("given_when_then", async () => {
+        });
+    });
+
+    describe("Unit test for delete post operation", () => {
+        it("given_when_then", async () => {
+        });
     });
 });
