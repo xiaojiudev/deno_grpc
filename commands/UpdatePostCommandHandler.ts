@@ -1,6 +1,7 @@
 import { mongoose, Post, PostResponse, validObjectId } from "../deps.ts";
 import { PostCollection } from "../model/PostSchema.ts";
 import { updateEsDocument } from "../db/elasticsearch.ts";
+import { update } from "https://deno.land/x/mongo@v0.32.0/src/collection/commands/update.ts";
 
 export class UpdatePostCommandHandler {
 	public async handle(post: Post): Promise<PostResponse> {
@@ -14,6 +15,7 @@ export class UpdatePostCommandHandler {
 		const userId = new mongoose.Types.ObjectId(post.userId);
 
 		const filter = { _id: postId, user: userId };
+
 		const postRetrieve = await PostCollection.findOne(filter);
 
 		if (!postRetrieve) {
@@ -42,7 +44,10 @@ export class UpdatePostCommandHandler {
 			};
 		}
 
-		const mappedPostData = updatedPost.value?.toClient();
+		console.log(updatedPost);
+
+		const mappedPostData = updatedPost.value?.toClient()!;
+
 
 		await updateEsDocument("posts", postId.toString(), {
 			...mappedPostData,
@@ -51,6 +56,12 @@ export class UpdatePostCommandHandler {
 		return {
 			success: true,
 			message: "Update post successfully",
+			post: {
+				id: mappedPostData.id!.toString(),
+				userId: mappedPostData.user.toString(),
+				title: mappedPostData.title,
+				content: mappedPostData.content,
+			},
 		};
 	}
 
