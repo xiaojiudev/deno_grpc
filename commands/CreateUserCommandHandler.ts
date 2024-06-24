@@ -31,7 +31,7 @@ export class CreateUserCommandHandler {
 		if (savedUser) {
 			return {
 				success: true,
-				message: `User created successfully ${mappedUser.id}`,
+				message: "User created successfully",
 			};
 		}
 
