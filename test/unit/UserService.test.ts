@@ -16,7 +16,7 @@ import { CreateUserCommandHandler } from "../../commands/index.ts";
 import { UserCollection } from "../../model/UserSchema.ts";
 import { mongoose } from "../../deps.ts";
 import { CreateUserRequest } from "../../deps.ts";
-import { connectDB } from "../../db/mongodb.ts";
+import { closeDBConnection, connectDB } from "../../db/mongodb.ts";
 
 describe("Unit Test - User service", () => {
 	const userIds: string[] = [];
@@ -37,7 +37,7 @@ describe("Unit Test - User service", () => {
 	});
 
 	afterAll(async () => {
-		await mongoose.connection.close();
+		await closeDBConnection();
 	});
 
 	describe("Unit test for save user operation", () => {
