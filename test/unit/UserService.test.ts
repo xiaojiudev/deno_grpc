@@ -1,8 +1,8 @@
 import {
-	assertEquals,
+	assertEquals, //TODO: remove (not used)
 	assertObjectMatch,
-	assertStrictEquals,
-	assertThrows,
+	assertStrictEquals, //TODO: remove (not used)
+	assertThrows, //TODO: remove (not used)
 } from "https://deno.land/std@0.224.0/assert/mod.ts";
 import {
 	afterAll,
@@ -87,7 +87,7 @@ describe("Unit Test - User service", () => {
 				password: "password123",
 			};
 
-			const savedUser1 = await command.handle(request);
+			const savedUser1 = await command.handle(request); //TODO: remove (not used)
 			const savedUser2 = await command.handle(request);
 
 			const expected = {

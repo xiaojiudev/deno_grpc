@@ -14,7 +14,7 @@ export class GetPostsQueryHandler {
 
 		if (postData) {
 			// deno-lint-ignore no-explicit-any
-			const mappedData = postData.map((postEs: any) => {
+			const mappedData = postData.map((postEs: any) => { //TODO: use unknown type
 				const post = postEs._source as IPost;
 
 				return {

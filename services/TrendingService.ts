@@ -19,7 +19,7 @@ const sigmoid = (x: number): number => {
 	return 1 / (1 + Math.exp(-x / 999));
 };
 
-const calculateTrendingScrore = (post: IPost): number => {
+const calculateTrendingScrore = (post: IPost): number => { //TODO: calculateTrendingScrore -> calculateTrendingScore
 	const currentTime = new Date().getTime();
 	const postedTime = post.createdAt?.getTime() || 0;
 	const timeDifference = (currentTime - postedTime) / (1000 * 60 * 60 * 24);
