@@ -10,10 +10,10 @@ import {
     assertRejects,
 } from "https://deno.land/std@0.224.0/assert/mod.ts";
 import { CreatePostCommandHandler } from "../../commands/index.ts";
-import { UserCollection } from "../../model/UserSchema.ts";
+import { UserCollection } from "../../models/UserSchema.ts";
 import { it, mongoose } from "../../deps.ts";
 import { closeDBConnection, connectDB } from "../../db/mongodb.ts";
-import { PostCollection } from "../../model/PostSchema.ts";
+import { PostCollection } from "../../models/PostSchema.ts";
 import { GetPostQueryHandler } from "../../queries/index.ts";
 import { closeEsConnection, connectEs } from "../../db/elasticsearch.ts";
 

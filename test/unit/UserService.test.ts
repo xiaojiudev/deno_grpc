@@ -13,7 +13,7 @@ import {
 	it,
 } from "https://deno.land/std@0.224.0/testing/bdd.ts";
 import { CreateUserCommandHandler } from "../../commands/index.ts";
-import { UserCollection } from "../../model/UserSchema.ts";
+import { UserCollection } from "../../models/UserSchema.ts";
 import { mongoose } from "../../deps.ts";
 import { CreateUserRequest } from "../../deps.ts";
 import { closeDBConnection, connectDB } from "../../db/mongodb.ts";
