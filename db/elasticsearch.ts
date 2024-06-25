@@ -7,7 +7,7 @@ export type SearchResponse = estypes.SearchResponse;
 export type SearchHitResponse = estypes.SearchHit<unknown>[];
 export type IndicesIndexSettings = estypes.IndicesIndexSettings;
 export type MappingTypeMapping = estypes.MappingTypeMapping;
-export type SearchHit = estypes.SearchHit<unknown>;
+export type SearchHit = estypes.SearchHit<unknown>; //TODO: remove (not used)
 
 let esClient: Client | null = null;
 
@@ -84,7 +84,7 @@ export const createEsIndex = async (
 
 export const indexEsDocument = async (
 	index: string,
-	document: any,
+	document: any, // TODO: use unknown type
 	settings?: IndicesIndexSettings,
 	mappings?: MappingTypeMapping,
 ): Promise<void> => {
@@ -135,7 +135,7 @@ export const queryEs = async (
 	return undefined;
 };
 
-export const deleteIndex = async (indexName: string): Promise<boolean> => {
+export const deleteIndex = async (indexName: string): Promise<boolean> => { //TODO: not used
 	const esClient = await connectEs();
 	if (esClient) {
 		const result = await esClient.indices.delete({ index: indexName });
@@ -149,7 +149,7 @@ export const deleteIndex = async (indexName: string): Promise<boolean> => {
 	return false;
 };
 
-export const deleteEsDocuments = async (
+export const deleteEsDocuments = async ( //TODO: not used
 	indexName: string,
 ): Promise<boolean> => {
 	const esClient = await connectEs();
@@ -186,7 +186,7 @@ export const deleteEsDocumentById = async (
 export const updateEsDocument = async (
 	indexName: string,
 	id: string,
-	payload: any,
+	payload: any, // TODO: use unknown type
 ): Promise<boolean> => {
 	const esClient = await connectEs();
 
