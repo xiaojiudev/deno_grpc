@@ -27,7 +27,7 @@ export class CreateUserCommandHandler {
 		};
 
 		const savedUser = await UserCollection.create({ ...payload });
-		const mappedUser = savedUser.toClient();
+		
 		if (savedUser) {
 			return {
 				success: true,

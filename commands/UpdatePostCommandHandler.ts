@@ -1,7 +1,6 @@
 import { mongoose, Post, PostResponse, validObjectId } from "../deps.ts";
 import { PostCollection } from "../models/PostSchema.ts";
 import { updateEsDocument } from "../db/elasticsearch.ts";
-import { update } from "https://deno.land/x/mongo@v0.32.0/src/collection/commands/update.ts";
 
 export class UpdatePostCommandHandler {
 	public async handle(post: Post): Promise<PostResponse> {

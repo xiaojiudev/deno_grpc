@@ -7,7 +7,7 @@ import {
 } from "https://deno.land/std@0.224.0/testing/bdd.ts";
 import {
     assertObjectMatch,
-    assertRejects,
+    assertRejects, //TODO: remove (not used)
 } from "https://deno.land/std@0.224.0/assert/mod.ts";
 import { CreatePostCommandHandler } from "../../commands/index.ts";
 import { UserCollection } from "../../models/UserSchema.ts";
@@ -20,7 +20,7 @@ import { closeEsConnection, connectEs } from "../../db/elasticsearch.ts";
 describe("Unit Test - Post service", () => {
     let userId: string | null = null;
     const postIds: string[] = [];
-    let command: CreatePostCommandHandler;
+    let command: CreatePostCommandHandler; //TODO: remove (not used)
 
     beforeAll(async () => {
         await connectDB();
@@ -70,9 +70,9 @@ describe("Unit Test - Post service", () => {
             assertObjectMatch(actualRes, expected);
         });
         it("givenValidButNotExistPostId_whenFindPost_thenReturnFailedObject", async () => {
-            const validPostId = new mongoose.Types.ObjectId().toString();
-            const query = new GetPostQueryHandler();
-            // const actualRes = await query.handle({ id: validPostId });
+            const validPostId = new mongoose.Types.ObjectId().toString(); //TODO: remove (not used)
+            const query = new GetPostQueryHandler(); //TODO: remove (not used)
+            // const actualRes = await query.handle({ id: validPostId }); //TODO: remove comment
 
             const expected = {
                 success: false,
@@ -88,12 +88,12 @@ describe("Unit Test - Post service", () => {
         });
     });
 
-    describe("Unit test for update post operation", () => {
+    describe("Unit test for update post operation", () => { // TODO: describe with no test
         it("given_when_then", async () => {
         });
     });
 
-    describe("Unit test for delete post operation", () => {
+    describe("Unit test for delete post operation", () => { // TODO: describe with no test
         it("given_when_then", async () => {
         });
     });

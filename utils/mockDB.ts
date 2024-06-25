@@ -1,5 +1,5 @@
 import { bcrypt, mongoose, ObjectIdType } from "../deps.ts";
-import { createEsIndex, getEs } from "../db/elasticsearch.ts";
+import {  getEs } from "../db/elasticsearch.ts";
 import { IUser, UserCollection } from "../models/UserSchema.ts";
 import { IPost, PostCollection } from "../models/PostSchema.ts";
 import { POST_INDEX, QUERY_INDEX } from "../constant/index.ts";
@@ -9,6 +9,8 @@ const userIdArr: ObjectIdType[] = [];
 const categoryArr: ICategory[] = [];
 const salt = await bcrypt.genSalt(8);
 const pwHash = await bcrypt.hash("admin123", salt);
+
+//TODO: the initial elasticsearch init does not have an index, therefore it cannot insert
 
 const users: IUser[] = [
 	{

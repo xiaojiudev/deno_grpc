@@ -1,6 +1,5 @@
 import { Empty, Post, PostList } from "../deps.ts";
 import { queryEs } from "../db/elasticsearch.ts";
-// import { PostES } from "./GetPostQueryHandler.ts";
 import { POST_INDEX } from "../constant/index.ts";
 import { IPost } from "../models/PostSchema.ts";
 

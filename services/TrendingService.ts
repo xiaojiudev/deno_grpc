@@ -19,7 +19,7 @@ const sigmoid = (x: number): number => {
 	return 1 / (1 + Math.exp(-x / 999));
 };
 
-const calculateTrendingScrore = (post: IPost): number => {
+const calculateTrendingScore = (post: IPost): number => {
 	const currentTime = new Date().getTime();
 	const postedTime = post.createdAt?.getTime() || 0;
 	const timeDifference = (currentTime - postedTime) / (1000 * 60 * 60 * 24);
@@ -55,7 +55,7 @@ export const updateTrendingScore = async (): Promise<void> => {
 	const posts = await PostCollection.find({});
 
 	posts.forEach(async (post, index) => {
-		const trendingScore = calculateTrendingScrore(post);
+		const trendingScore = calculateTrendingScore(post);
 		console.log(`Post ${index + 1} - ${trendingScore}`);
 
 		const docRes = await PostCollection.findOneAndUpdate(

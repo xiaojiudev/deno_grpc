@@ -6,7 +6,6 @@ import { validObjectId } from "../deps.ts";
 import { PostList, UserRequest } from "../deps.ts";
 import { CategoryCollection } from "../models/CategorySchema.ts";
 import { IPost } from "../models/PostSchema.ts";
-import { PostCollection } from "../models/PostSchema.ts";
 import { UserCollection } from "../models/UserSchema.ts";
 import { RequestAgrs, getRecommendationPosts } from "../utils/pythonScript.ts";
 
