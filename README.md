@@ -38,14 +38,13 @@ This project using Deno to write GRPC api service with CQRS model to support soc
     - isShared: 0.9
     - isCommented: 1.0
 
-<p align="center">
-  <img src="https://quicklatex.com/cache3/bb/ql_231b93da686617e22ac799be1e7486bb_l3.png" alt="Trending score formula"/>
-</p>
+` trending_score = sigmoid(interaction_score * e^(-decay_score * time)) `
 
 <p align="center">
   <img src="https://quicklatex.com/cache3/96/ql_d72477ac525b24f61f1b62fd2acf6596_l3.png" alt="Sigmoid formula"/>
 </p>
-- decay_score = 0.95
+
+``` decay_score = 0.95```
 
 **Note:** I also use `Deno.CronJob` to calculate and sync trending score to  Elasticsearch every xx minutes. This will be helpfull for fast retrieving the top hot posts in the big data contexts.
 
