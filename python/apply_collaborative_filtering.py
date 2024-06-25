@@ -57,13 +57,18 @@ def recommend_posts(file_path: str, categories_dataset: List[str], user_id: str,
     # Compute item-item similarity
     item_similarity = cosine_similarity(A.T)
 
+    # Extract user's interaction in the dataset
     user_interactions = np.array(complete_dataset[complete_dataset['user_id'] == user_id].liked.tolist())
 
     if user_interactions.size == 0:
         print(f"No interactions found for user {user_id}.")
         return []
 
+    # Calculate item scores based on user's interactions and item similarity
     item_scores = user_interactions.dot(item_similarity)
+    print("user interactions", user_interactions)
+    print("item_similarity\n", item_similarity)
+    print("item_scores\n", item_scores)
 
     # Sort items by score and recommend the top-n + 1, because the first element is the same post and always is 1
     recommended_items = np.argsort(item_scores)[::-1][:top_n+1]
