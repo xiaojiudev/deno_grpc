@@ -56,22 +56,36 @@ def recommend_posts(file_path: str, categories_dataset: List[str], user_id: str,
 
     # Compute item-item similarity
     item_similarity = cosine_similarity(A.T)
+    print("item_similarity\n", item_similarity)
+    # Output:
+    # [[1.         0.         0.81649658 0.70710678]
+    # [0.         0.         0.         0.        ]
+    # [0.81649658 0.         1.         0.57735027]
+    # [0.70710678 0.         0.57735027 1.        ]]
 
     # Extract user's interaction in the dataset
     user_interactions = np.array(complete_dataset[complete_dataset['user_id'] == user_id].liked.tolist())
+    print("user interactions", user_interactions)
+    # Output:
+    # [0 0 1 0]
 
     if user_interactions.size == 0:
         print(f"No interactions found for user {user_id}.")
         return []
 
-    # Calculate item scores based on user's interactions and item similarity
+    # Calculate item scores based on user's interactions and item similarity.
+    # First column      0*1 + 0*0 + 1*0.816 + 0*0.707 = 0.816
+    # Second column     0*0 + 0*0 + 1*0 + 0*0 = 0
+    # Third column      0*0.816 + 0*0 + 1*1 + 0*0.577 = 1
+    # Fourth column     0*0.707 + 0*0 + 1*0.577 + 0*1 = 0.577
+    # => [0.816     0    1   0.577]
     item_scores = user_interactions.dot(item_similarity)
-    print("user interactions", user_interactions)
-    print("item_similarity\n", item_similarity)
     print("item_scores\n", item_scores)
+    # Output:
+    # [0.81649658 0.         1.         0.57735027]
 
     # Sort items by score and recommend the top-n + 1, because the first element is the same post and always is 1
-    recommended_items = np.argsort(item_scores)[::-1][:top_n+1]
+    recommended_items = np.argsort(item_scores)[::-1][:top_n + 1]
 
     recommended_result = []
 
@@ -97,7 +111,7 @@ if __name__ == "__main__":
     print(json.dumps(recommendations))
 
 # categories = ['cate1', 'cate2', 'cate3', 'cate4', ]
-# print(recommend_posts("./test.data", categories, "c"))
-# print(recommend_posts("./test1.data", categories, "c"))
-# print(recommend_posts("./dataset.data", categories, "3"))
-# print(recommend_posts("./dataset1.data", categories, "3"))
+# print(recommend_posts("../dataset/test.data", categories, "c"))
+# print(recommend_posts("../dataset/test1.data", categories, "c"))
+# print(recommend_posts("../dataset/dataset.data", categories, "3"))
+# print(recommend_posts("../dataset/dataset1.data", categories, "3"))
