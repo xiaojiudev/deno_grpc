@@ -59,30 +59,28 @@ This project using Deno to write GRPC api service with CQRS model to support soc
 - My strategy:
     - Based on user_id and user_favorite_categories, apply `Item-Item Collaborative Filtering` method to retrieve top 10 recommended posts.
 
-- Cosine similarity:
-    - Calculate the similarity between all the item pairs.
-    - ![Cosine similarity!](https://miro.medium.com/v2/resize:fit:1022/1*-0AjCAVpOI50XySKLCt_Bg.png)
+
+- Cosine similarity: Calculate the similarity between all the item pairs.
+
+<!-- ![Cosine similarity!](https://miro.medium.com/v2/resize:fit:1022/1*-0AjCAVpOI50XySKLCt_Bg.png) -->
+
+<p align="center">
+  <img src="https://miro.medium.com/v2/resize:fit:1022/1*-0AjCAVpOI50XySKLCt_Bg.png" alt="Cosine similarity"/>
+</p>
 
 - Prediction computation:
     - Given the `user_interactions` and the item `similarity_matrix`
-        - Example `user_interactions` vector, i.e., list of categories that the user liked: 
-            
-            [0 0 1 0]
+        - Example `user_interactions` vector, i.e., list of categories that the user liked: ```[0 0 1 0]```
         - Item `similarity_matrix`:
-
-            [[1 &emsp;&emsp;&emsp;&emsp;&emsp;&ensp; 0 &emsp; 0.81649658 &emsp;&ensp; 0.70710678]
-
-            [0&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; 0 &emsp; 0 &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; 0]
-
-            [0.81649658 &emsp; 0 &emsp; 1 &emsp;&emsp;&emsp;&emsp;&emsp;&emsp; 0.57735027]
-            
-            [0.70710678 &emsp; 0 &emsp; 0.57735027 &emsp;&emsp;&emsp;&emsp;&emsp;&emsp; 1]]
-
+        ```
+        [[1.        0.         0.81649658 0.70710678]
+        [0.         0.         0.         0.        ]
+        [0.81649658 0.         1.         0.57735027]
+        [0.70710678 0.         0.57735027 1.        ]]
+        ```
     - Multiply each row of `item_similarity` by the corresponding element in `user_interactions` and sum them up for each column
-    - Combine the results to get the vectors:  
-        - [0.81649658 &emsp; 0 &emsp; 1. &emsp; 0.57735027] <=> [category1 &ensp; category2 &ensp; category3 &ensp; category4]
-    - Sort and get the recommendation results
-        - Recommendation list: `category3 > category1 > category 4 > category2`
+    - Combine the results to get the vectors:  ```[0.81649658    0    1.    0.57735027]``` <=> ```[category1    category2    category3    category4]```
+    - Sort and get the recommendation results: ```category3 > category1 > category 4 > category2```
     <!-- - Making Recommendations
     - ![Prediction computation!](https://quicklatex.com/cache3/cf/ql_c29dcade44fd0c18bd9a990406d05ccf_l3.png) -->
 
