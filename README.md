@@ -19,7 +19,7 @@ This project using Deno to write GRPC api service with CQRS model to support soc
 ### Task 1 - Api CRUD posts
 
     1. Define Proto's Post schema (./protos/social_media.proto).
-    2. Define Mongo's Post schema (./model/PostSchema.ts).
+    2. Define Mongo's Post schema (./model/PostSchema.ts). //TODO: models
     3. Setup gRPC server, connect to MongoDB, connect to Elasticsearch.
     4. Implement CRUD action.
     5. Sync data to Elasticsearch for fast retrieve posts opeations.
