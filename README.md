@@ -59,6 +59,10 @@ This project using Deno to write GRPC api service with CQRS model to support soc
 - My strategy:
     - Based on user_id and user_favorite_categories, apply `Item-Item Collaborative Filtering` method to retrieve top 10 recommended posts.
 
+Cosine similarity
+
+![Cosine similarity!](https://miro.medium.com/v2/resize:fit:1400/1*LfW66-WsYkFqWc4XYJbEJg.png)
+
 ## Issues Note
 
 **grpc/grpc-js hasn't supported Deno (typescript) well**
