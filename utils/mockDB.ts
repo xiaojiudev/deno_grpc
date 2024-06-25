@@ -1,9 +1,9 @@
 import { bcrypt, mongoose, ObjectIdType } from "../deps.ts";
 import { createEsIndex, getEs } from "../db/elasticsearch.ts";
-import { IUser, UserCollection } from "../model/UserSchema.ts";
-import { IPost, PostCollection } from "../model/PostSchema.ts";
+import { IUser, UserCollection } from "../models/UserSchema.ts";
+import { IPost, PostCollection } from "../models/PostSchema.ts";
 import { POST_INDEX, QUERY_INDEX } from "../constant/index.ts";
-import { CategoryCollection, ICategory } from "../model/CategorySchema.ts";
+import { CategoryCollection, ICategory } from "../models/CategorySchema.ts";
 
 const userIdArr: ObjectIdType[] = [];
 const categoryArr: ICategory[] = [];

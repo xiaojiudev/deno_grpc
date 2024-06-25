@@ -12,17 +12,17 @@ const clientA = getClient<SocialMediaService>({
 //     .GetPosts({})
 //     .then(data => console.log("All posts", data));
 
-// await clientA
-//     .GetTrendingPosts({})
-//     .then(data => console.log("Top 10 trending posts", data));
+await clientA
+    .GetTrendingPosts({})
+    .then(data => console.log("Top 10 trending posts", data));
 
 // await clientA
 //     .SearchPost({ search: "magna" })
 //     .then(data => console.log("Search results", data));
 
-await clientA
-	.GetTrendingKeywords({})
-	.then((data) => console.log("Top 10 hot keyword", data));
+// await clientA
+// 	.GetTrendingKeywords({})
+// 	.then((data) => console.log("Top 10 hot keyword", data));
 
 // await clientA
 // 	.RecommendPosts({userId: "665d7484f89adaa511c994c9"})
