@@ -1,4 +1,4 @@
-import { PostCollection } from "../model/PostSchema.ts";
+import { PostCollection } from "../models/PostSchema.ts";
 import { mongoose, PostRequest, PostResponse, validObjectId } from "../deps.ts";
 import { deleteEsDocumentById } from "../db/elasticsearch.ts";
 

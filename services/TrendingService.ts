@@ -1,6 +1,6 @@
 import { POST_INDEX } from "../constant/index.ts";
 import { getEs } from "../db/elasticsearch.ts";
-import { IPost, PostCollection } from "../model/PostSchema.ts";
+import { IPost, PostCollection } from "../models/PostSchema.ts";
 
 const DECAY_RATE = 0.95;
 

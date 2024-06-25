@@ -1,5 +1,5 @@
 import { bcrypt, CreateUserRequest, CreateUserResponse } from "../deps.ts";
-import { UserCollection } from "../model/UserSchema.ts";
+import { UserCollection } from "../models/UserSchema.ts";
 
 export class CreateUserCommandHandler {
 	public async handle(request: CreateUserRequest): Promise<CreateUserResponse> {

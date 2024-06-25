@@ -1,7 +1,7 @@
 import { Post, PostList, SearchRequest } from "../deps.ts";
 import { queryEs } from "../db/elasticsearch.ts";
 import { POST_INDEX } from "../constant/index.ts";
-import { IPost } from "../model/PostSchema.ts";
+import { IPost } from "../models/PostSchema.ts";
 
 export class SearchPostQueryHandler {
 	async handle(request: SearchRequest): Promise<PostList> {

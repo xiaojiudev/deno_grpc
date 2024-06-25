@@ -1,4 +1,4 @@
-import { UserCollection } from "../model/UserSchema.ts";
+import { UserCollection } from "../models/UserSchema.ts";
 import { CSVWriter } from "jsr:@vslinko/csv@1.0.2";
 
 const USER_FAVORITE_DATASET_PATH = "./dataset/user_fav.data";

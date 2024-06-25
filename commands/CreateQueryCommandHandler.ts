@@ -1,7 +1,7 @@
 import { QUERY_INDEX } from "../constant/index.ts";
 import { indexEsDocument } from "../db/elasticsearch.ts";
 import { SearchRequest } from "../deps.ts";
-import { IQuery, QueryCollection } from "../model/QuerySchema.ts";
+import { IQuery, QueryCollection } from "../models/QuerySchema.ts";
 
 export class CreateQueryCommandHandler {
 	public async handle(searchRequest: SearchRequest): Promise<void> {
