@@ -55,6 +55,9 @@ export const closeEsConnection = async (): Promise<void> => {
 	}
 }
 
+export const isIndicesExist = async (indexName: string): Promise<boolean> => {
+	return await getEs().indices.exists({ index: indexName });
+}
 export const createEsIndex = async (
 	indexName: string,
 	settings?: IndicesIndexSettings,
