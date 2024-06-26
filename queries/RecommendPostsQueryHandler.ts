@@ -7,8 +7,7 @@ import { PostList, UserRequest } from "../deps.ts";
 import { CategoryCollection } from "../models/CategorySchema.ts";
 import { IPost } from "../models/PostSchema.ts";
 import { UserCollection } from "../models/UserSchema.ts";
-import { RequestAgrs, getRecommendationPosts } from "../utils/pythonScript.ts";
-
+import { RequestAgrs, runCollaborativeFiltering } from "../utils/pythonScript.ts";
 
 export class RecommendPostsQueryHandler {
 	async handle(request: UserRequest): Promise<PostList> {
@@ -46,10 +45,10 @@ export class RecommendPostsQueryHandler {
 			USER_ID: userId,
 			RECOMMEND_TOP_N: 5
 		}
-		const recommendPostsRes = await getRecommendationPosts(payload);
 
+		const recommendPostsRes = await runCollaborativeFiltering(payload);
 		const categoryIds = recommendPostsRes.map((c) => new mongoose.Types.ObjectId(c));
-
+		
 		const esClient = getEs();
 		const aggregationData = await esClient.search({
 			index: POST_INDEX,
