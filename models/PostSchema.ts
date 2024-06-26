@@ -71,7 +71,7 @@ PostSchema.set("toJSON", {
 PostSchema.set("toObject", { virtuals: true });
 
 PostSchema.post("save", async function (doc) {
-	console.log('POST SAVE POST HOOK');
+	console.log('ℹ️  POST SAVE POST HOOK');
 
 	if (doc.categories && doc.categories.length > 0) {
 		await CategoryCollection.updateMany(
@@ -82,7 +82,7 @@ PostSchema.post("save", async function (doc) {
 });
 
 PostSchema.post("insertMany", function (docs) {
-	console.log('POST SAVE MANY POSTS HOOK');
+	console.log('ℹ️  POST SAVE MANY POSTS HOOK');
 	docs.forEach(async (doc) => {
 		if (doc.categories && doc.categories.length > 0) {
 			await CategoryCollection.updateMany(

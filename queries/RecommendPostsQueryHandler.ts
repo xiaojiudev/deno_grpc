@@ -22,14 +22,14 @@ export class RecommendPostsQueryHandler {
 			.select("favCategories");
 
 		if (!userFavCategories) {
-			console.log("User not found");
+			console.log("⚠️  User not found");
 			return { posts: [] };
 		} else if (userFavCategories?.favCategories?.length === 0) {
-			console.log("No fav categories - Random trending posts");
+			console.log("ℹ️  No fav categories - Random trending posts");
 			const postsRes = await this.getRandomTrendingPost();
 			return { posts: [...postsRes] }
 		} else {
-			console.log("Having fav categories - Run collaborative filtering");
+			console.log("ℹ️  Having fav categories - Run collaborative filtering");
 			const postsRes = await this.recommendPost(userId);
 			return { posts: [...postsRes] }
 		}

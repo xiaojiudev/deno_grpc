@@ -56,7 +56,7 @@ export const updateTrendingScore = async (): Promise<void> => {
 
 	posts.forEach(async (post, index) => {
 		const trendingScore = calculateTrendingScore(post);
-		console.log(`Post ${index + 1} - ${trendingScore}`);
+		console.log(`ℹ️  Post ${index + 1} - ${trendingScore}`);
 
 		const docRes = await PostCollection.findOneAndUpdate(
 			{ _id: post._id },

@@ -12,13 +12,13 @@ const startServer = async (): Promise<void> => {
 		const grpcInstance = await initGRPCService();
 		await getMockPostData();
 		appCronJob();
-		console.log(`gRPC server gonna listen on - port: ${APP_GRPC_PORT} `);
+		console.log(`✅ gRPC server gonna listen on - port: ${APP_GRPC_PORT} `);
 
 		for await (const conn of Deno.listen({ port: APP_GRPC_PORT })) {
 			grpcInstance.handle(conn);
 		}
 	} catch (error) {
-		console.log("Start server failed!", error);
+		console.log("❌ Start server failed!", error);
 		Deno.exit();
 	}
 };
