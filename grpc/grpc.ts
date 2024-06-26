@@ -14,7 +14,7 @@ export const initGrpcServer = (): GrpcServer => {
 
 		return grpcServer;
 	} catch (error) {
-		console.log("Init Grpc Server ERROR");
+		console.log("❌ Init Grpc Server ERROR");
 		throw error;
 	}
 };
