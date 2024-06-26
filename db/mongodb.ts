@@ -8,16 +8,16 @@ export const connectDB = async (): Promise<void> => {
 	await mongoose
 		.connect(APP_DATABASE_URI, configOptions)
 		.then((info) => {
-			console.log(`Connected to MongoDB successfully - port: ${info.connection.port}`);
+			console.log(`✅ Connected to MongoDB successfully - port: ${info.connection.port}`);
 		})
 		.catch((err) => {
-			console.log("Connected to MongoDB ERROR! ", err);
+			console.log("❌ Connected to MongoDB ERROR! ", err);
 			throw err;
 		});
 };
 
 export const closeDBConnection = async (): Promise<void> => {
 	await mongoose.connection.close();
-	console.log("Closed MongoDB connection successfully");
+	console.log("✅ Closed MongoDB connection successfully");
 	
 }
