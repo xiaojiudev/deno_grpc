@@ -50,8 +50,6 @@ export const getEs = (): Client => {
 export const closeEsConnection = async (): Promise<void> => {
 	const client = getEs();
 	if (client) {
-
-		// clearTimeout();
 		await client.close();
 		console.log("✅ Closed Elasticsearch connection successfully");
 	}
