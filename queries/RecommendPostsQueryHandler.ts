@@ -38,7 +38,7 @@ export class RecommendPostsQueryHandler {
 	private async recommendPost(userId: string): Promise<Post[]> {
 		const categoryDocs = await CategoryCollection.find({}).distinct('_id');
 		const categoryList = categoryDocs.map((c) => c._id.toString());
-
+		
 		const payload: RequestAgrs = {
 			DATASET_PATH: "./dataset/user_fav.data",
 			CATEGORY_LIST: categoryList,
