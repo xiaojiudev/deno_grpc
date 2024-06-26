@@ -1,5 +1,5 @@
 // Model
-import { QueryMapping } from "../models/QuerySchema.ts";
+import { QueryCollection, QueryMapping } from "../models/QuerySchema.ts";
 import { IUser, UserCollection, UserMapping } from "../models/UserSchema.ts";
 import { IPost, PostCollection, PostMapping } from "../models/PostSchema.ts";
 import { CategoryCollection, CategoryMapping, ICategory } from "../models/CategorySchema.ts";
@@ -7,7 +7,7 @@ import { CategoryCollection, CategoryMapping, ICategory } from "../models/Catego
 // Util functions
 import { bcrypt, mongoose, ObjectIdType } from "../deps.ts";
 import { CATEGORY_INDEX, POST_INDEX, QUERY_INDEX, USER_INDEX } from "../constant/index.ts";
-import { createEsIndex, deleteEsIndex, getEs } from "../db/elasticsearch.ts";
+import { createEsIndex, deleteEsIndex, getEs, isIndicesExist } from "../db/elasticsearch.ts";
 
 const userIdArr: ObjectIdType[] = [];
 const categoryArr: ICategory[] = [];
@@ -200,12 +200,14 @@ const samplePosts: IPost[] = [
 
 export const getMockPostData = async () => {
 	try {
-		// await clearAllMocks();
-		// await initEsIndex();
-		// await mockUserData();
-		// await mockCategoryData();
-		// await mockPostData();
-		// await syncDataToEs();
+		if (await shouldMock()) {
+			await clearAllMocks();
+			await initEsIndex();
+			await mockUserData();
+			await mockCategoryData();
+			await mockPostData();
+			await syncDataToEs();
+		}
 	} catch (error) {
 		await clearAllMocks();
 		console.log("❌ Mock data ERROR");
