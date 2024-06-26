@@ -29,7 +29,9 @@ export const getRecommendationPosts = async (request: RequestAgrs) => {
     const result: string[] = JSON.parse(new TextDecoder().decode(stdout));
 
     const errorMessage: string = new TextDecoder().decode(stderr);
-    console.log(errorMessage);
+    if(errorMessage) {
+        console.log("❌ Error when running python script" + errorMessage);
+    }
 
     return result;
 }
