@@ -51,15 +51,8 @@ export class GetTrendingPostsQueryHandler {
 			// deno-lint-ignore no-explicit-any
 			const mappedData = trendingPosts.map((postEs: any) => {
 				const post = postEs._source as IPost;
-				const {
-					categories,
-					interactions,
-					createdAt,
-					updatedAt,
-					trendingScore,
-					user,
-					...remainData
-				} = post;
+				// deno-lint-ignore no-unused-vars
+				const { categories, interactions, createdAt, updatedAt, trendingScore, user, ...remainData } = post;
 				const result: Post = {
 					...remainData,
 					id: remainData.id!.toString(),
