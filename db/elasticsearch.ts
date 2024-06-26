@@ -28,20 +28,20 @@ export const connectEs = async (): Promise<Client> => {
 
 		if (resp.name && resp.cluster_name && resp.cluster_uuid) {
 			console.log(
-				"Connected to Elasticsearch successfully - port: " + portRunning,
+				"✅ Connected to Elasticsearch successfully - port: " + portRunning,
 			);
 		}
 
 		return esClient;
 	} catch (error) {
-		console.log("Connected to Elasticsearch ERROR");
+		console.log("❌ Connected to Elasticsearch ERROR");
 		throw error;
 	}
 };
 
 export const getEs = (): Client => {
 	if (!esClient) {
-		throw new Error("Elasticsearch connection failed");
+		throw new Error("❌ Elasticsearch connection failed");
 	}
 
 	return esClient;
@@ -53,7 +53,7 @@ export const closeEsConnection = async (): Promise<void> => {
 
 		// clearTimeout();
 		await client.close();
-		console.log("Closed Elasticsearch connection successfully");
+		console.log("✅ Closed Elasticsearch connection successfully");
 	}
 }
 
@@ -71,7 +71,9 @@ export const createEsIndex = async (
 				settings: settings,
 				mappings: mappings,
 			});
-			console.log(result);
+			console.log(`✅ Create ${indexName.toUpperCase()} indices successfully`);
+		} else {
+			console.log(`⚠️  ${indexName.toUpperCase()} indices already exists`);
 		}
 
 		return true;
@@ -97,7 +99,7 @@ export const indexEsDocument = async (
 						id: doc?.id,
 						document: doc,
 					});
-					console.log(`Indexed document ID: ${result._id}`, result);
+					console.log(`✅ Indexed document ID: ${result._id}`, result);
 				}
 			} else if (document instanceof Object && "id" in document) {
 				const result = await esClient.index({
@@ -105,11 +107,11 @@ export const indexEsDocument = async (
 					id: document.id as string,
 					document: document,
 				});
-				console.log(`Indexed document ID: ${result._id}`, result);
+				console.log(`✅ Indexed document ID: ${result._id}`, result);
 			}
 		}
 	} catch (error) {
-		console.log("Index document failed");
+		console.log("❌ Index document failed");
 		console.log(error);
 	}
 };
@@ -126,7 +128,7 @@ export const queryEs = async (
 			const hits = searchResult.hits.hits;
 			return hits;
 		} catch (error) {
-			console.log("Search error: " + error);
+			console.log("❌ Search error: " + error);
 		}
 	}
 
