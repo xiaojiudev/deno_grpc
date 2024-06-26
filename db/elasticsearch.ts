@@ -79,6 +79,17 @@ export const createEsIndex = async (
 	}
 };
 
+export const deleteEsIndex = async (indexName: string) => {
+	const esClient = await connectEs();
+	if (esClient) {
+		if (await isIndicesExist(indexName)) {
+			await esClient.indices.delete({ index: indexName });
+			console.log(`✅ Delete ${indexName.toUpperCase()} indices successfully`);
+		} else {
+			console.log(`⚠️  ${indexName.toUpperCase()} indices not exists`);
+		}
+	}
+}
 export const indexEsDocument = async (
 	index: string,
 	document: unknown,
