@@ -52,7 +52,7 @@ export class RecommendPostsQueryHandler {
 
 		const esClient = getEs();
 		const aggregationData = await esClient.search({
-			index: 'posts',
+			index: POST_INDEX,
 			size: 10,
 			query: {
 				bool: {
