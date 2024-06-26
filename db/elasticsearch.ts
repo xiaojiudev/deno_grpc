@@ -90,15 +90,13 @@ export const deleteEsIndex = async (indexName: string) => {
 		}
 	}
 }
+
 export const indexEsDocument = async (
 	index: string,
 	document: unknown,
-	settings?: IndicesIndexSettings,
-	mappings?: MappingTypeMapping,
 ): Promise<void> => {
 	try {
 		const esClient = await connectEs();
-		await createEsIndex(index, settings, mappings);
 		if (esClient) {
 			if (document instanceof Array) {
 				for (const doc of document) {
