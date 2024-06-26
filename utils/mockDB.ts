@@ -31,31 +31,31 @@ const users: IUser[] = [
 
 const categories = [
 	{
-		name: "Category A"
+		name: "Category A",
 	},
 	{
-		name: "Category B"
+		name: "Category B",
 	},
 	{
-		name: "Category C"
+		name: "Category C",
 	},
 	{
-		name: "Category D"
+		name: "Category D",
 	},
 	{
-		name: "Category E"
+		name: "Category E",
 	},
 	{
-		name: "Category F"
+		name: "Category F",
 	},
 	{
-		name: "Category G"
+		name: "Category G",
 	},
 	{
-		name: "Category H"
+		name: "Category H",
 	},
 	{
-		name: "Category I"
+		name: "Category I",
 	},
 ];
 
@@ -200,15 +200,41 @@ const samplePosts: IPost[] = [
 
 export const getMockPostData = async () => {
 	try {
-		await clearAllMocks();
-		await mockUserData();
-		await mockCategoryData();
-		await mockPostData();
+		// await clearAllMocks();
+		// await initEsIndex();
+		// await mockUserData();
+		// await mockCategoryData();
+		// await mockPostData();
+		// await syncDataToEs();
 	} catch (error) {
 		await clearAllMocks();
 		console.log("❌ Mock data ERROR");
 		throw error;
 	}
+};
+
+const clearAllMocks = async () => {
+	await Promise.all([
+		UserCollection.deleteMany({}),
+		CategoryCollection.deleteMany({}),
+		PostCollection.deleteMany({}),
+	]);
+
+	await Promise.all([
+		deleteEsIndex(POST_INDEX),
+		deleteEsIndex(QUERY_INDEX),
+	]);
+
+	console.log("✅ Clear all mock data successfully");
+};
+
+const initEsIndex = async () => {
+	await Promise.all([
+		createEsIndex(USER_INDEX, UserMapping),
+		createEsIndex(CATEGORY_INDEX, CategoryMapping),
+		createEsIndex(POST_INDEX, PostMapping),
+		createEsIndex(QUERY_INDEX, QueryMapping),
+	]);
 };
 
 const mockUserData = async () => {
@@ -237,8 +263,8 @@ const mockCategoryData = async () => {
 
 			return {
 				...category,
-				users: [...userArr]
-			}
+				users: [...userArr],
+			};
 		});
 
 		const cateDocs = await CategoryCollection.insertMany([...completeCategories]);
@@ -280,7 +306,6 @@ const mockPostData = async () => {
 	}
 };
 
-const clearAllMocks = async () => {
 const syncDataToEs = async () => {
 	const esClient = getEs();
 	const postDocs = await PostCollection.find({});
