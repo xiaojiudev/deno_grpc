@@ -27,8 +27,8 @@
 		"exclude": ["./idea", "./vscode", "./dataset", "./ml-100k", "./python", "./temp"],
 		"rules": {
 			"tags": ["recommended"],
-			"include": ["ban-untagged-todo"],
-			"exclude": ["no-unused-vars"]
+			"include": ["ban-untagged-todo", "no-unused-vars"],
+			"exclude": []
 		}
 	},
 	"fmt": {
