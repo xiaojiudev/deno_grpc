@@ -6,9 +6,11 @@ export interface RequestAgrs {
 }
 
 const PYTHON3_ENV_PATH: string = "C:/Program Files/Python36/python.exe";
+
+// Find from root directory
 const FILE_EXEC_PATH: string = "./python/apply_collaborative_filtering.py";
 
-export const getRecommendationPosts = async (request: RequestAgrs) => {
+export const runCollaborativeFiltering = async (request: RequestAgrs) => {
     const { DATASET_PATH, CATEGORY_LIST, USER_ID, RECOMMEND_TOP_N } = request;
 
     const mappedAgrs = [
