@@ -7,7 +7,6 @@ export type SearchResponse = estypes.SearchResponse;
 export type SearchHitResponse = estypes.SearchHit<unknown>[];
 export type IndicesIndexSettings = estypes.IndicesIndexSettings;
 export type MappingTypeMapping = estypes.MappingTypeMapping;
-export type SearchHit = estypes.SearchHit<unknown>; //TODO: remove (not used)
 
 let esClient: Client | null = null;
 
@@ -51,8 +50,8 @@ export const getEs = (): Client => {
 
 export const closeEsConnection = async (): Promise<void> => {
 	const client = getEs();
-	if (client) {		
-		
+	if (client) {
+
 		// clearTimeout();
 		await client.close();
 		console.log("Closed Elasticsearch connection successfully");
@@ -133,37 +132,6 @@ export const queryEs = async (
 	}
 
 	return undefined;
-};
-
-export const deleteIndex = async (indexName: string): Promise<boolean> => { //TODO: not used
-	const esClient = await connectEs();
-	if (esClient) {
-		const result = await esClient.indices.delete({ index: indexName });
-		if (result.acknowledged) {
-			console.log("Delete Index successfully");
-			return true;
-		} else {
-			console.log("Delete Index failed");
-		}
-	}
-	return false;
-};
-
-export const deleteEsDocuments = async ( //TODO: not used
-	indexName: string,
-): Promise<boolean> => {
-	const esClient = await connectEs();
-	if (esClient) {
-		const result = await esClient.deleteByQuery({
-			index: indexName,
-			query: {
-				match_all: {},
-			},
-		});
-
-		return true;
-	}
-	return false;
 };
 
 export const deleteEsDocumentById = async (
