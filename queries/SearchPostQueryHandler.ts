@@ -22,17 +22,21 @@ export class SearchPostQueryHandler {
 		});
 
 		if (postQueries) {
-			// deno-lint-ignore no-explicit-any
-			const mappedData = postQueries.map((postEs: any) => { //TODO: use unknown type
-				const post = postEs._source as IPost;
+			const mappedData = postQueries.map((postEs: unknown) => {
+				if (postEs instanceof Object && "_source" in postEs) {
+					const post = postEs._source as IPost;
 
-				return {
-					id: post.id?.toString(),
-					userId: post.user.toString(),
-					title: post.title,
-					content: post.content,
-				} as Post;
-			});
+					return {
+						id: post.id?.toString(),
+						userId: post.user.toString(),
+						title: post.title,
+						content: post.content,
+					} as Post;
+				} else {
+					return null;
+				}
+
+			}).filter((post): post is Post => post !== null);
 
 			return { posts: [...mappedData] };
 		}
