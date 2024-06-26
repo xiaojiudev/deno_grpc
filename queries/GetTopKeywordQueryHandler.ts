@@ -1,4 +1,5 @@
-import { getEs } from "../db/elasticsearch.ts";
+import { QUERY_INDEX } from "../constant/index.ts";
+import { getEs, isIndicesExist } from "../db/elasticsearch.ts";
 import { Empty, KeywordList } from "../deps.ts";
 
 export class GetTopKeywordQueryHandler {
@@ -40,14 +41,14 @@ export class GetTopKeywordQueryHandler {
 				},
 			},
 		});
-		
+
 		// @ts-ignore: Elasticsearch types don't fully capture aggregation structure
 		const buckets = aggregationData.aggregations?.top_query.buckets;
 		console.log(buckets);
 
-		const topKeywords = buckets.map((
-			item: { key: string; doc_count: number },
-		) => item.key);
+		const topKeywords = buckets.map((item: { key: string; doc_count: number }) => {
+			return { keyword: item.key, count: item.doc_count };
+		});
 
 		return { keywords: [...topKeywords] };
 	}
