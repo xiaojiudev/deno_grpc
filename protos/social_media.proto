@@ -38,7 +38,12 @@ message PostList {
 }
 
 message KeywordList {
-    repeated string keywords = 1;
+    repeated KeyWord keywords = 1;
+}
+
+message KeyWord {
+    required string keyword = 1;
+    required int64 count = 2;
 }
 
 message UserRequest {
