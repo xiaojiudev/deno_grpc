@@ -9,18 +9,18 @@ import os.path
 from typing import List
 
 
-def recommend_posts(file_path: str, categories_dataset: List[str], user_id: str, top_n=3) -> List[str]:
+def recommend_posts(dataset_path: str, categories_dataset: List[str], user_id: str, top_n=3) -> List[str]:
     # Define the column names for the dataset.
     header_name = ['user_id', 'category', 'liked', 'timestamp']
 
     # Load the dataset
-    if os.path.isfile(file_path):
-        dataset = pd.read_csv(file_path,
+    if os.path.isfile(dataset_path):
+        dataset = pd.read_csv(dataset_path,
                               sep='\t',
                               names=header_name,
                               dtype={'user_id': str, 'category': str, 'liked': bool, 'timestamp': int})
     else:
-        dataset = pd.read_csv("./test.data",
+        dataset = pd.read_csv("../dataset/test.data",
                               sep='\t',
                               names=header_name,
                               dtype={'user_id': str, 'category': str, 'liked': bool, 'timestamp': int})
