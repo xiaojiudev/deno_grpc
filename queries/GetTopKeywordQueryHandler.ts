@@ -35,8 +35,7 @@ export class GetTopKeywordQueryHandler {
 				},
 			},
 		});
-		// console.log(aggregationData);
-
+		
 		// @ts-ignore: Elasticsearch types don't fully capture aggregation structure
 		const buckets = aggregationData.aggregations?.top_query.buckets;
 		console.log(buckets);
