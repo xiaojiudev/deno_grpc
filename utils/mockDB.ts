@@ -14,8 +14,6 @@ const categoryArr: ICategory[] = [];
 const salt = await bcrypt.genSalt(8);
 const pwHash = await bcrypt.hash("admin123", salt);
 
-//TODO: the initial elasticsearch init does not have an index, therefore it cannot insert
-
 const users: IUser[] = [
 	{
 		username: "xiaojiu123",
@@ -208,7 +206,7 @@ export const getMockPostData = async () => {
 		await mockPostData();
 	} catch (error) {
 		await clearAllMocks();
-		console.log("Mock data ERROR");
+		console.log("❌ Mock data ERROR");
 		throw error;
 	}
 };
@@ -219,13 +217,13 @@ const mockUserData = async () => {
 	if (existingUserCount === 0) {
 		const userDocs = await UserCollection.insertMany([...users]);
 		userDocs.forEach((user) => userIdArr.push(user._id));
-		console.log("Mocked user's data successfully");
+		console.log("✅ Mocked user's data successfully");
 	} else {
 		const users = await UserCollection.find({});
 		users.forEach((user) => userIdArr.push(user._id!));
-		console.log("User's data has already mocked");
+		console.log("⚠️ User's data has already mocked");
 	}
-}
+};
 
 const mockCategoryData = async () => {
 	const existingCateCount = await CategoryCollection.countDocuments({});
@@ -245,14 +243,13 @@ const mockCategoryData = async () => {
 
 		const cateDocs = await CategoryCollection.insertMany([...completeCategories]);
 		cateDocs.forEach((cate) => categoryArr.push(cate.toClient()));
-		console.log("Mocked cate's data successfully");
+		console.log("✅ Mocked cate's data successfully");
 	} else {
 		const categories = await CategoryCollection.find({});
 		categories.forEach((cate) => categoryArr.push(cate.toClient()));
-		console.log("Cate's data has already mocked");
+		console.log("⚠️ Cate's data has already mocked");
 	}
-
-}
+};
 
 const mockPostData = async () => {
 	const esClient = getEs();
