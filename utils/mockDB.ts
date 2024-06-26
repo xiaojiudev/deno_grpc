@@ -252,7 +252,6 @@ const mockCategoryData = async () => {
 };
 
 const mockPostData = async () => {
-	const esClient = getEs();
 	const existingPostCount = await PostCollection.countDocuments({});
 
 	if (existingPostCount === 0) {
@@ -261,8 +260,8 @@ const mockPostData = async () => {
 			const cateIdArr = categoryArr
 				.sort(() => Math.random() - Math.random())
 				.slice(0, numOfItems)
-				.filter(c => c && c?.id)
-				.map(c => c.id!)
+				.filter((c) => c && c?.id)
+				.map((c) => c.id!);
 
 			return {
 				...post,
@@ -271,47 +270,15 @@ const mockPostData = async () => {
 			};
 		});
 
-		const postDocs = await PostCollection.insertMany([...postData], {
+		await PostCollection.insertMany([...postData], {
 			includeResultMetadata: true,
 		});
 
-		const MONGO_POST_CREATE = !!postDocs;
-		let ES_POST_CREATE = true;
-
-		samplePosts.forEach(async (post, index) => {
-			const { id, ...remainData } = post;
-			const res = await esClient.index({
-				index: POST_INDEX,
-				id: postDocs[index]._id.toString(),
-				document: {
-					...remainData,
-					trendingScore: postDocs[index]?.trendingScore,
-					id: postDocs[index]._id.toString(),
-					user: postDocs[index].user.toString(),
-				},
-			});
-
-			if (res.result !== "created") {
-				ES_POST_CREATE = false;
-			}
-		});
-
-		if (!MONGO_POST_CREATE || !ES_POST_CREATE) {
-			await clearAllMocks();
-			console.log(
-				"Mock Data to MongoDB or Elasticsearch failed! Nothing to insert!",
-			);
-			console.log(`MONGODB_POST_CREATE: ${MONGO_POST_CREATE}`);
-			console.log(`ES_POST_CREATE: ${ES_POST_CREATE}`);
-			return { success: false };
-		}
-		console.log("Mock post's data successfully!");
-		return { success: MONGO_POST_CREATE && ES_POST_CREATE };
+		console.log("✅ Mock post's data successfully!");
 	} else {
-		console.log("Post's data has already mocked!");
-		return { success: true };
+		console.log("⚠️ Post's data has already mocked!");
 	}
-}
+};
 
 const clearAllMocks = async () => {
 	const esClient = getEs();
