@@ -6,7 +6,7 @@ export class GetTopKeywordQueryHandler {
 		const esClient = getEs();
 
 		const aggregationData = await esClient.search({
-			index: "queries",
+			index: QUERY_INDEX,
 			_source: false,
 			size: 0, // needn't search hits, just show the results
 			query: {
