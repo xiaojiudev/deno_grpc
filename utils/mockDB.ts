@@ -1,9 +1,13 @@
+// Model
+import { QueryMapping } from "../models/QuerySchema.ts";
+import { IUser, UserCollection, UserMapping } from "../models/UserSchema.ts";
+import { IPost, PostCollection, PostMapping } from "../models/PostSchema.ts";
+import { CategoryCollection, CategoryMapping, ICategory } from "../models/CategorySchema.ts";
+
+// Util functions
 import { bcrypt, mongoose, ObjectIdType } from "../deps.ts";
-import {  getEs } from "../db/elasticsearch.ts";
-import { IUser, UserCollection } from "../models/UserSchema.ts";
-import { IPost, PostCollection } from "../models/PostSchema.ts";
-import { POST_INDEX, QUERY_INDEX } from "../constant/index.ts";
-import { CategoryCollection, ICategory } from "../models/CategorySchema.ts";
+import { CATEGORY_INDEX, POST_INDEX, QUERY_INDEX, USER_INDEX } from "../constant/index.ts";
+import { createEsIndex, deleteEsIndex, getEs } from "../db/elasticsearch.ts";
 
 const userIdArr: ObjectIdType[] = [];
 const categoryArr: ICategory[] = [];
