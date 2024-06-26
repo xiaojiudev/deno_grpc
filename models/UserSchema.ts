@@ -1,4 +1,5 @@
 import { mongoose, ObjectId, Schema } from "../deps.ts";
+import { MappingTypeMapping } from "../db/elasticsearch.ts";
 
 export interface IUser {
 	id?: mongoose.Types.ObjectId;
@@ -40,5 +41,15 @@ UserSchema.set("toJSON", {
 });
 
 UserSchema.set("toObject", { virtuals: true });
+
+export const UserMapping: MappingTypeMapping = {
+	properties: {
+		id: { type: "keyword" },
+		username: { type: "text" },
+		password: { type: "keyword" },
+		favCategories: { type: "keyword" },
+		createdAt: { type: "date" },
+	}
+}
 
 export const UserCollection = mongoose.model("Users", UserSchema, "users");

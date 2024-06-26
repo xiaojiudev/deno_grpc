@@ -1,5 +1,6 @@
-import { mongoose, ObjectId, Schema } from "../deps.ts";
 import { UserCollection } from "./UserSchema.ts";
+import { mongoose, ObjectId, Schema } from "../deps.ts";
+import { MappingTypeMapping } from "../db/elasticsearch.ts";
 
 export interface ICategory {
     id?: mongoose.Types.ObjectId;
@@ -66,5 +67,16 @@ CategorySchema.post("insertMany", function (docs) {
         }
     });
 });
+
+export const CategoryMapping: MappingTypeMapping = {
+    properties: {
+        id: { type: "keyword" },
+        name: { type: "text" },
+        users: { type: "keyword" },
+        posts: { type: "keyword" },
+        createdAt: { type: "date" },
+        updatedAt: { type: "date" },
+    }
+}
 
 export const CategoryCollection = mongoose.model("Categories", CategorySchema, "categories");

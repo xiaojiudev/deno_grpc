@@ -1,5 +1,6 @@
 import { mongoose, ObjectId, Schema } from "../deps.ts";
 import { CategoryCollection } from "./CategorySchema.ts";
+import { MappingTypeMapping } from "../db/elasticsearch.ts";
 
 export interface IPost {
 	id?: mongoose.Types.ObjectId;
@@ -92,5 +93,30 @@ PostSchema.post("insertMany", function (docs) {
 		}
 	});
 });
+
+export const PostMapping: MappingTypeMapping = {
+	properties: {
+		id: { type: "keyword" },
+		user: { type: "keyword" },
+		title: { type: "text" },
+		content: { type: "text" },
+		categories: { type: "keyword" },
+		interactions: {
+			properties: {
+				likes: { type: "integer" },
+				comments: { type: "integer" },
+				shares: { type: "integer" },
+				clicked: { type: "integer" },
+				profileClicked: { type: "integer" },
+				bookmarked: { type: "integer" },
+				photoExpanded: { type: "integer" },
+				videoPlayback: { type: "integer" },
+			}
+		},
+		trendingScore: { type: "double" },
+		createdAt: { type: "date" },
+		updatedAt: { type: "date" },
+	}
+}
 
 export const PostCollection = mongoose.model("Posts", PostSchema, "posts");

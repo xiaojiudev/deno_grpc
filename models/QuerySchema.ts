@@ -1,4 +1,5 @@
 import { mongoose, ObjectId, Schema } from "../deps.ts";
+import { MappingTypeMapping } from "../db/elasticsearch.ts";
 
 export interface IQuery {
 	id?: mongoose.Types.ObjectId;
@@ -36,5 +37,13 @@ QuerySchema.set("toJSON", {
 });
 
 QuerySchema.set("toObject", { virtuals: true });
+
+export const QueryMapping: MappingTypeMapping = {
+	properties: {
+		id: { type: "keyword" },
+		queryString: { type: "text" },
+		queryDate: { type: "date" },
+	}
+}
 
 export const QueryCollection = mongoose.model("Queries", QuerySchema, "queries");

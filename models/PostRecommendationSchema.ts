@@ -1,4 +1,5 @@
 import { mongoose, ObjectId, Schema } from "../deps.ts";
+import { MappingTypeMapping } from "../db/elasticsearch.ts";
 
 export interface IPostRecommendation {
     id?: mongoose.Types.ObjectId;
@@ -40,5 +41,15 @@ PostRecommendationSchema.set("toJSON", {
 });
 
 PostRecommendationSchema.set("toObject", { virtuals: true });
+
+export const PostRecommendationMapping: MappingTypeMapping = {
+    properties: {
+        id: { type: "keyword" },
+        user: { type: "keyword" },
+        recommendedPosts: { type: "keyword" },
+        createdAt: { type: "date" },
+        updatedAt: { type: "date" },
+    }
+}
 
 export const PostRecommendationCollection = mongoose.model("PostRecommendation", PostRecommendationSchema, "post_recommendations");
