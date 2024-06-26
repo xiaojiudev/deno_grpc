@@ -58,29 +58,25 @@ export const closeEsConnection = async (): Promise<void> => {
 export const isIndicesExist = async (indexName: string): Promise<boolean> => {
 	return await getEs().indices.exists({ index: indexName });
 }
+
 export const createEsIndex = async (
 	indexName: string,
+	mappings: MappingTypeMapping,
 	settings?: IndicesIndexSettings,
-	mappings?: MappingTypeMapping,
-): Promise<boolean> => {
+): Promise<void> => {
 	const esClient = await connectEs();
 	if (esClient) {
-		const isExist = await esClient.indices.exists({ index: indexName });
-		if (!isExist) {
-			const result = await esClient.indices.create({
+		if (await !isIndicesExist(indexName)) {
+			await esClient.indices.create({
 				index: indexName,
-				settings: settings,
 				mappings: mappings,
+				settings: settings,
 			});
 			console.log(`✅ Create ${indexName.toUpperCase()} indices successfully`);
 		} else {
 			console.log(`⚠️  ${indexName.toUpperCase()} indices already exists`);
 		}
-
-		return true;
 	}
-
-	return false;
 };
 
 export const indexEsDocument = async (
