@@ -24,10 +24,10 @@ export const getRecommendationPosts = async (request: RequestAgrs) => {
     }
 
     const command = new Deno.Command(PYTHON3_ENV_PATH, options);
-    const { code, stdout, stderr } = await command.output();
+    const { stdout, stderr } = await command.output();
 
     const result: string[] = JSON.parse(new TextDecoder().decode(stdout));
-    
+
     const errorMessage: string = new TextDecoder().decode(stderr);
     console.log(errorMessage);
 
