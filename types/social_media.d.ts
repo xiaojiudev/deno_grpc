@@ -39,7 +39,12 @@ export interface PostList {
 }
 
 export interface KeywordList {
-  keywords?: string[];
+  keywords?: KeyWord[];
+}
+
+export interface KeyWord {
+  keyword: string;
+  count: number;
 }
 
 export interface UserRequest {
