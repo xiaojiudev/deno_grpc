@@ -1,4 +1,3 @@
-// deno-lint-ignore-file no-explicit-any
 import { Client, estypes } from "npm:@elastic/elasticsearch";
 import { APP_ELASTICSEARCH_NAME, APP_ELASTICSEARCH_PW, APP_ELASTICSEARCH_URI } from "../deps.ts";
 
@@ -83,7 +82,7 @@ export const createEsIndex = async (
 
 export const indexEsDocument = async (
 	index: string,
-	document: any, // TODO: use unknown type
+	document: unknown,
 	settings?: IndicesIndexSettings,
 	mappings?: MappingTypeMapping,
 ): Promise<void> => {
@@ -100,10 +99,10 @@ export const indexEsDocument = async (
 					});
 					console.log(`Indexed document ID: ${result._id}`, result);
 				}
-			} else if (document instanceof Object) {
+			} else if (document instanceof Object && "id" in document) {
 				const result = await esClient.index({
 					index,
-					id: document?.id,
+					id: document.id as string,
 					document: document,
 				});
 				console.log(`Indexed document ID: ${result._id}`, result);
@@ -154,7 +153,7 @@ export const deleteEsDocumentById = async (
 export const updateEsDocument = async (
 	indexName: string,
 	id: string,
-	payload: any, // TODO: use unknown type
+	payload: unknown,
 ): Promise<boolean> => {
 	const esClient = await connectEs();
 
@@ -164,7 +163,7 @@ export const updateEsDocument = async (
 			id,
 			doc: {
 				id,
-				...payload,
+				...payload as object,
 			},
 			doc_as_upsert: true,
 		});
