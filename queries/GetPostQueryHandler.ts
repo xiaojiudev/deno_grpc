@@ -7,11 +7,12 @@ export class GetPostQueryHandler {
 	async handle(query: PostRequest): Promise<PostResponse> {
 		if (!query.id || !validObjectId(query.id)) {
 			/*
-			Deno and grpc_basic haven't supported grpc server error/status response yet!
-			https://github.com/denoland/deno/issues/23714
-			https://github.com/denoland/deno/issues/3326 
+				Deno and grpc_basic haven't supported grpc server error/status response yet!
+				https://github.com/denoland/deno/issues/23714
+				https://github.com/denoland/deno/issues/3326 
+
+ 				should throw new Error("Invalid ID");
 			*/
-			// throw new Error("Invalid ID");
 			return {
 				success: false,
 				message: "Invalid ID",
