@@ -56,7 +56,7 @@ def recommend_posts(file_path: str, categories_dataset: List[str], user_id: str,
 
     # Compute item-item similarity
     item_similarity = cosine_similarity(A.T)
-    print("item_similarity\n", item_similarity)
+    # print("item_similarity\n", item_similarity)
     # Output:
     # [[1.         0.         0.81649658 0.70710678]
     # [0.         0.         0.         0.        ]
@@ -65,7 +65,7 @@ def recommend_posts(file_path: str, categories_dataset: List[str], user_id: str,
 
     # Extract user's interaction in the dataset
     user_interactions = np.array(complete_dataset[complete_dataset['user_id'] == user_id].liked.tolist())
-    print("user interactions", user_interactions)
+    # print("user interactions", user_interactions)
     # Output:
     # [0 0 1 0]
 
@@ -80,7 +80,7 @@ def recommend_posts(file_path: str, categories_dataset: List[str], user_id: str,
     # Fourth column     0*0.707 + 0*0 + 1*0.577 + 0*1 = 0.577
     # => [0.816     0    1   0.577]
     item_scores = user_interactions.dot(item_similarity)
-    print("item_scores\n", item_scores)
+    # print("item_scores\n", item_scores)
     # Output:
     # [0.81649658 0.         1.         0.57735027]
 
