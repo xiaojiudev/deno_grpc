@@ -281,23 +281,22 @@ const mockPostData = async () => {
 };
 
 const clearAllMocks = async () => {
+const syncDataToEs = async () => {
 	const esClient = getEs();
-	await Promise.all([
-		UserCollection.deleteMany({}),
-		CategoryCollection.deleteMany({}),
-		PostCollection.deleteMany({}),
-	]);
+	const postDocs = await PostCollection.find({});
 
-	await Promise.all([
-		esClient.deleteByQuery({
+	postDocs.forEach(async (post, index) => {
+		const { id, ...remainData } = post.toClient();
+		const res = await esClient.index({
 			index: POST_INDEX,
-			query: { match_all: {} },
-		}),
-		esClient.deleteByQuery({
-			index: QUERY_INDEX,
-			query: { match_all: {} },
-		}),
-	]);
-	
-	console.log("Clear all mock data");
+			id: id?.toString()!,
+			document: {
+				...remainData,
+				trendingScore: postDocs[index]?.trendingScore,
+				id: id?.toString()!,
+				user: postDocs[index].user.toString(),
+			},
+		});
+		console.log("ℹ️  Sync data to ES status - ", res.result);
+	});
 };
