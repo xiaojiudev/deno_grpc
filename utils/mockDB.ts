@@ -213,6 +213,21 @@ export const getMockPostData = async () => {
 	}
 };
 
+const shouldMock = async (): Promise<boolean> => {
+	const esClient = getEs();
+	const postsCount = await PostCollection.countDocuments();
+	const existIndicesPost = await isIndicesExist(POST_INDEX);
+
+	if (postsCount > 0 && existIndicesPost) {
+		const postsEsCount = await esClient.count({ index: POST_INDEX });
+		if (postsCount === postsEsCount.count) {
+			return false;
+		}
+	}
+
+	return true;
+}
+
 const clearAllMocks = async () => {
 	await Promise.all([
 		UserCollection.deleteMany({}),
