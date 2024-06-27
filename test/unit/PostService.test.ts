@@ -1,23 +1,28 @@
+// Test
 import {
     afterAll,
     afterEach,
     beforeAll,
     beforeEach,
     describe,
+    it,
 } from "https://deno.land/std@0.224.0/testing/bdd.ts";
 import {
     assertObjectMatch,
-    assertRejects, //TODO: remove (not used)
 } from "https://deno.land/std@0.224.0/assert/mod.ts";
-import { CreatePostCommandHandler } from "../../commands/index.ts";
-import { UserCollection } from "../../models/UserSchema.ts";
-import { it, mongoose } from "../../deps.ts";
-import { closeDBConnection, connectDB } from "../../db/mongodb.ts";
-import { PostCollection } from "../../models/PostSchema.ts";
-import { GetPostQueryHandler } from "../../queries/index.ts";
-import { closeEsConnection, connectEs } from "../../db/elasticsearch.ts";
 
-describe("Unit Test - Post service", () => {
+// Model
+import { UserCollection } from "../../models/UserSchema.ts";
+import { PostCollection } from "../../models/PostSchema.ts";
+
+// Database
+import { closeDBConnection, connectDB } from "../../db/mongodb.ts";
+import { closeEsConnection, connectEs } from "../../db/elasticsearch.ts";
+import { PostResponse, mongoose } from "../../deps.ts";
+
+// Action
+import { CreatePostCommandHandler } from "../../commands/index.ts";
+import { GetPostQueryHandler } from "../../queries/index.ts";
     let userId: string | null = null;
     const postIds: string[] = [];
     let command: CreatePostCommandHandler; //TODO: remove (not used)
