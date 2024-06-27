@@ -1,7 +1,7 @@
 import { APP_GRPC_PORT } from "./deps.ts";
-import { connectDB } from "./db/mongodb.ts";
+import { closeDBConnection, connectDB } from "./db/mongodb.ts";
 import { initGRPCService } from "./grpc/grpc.ts";
-import { connectEs } from "./db/elasticsearch.ts";
+import { closeEsConnection, connectEs } from "./db/elasticsearch.ts";
 import { getMockPostData } from "./utils/mockDB.ts";
 import { appCronJob } from "./services/CronJobService.ts";
 
@@ -19,6 +19,8 @@ const startServer = async (): Promise<void> => {
 		}
 	} catch (error) {
 		console.log("❌ Start server failed!", error);
+		await closeDBConnection();
+		await closeEsConnection();
 		Deno.exit();
 	}
 };
