@@ -1,5 +1,5 @@
 // Model
-import { QueryCollection, QueryMapping } from "../models/QuerySchema.ts";
+import { QueryMapping } from "../models/QuerySchema.ts";
 import { IUser, UserCollection, UserMapping } from "../models/UserSchema.ts";
 import { IPost, PostCollection, PostMapping } from "../models/PostSchema.ts";
 import { CategoryCollection, CategoryMapping, ICategory } from "../models/CategorySchema.ts";
