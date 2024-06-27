@@ -21,6 +21,7 @@ import { closeDBConnection, connectDB } from "../../db/mongodb.ts";
 // Action
 import { CreateUserRequest } from "../../deps.ts";
 import { CreateUserCommandHandler } from "../../commands/index.ts";
+
 describe("Unit Test - User service", () => {
 	const userIds: string[] = [];
 	let command: CreateUserCommandHandler;
@@ -46,12 +47,13 @@ describe("Unit Test - User service", () => {
 	describe("Unit test for create user operation", () => {
 		it("givenEmptyRequest_whenCreateUser_thenReturnFailedObject", async () => {
 			const request = {} as CreateUserRequest;
-			const actualRes = await command.handle(request);
+			const actualRes: CreateUserResponse = await command.handle(request);
 
-			const expected = {
+			const expected: Record<string, boolean | string | unknown> = {
 				success: false,
 				message: "Check your fields are valid before continuing",
 			};
+
 			assertObjectMatch(actualRes, expected);
 		});
 
@@ -60,9 +62,9 @@ describe("Unit Test - User service", () => {
 				username: "1",
 				password: "password",
 			};
-			const actualRes = await command.handle(request);
+			const actualRes: CreateUserResponse = await command.handle(request);
 
-			const expected = {
+			const expected: Record<string, boolean | string | unknown> = {
 				success: false,
 				message: "Username required 6-16 characters, only letters and numbers are allowed",
 			};
@@ -74,9 +76,9 @@ describe("Unit Test - User service", () => {
 				username: "username",
 				password: "123",
 			};
-			const actualRes = await command.handle(request);
+			const actualRes: CreateUserResponse = await command.handle(request);
 
-			const expected = {
+			const expected: Record<string, boolean | string | unknown> = {
 				success: false,
 				message:
 					"Password required minimum eight characters, at least one letter and one number",
@@ -91,9 +93,9 @@ describe("Unit Test - User service", () => {
 			};
 
 			await command.handle(request);
-			const savedUser2 = await command.handle(request);
+			const savedUser2: CreateUserResponse = await command.handle(request);
 
-			const expected = {
+			const expected: Record<string, boolean | string | unknown> = {
 				success: false,
 				message: "User already exist!",
 			};
@@ -114,9 +116,9 @@ describe("Unit Test - User service", () => {
 				password: "password123",
 			};
 
-			const actualRes = await command.handle(request);
+			const actualRes: CreateUserResponse = await command.handle(request);
 
-			const expected = {
+			const expected: Record<string, boolean | string | unknown> = {
 				success: true,
 				message: "User created successfully",
 			};
