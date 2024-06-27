@@ -23,6 +23,14 @@ import { PostResponse, mongoose } from "../../deps.ts";
 // Action
 import { CreatePostCommandHandler } from "../../commands/index.ts";
 import { GetPostQueryHandler } from "../../queries/index.ts";
+
+// Temporary fix prevent leaks detected when close elasticsearch connection
+const sanitizationOptions = {
+    sanitizeOps: false,
+    sanitizeResources: false,
+}
+
+describe("Unit Test - Post service", sanitizationOptions, () => {
     let userId: string | null = null;
     const postIds: string[] = [];
     let command: CreatePostCommandHandler; //TODO: remove (not used)
