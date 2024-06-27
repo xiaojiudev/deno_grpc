@@ -49,10 +49,10 @@ export const getEs = (): Client => {
 };
 
 export const closeEsConnection = async (): Promise<void> => {
-	const client = getEs();
-	if (client) {
-		await client.close();
-		console.log("✅ Closed Elasticsearch connection successfully");
+	if (esClient) {
+		await esClient.close();
+		esClient = null;
+		console.log("✅ Closed Elasticsearch connection");
 	}
 }
 
