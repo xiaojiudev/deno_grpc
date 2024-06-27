@@ -6,6 +6,7 @@ export type SearchResponse = estypes.SearchResponse;
 export type SearchHitResponse = estypes.SearchHit<unknown>[];
 export type IndicesIndexSettings = estypes.IndicesIndexSettings;
 export type MappingTypeMapping = estypes.MappingTypeMapping;
+type InforResponse = estypes.InfoResponse;
 
 let esClient: Client | null = null;
 
@@ -23,8 +24,8 @@ export const connectEs = async (): Promise<Client> => {
 			},
 		});
 
-		const resp = await esClient.info();
-		const portRunning = esClient.connectionPool.connections[0].url.port;
+		const resp: InforResponse = await esClient.info();
+		const portRunning: number = esClient.connectionPool.connections[0].url.port;
 
 		if (resp.name && resp.cluster_name && resp.cluster_uuid) {
 			console.log(
