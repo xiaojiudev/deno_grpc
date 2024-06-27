@@ -1,3 +1,4 @@
+// Test
 import {
 	assertObjectMatch,
 } from "https://deno.land/std@0.224.0/assert/mod.ts";
@@ -6,15 +7,20 @@ import {
 	afterEach,
 	beforeAll,
 	beforeEach,
-	describe,	
+	describe,
 	it,
 } from "https://deno.land/std@0.224.0/testing/bdd.ts";
-import { CreateUserCommandHandler } from "../../commands/index.ts";
+
+// Model
 import { UserCollection } from "../../models/UserSchema.ts";
-import { mongoose } from "../../deps.ts";
-import { CreateUserRequest } from "../../deps.ts";
+
+// Database
+import { CreateUserResponse, mongoose } from "../../deps.ts";
 import { closeDBConnection, connectDB } from "../../db/mongodb.ts";
 
+// Action
+import { CreateUserRequest } from "../../deps.ts";
+import { CreateUserCommandHandler } from "../../commands/index.ts";
 describe("Unit Test - User service", () => {
 	const userIds: string[] = [];
 	let command: CreateUserCommandHandler;
