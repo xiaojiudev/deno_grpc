@@ -33,14 +33,14 @@ const sanitizationOptions = {
 describe("Unit Test - Post service", sanitizationOptions, () => {
     let userId: string | null = null;
     const postIds: string[] = [];
-    let command: CreatePostCommandHandler; //TODO: remove (not used)
+    let command: CreatePostCommandHandler;
 
     beforeAll(async () => {
         await connectDB();
         await connectEs();
     });
 
-    beforeEach(() => {
+    beforeEach(async () => {
         command = new CreatePostCommandHandler();
     });
 
@@ -61,53 +61,58 @@ describe("Unit Test - Post service", sanitizationOptions, () => {
 
     describe("Unit test for find post operation", () => {
         it("givenInvalidPostId_whenFindPost_thenThrowError", async () => {
-            const invalidPostId = "123";
-            const query = new GetPostQueryHandler();
-            const actualRes = await query.handle({id: invalidPostId});
-
-            /*
-                assertRejects is used for Promise function
-                assertThrows is used for normal function
-            */
-            // assertRejects(
-            //     async () => await query.handle({ id: invalidPostId }),
-            //     Error,
-            //     "Invalid ID",
-            // );
-
-            const expected = {
+            const invalidPostId: string = "123";
+            const query: GetPostQueryHandler = new GetPostQueryHandler();
+            
+            const actualRes: PostResponse = await query.handle({ id: invalidPostId });
+            const expected: Record<string, boolean | string | unknown> = {
                 success: false,
                 message: "Invalid ID",
             };
 
+            /*
+                assertRejects is used for Promise function
+                assertThrows is used for normal function
+            
+                assertRejects(
+                    async () => await query.handle({ id: invalidPostId }),
+                    Error,
+                    "Invalid ID",
+                );
+            */
+
             assertObjectMatch(actualRes, expected);
         });
-        it("givenValidButNotExistPostId_whenFindPost_thenReturnFailedObject", async () => {
-            const validPostId = new mongoose.Types.ObjectId().toString(); //TODO: remove (not used)
-            const query = new GetPostQueryHandler(); //TODO: remove (not used)
-            // const actualRes = await query.handle({ id: validPostId }); //TODO: remove comment
 
-            const expected = {
+        it("givenValidButNotExistPostId_whenFindPost_thenReturnFailedObject", async () => {
+            const validPostId: string = new mongoose.Types.ObjectId().toString();
+            const query: GetPostQueryHandler = new GetPostQueryHandler();
+
+            const actualRes: PostResponse = await query.handle({ id: validPostId });
+            const expected: Record<string, boolean | string | unknown> = {
                 success: false,
                 message: "Post not found",
             };
 
-            assertObjectMatch(expected, expected);
+            assertObjectMatch(actualRes, expected);
         });
     });
 
     describe("Unit test for save post operation", () => {
         it("given_when_then", async () => {
+
         });
     });
 
-    describe("Unit test for update post operation", () => { // TODO: describe with no test
+    describe("Unit test for update post operation", () => {
         it("given_when_then", async () => {
+
         });
     });
 
-    describe("Unit test for delete post operation", () => { // TODO: describe with no test
+    describe("Unit test for delete post operation", () => {
         it("given_when_then", async () => {
+
         });
     });
-});
+},);
