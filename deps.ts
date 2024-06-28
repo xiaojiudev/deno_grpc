@@ -30,3 +30,12 @@ export type ObjectIdType = mongoose.Types.ObjectId;
 export const validObjectId = (id: string): boolean => {
 	return mongoose.isValidObjectId(id);
 };
+
+export const generateObjectId = (id?: string): ObjectIdType => {
+	if(id && validObjectId(id)) {
+		// @ts-ignore mongoose ObjectId typescript bug
+		return new mongoose.Types.ObjectId(id);
+	} else {
+		return new mongoose.Types.ObjectId();
+	}
+}
