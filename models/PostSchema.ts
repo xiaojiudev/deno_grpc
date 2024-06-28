@@ -82,16 +82,18 @@ PostSchema.post("save", async function (doc) {
 	}
 });
 
-PostSchema.post("insertMany", function (docs) {
+PostSchema.post("insertMany", async function (docs) {
 	console.log('ℹ️  POST SAVE MANY POSTS HOOK');
-	docs.forEach(async (doc) => {
-		if (doc.categories && doc.categories.length > 0) {
-			await CategoryCollection.updateMany(
-				{ _id: { $in: doc.categories } },
-				{ $addToSet: { posts: doc._id } }
-			);
+	if(Array.isArray(docs)) {
+		for (const doc of docs) {
+			if (doc.categories && doc.categories.length > 0) {
+				await CategoryCollection.updateMany(
+					{ _id: { $in: doc.categories } },
+					{ $addToSet: { posts: doc._id } }
+				);
+			}
 		}
-	});
+	}
 });
 
 export const PostMapping: MappingTypeMapping = {

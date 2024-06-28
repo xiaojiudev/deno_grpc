@@ -56,16 +56,18 @@ CategorySchema.post("save", async function (doc) {
     }
 });
 
-CategorySchema.post("insertMany", function (docs) {
+CategorySchema.post("insertMany", async function (docs) {
     console.log('ℹ️  POST SAVE MANY CATEGORIES HOOK');
-    docs.forEach(async (doc) => {
-        if (doc.users && doc.users.length > 0) {
-            await UserCollection.updateMany(
-                { _id: { $in: doc.users } },
-                { $addToSet: { favCategories: doc._id } }
-            );
+    if (Array.isArray(docs)) {
+        for (const doc of docs) {
+            if (doc.users && doc.users.length > 0) {
+                await UserCollection.updateMany(
+                    { _id: { $in: doc.users } },
+                    { $addToSet: { favCategories: doc._id } }
+                );
+            }
         }
-    });
+    }
 });
 
 export const CategoryMapping: MappingTypeMapping = {
