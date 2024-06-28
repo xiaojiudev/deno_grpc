@@ -5,7 +5,7 @@ import { IPost, PostCollection, PostMapping } from "../models/PostSchema.ts";
 import { CategoryCollection, CategoryMapping, ICategory } from "../models/CategorySchema.ts";
 
 // Util functions
-import { bcrypt, mongoose, ObjectIdType } from "../deps.ts";
+import { bcrypt, generateObjectId, ObjectIdType } from "../deps.ts";
 import { CATEGORY_INDEX, POST_INDEX, QUERY_INDEX, USER_INDEX } from "../constant/index.ts";
 import { createEsIndex, deleteEsIndex, getEs, isIndicesExist } from "../db/elasticsearch.ts";
 
@@ -75,7 +75,7 @@ const samplePosts: IPost[] = [
 		},
 		createdAt: new Date(Date.now() - (0.5 * 60 * 60 * 1000)), // 30 minutes ago
 		updatedAt: new Date(Date.now() - (0.5 * 60 * 60 * 1000)),
-		user: new mongoose.Types.ObjectId(),
+		user: generateObjectId(),
 	},
 	{
 		title: "Post 2",
@@ -92,7 +92,7 @@ const samplePosts: IPost[] = [
 		},
 		createdAt: new Date(Date.now() - (48 * 60 * 60 * 1000)), // 2 days ago
 		updatedAt: new Date(Date.now() - (48 * 60 * 60 * 1000)),
-		user: new mongoose.Types.ObjectId(),
+		user: generateObjectId(),
 	},
 	{
 		title: "Post 3",
@@ -109,7 +109,7 @@ const samplePosts: IPost[] = [
 		},
 		createdAt: new Date(Date.now() - (72 * 60 * 60 * 1000)), // 3 days ago
 		updatedAt: new Date(Date.now() - (72 * 60 * 60 * 1000)),
-		user: new mongoose.Types.ObjectId(),
+		user: generateObjectId(),
 	},
 	{
 		title: "Post 4",
@@ -126,7 +126,7 @@ const samplePosts: IPost[] = [
 		},
 		createdAt: new Date(Date.now() - (7 * 24 * 60 * 60 * 1000)), // 1 week ago
 		updatedAt: new Date(Date.now() - (7 * 24 * 60 * 60 * 1000)),
-		user: new mongoose.Types.ObjectId(),
+		user: generateObjectId(),
 	},
 	{
 		title: "Post 5",
@@ -143,7 +143,7 @@ const samplePosts: IPost[] = [
 		},
 		createdAt: new Date(Date.now() - (3 * 30 * 24 * 60 * 60 * 1000)), // 3 month ago
 		updatedAt: new Date(Date.now() - (3 * 30 * 24 * 60 * 60 * 1000)),
-		user: new mongoose.Types.ObjectId(),
+		user: generateObjectId(),
 	},
 	{
 		title: "Post 6",
@@ -160,7 +160,7 @@ const samplePosts: IPost[] = [
 		},
 		createdAt: new Date(Date.now() - (24 * 60 * 60 * 1000)), // 1 day ago
 		updatedAt: new Date(Date.now() - (24 * 60 * 60 * 1000)),
-		user: new mongoose.Types.ObjectId(),
+		user: generateObjectId(),
 	},
 	{
 		title: "Post 7",
@@ -177,7 +177,7 @@ const samplePosts: IPost[] = [
 		},
 		createdAt: new Date(Date.now() - (2 * 24 * 60 * 60 * 1000)), // 2 days ago
 		updatedAt: new Date(Date.now() - (2 * 24 * 60 * 60 * 1000)),
-		user: new mongoose.Types.ObjectId(),
+		user: generateObjectId(),
 	},
 	{
 		title: "Post 8",
@@ -194,7 +194,7 @@ const samplePosts: IPost[] = [
 		},
 		createdAt: new Date(Date.now() - (3 * 365 * 24 * 60 * 60 * 1000)), // 3 years ago
 		updatedAt: new Date(Date.now() - (3 * 365 * 24 * 60 * 60 * 1000)),
-		user: new mongoose.Types.ObjectId(),
+		user: generateObjectId(),
 	},
 ];
 

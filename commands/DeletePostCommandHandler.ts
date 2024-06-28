@@ -1,5 +1,5 @@
 import { PostCollection } from "../models/PostSchema.ts";
-import { mongoose, PostRequest, PostResponse, validObjectId } from "../deps.ts";
+import { generateObjectId, PostRequest, PostResponse, validObjectId } from "../deps.ts";
 import { deleteEsDocumentById } from "../db/elasticsearch.ts";
 
 export class DeletePostCommandHandler {
@@ -10,7 +10,7 @@ export class DeletePostCommandHandler {
 			return checkValidPostRes;
 		}
 
-		const postObjectId = new mongoose.Types.ObjectId(post.id);
+		const postObjectId = generateObjectId(post.id);
 
 		const docRes = await PostCollection.deleteOne({ _id: postObjectId });
 

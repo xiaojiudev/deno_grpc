@@ -2,7 +2,7 @@ import { POST_INDEX } from "../constant/index.ts";
 import { UserCollection } from "../models/UserSchema.ts";
 import { indexEsDocument } from "../db/elasticsearch.ts";
 import { IPost, PostCollection } from "../models/PostSchema.ts";
-import { mongoose, Post, PostResponse, validObjectId } from "../deps.ts";
+import { generateObjectId, Post, PostResponse, validObjectId } from "../deps.ts";
 
 export class CreatePostCommandHandler {
 	public async handle(post: Post): Promise<PostResponse> {
@@ -17,7 +17,7 @@ export class CreatePostCommandHandler {
 		const payload: IPost = {
 			title,
 			content,
-			user: new mongoose.Types.ObjectId(userId),
+			user: generateObjectId(userId),
 		};
 
 		const insetDoc = await PostCollection.create({ ...payload });

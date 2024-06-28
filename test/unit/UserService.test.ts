@@ -15,7 +15,7 @@ import {
 import { UserCollection } from "../../models/UserSchema.ts";
 
 // Database
-import { CreateUserResponse, mongoose } from "../../deps.ts";
+import { CreateUserResponse, generateObjectId } from "../../deps.ts";
 import { closeDBConnection, connectDB } from "../../db/mongodb.ts";
 
 // Action
@@ -36,7 +36,7 @@ describe("Unit Test - User service", () => {
 
 	afterEach(async () => {
 		for (const userId of userIds) {
-			await UserCollection.deleteOne({ _id: new mongoose.Types.ObjectId(userId) });
+			await UserCollection.deleteOne({ _id: generateObjectId(userId) });
 		}
 	});
 

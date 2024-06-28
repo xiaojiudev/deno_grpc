@@ -1,6 +1,6 @@
 import { POST_INDEX } from "../constant/index.ts";
 import { getEs, queryEs } from "../db/elasticsearch.ts";
-import { mongoose } from "../deps.ts";
+import { generateObjectId } from "../deps.ts";
 import { Post } from "../deps.ts";
 import { validObjectId } from "../deps.ts";
 import { PostList, UserRequest } from "../deps.ts";
@@ -37,7 +37,7 @@ export class RecommendPostsQueryHandler {
 	private async recommendPost(userId: string): Promise<Post[]> {
 		const POST_DATASET_PATH = "../dataset/user_fav.data";
 		const categoryDocs = await CategoryCollection.find({}).distinct('_id');
-		const categoryList = categoryDocs.map((c) => c._id.toString());
+		const categoryList = categoryDocs.map((c) => c.toString());
 
 		const payload: RequestAgrs = {
 			DATASET_PATH: POST_DATASET_PATH,
@@ -47,7 +47,7 @@ export class RecommendPostsQueryHandler {
 		}
 
 		const recommendPostsRes = await runCollaborativeFiltering(payload);
-		const categoryIds = recommendPostsRes.map((c) => new mongoose.Types.ObjectId(c));
+		const categoryIds = recommendPostsRes.map((c) => generateObjectId(c));
 		
 		const esClient = getEs();
 		const aggregationData = await esClient.search({

@@ -18,7 +18,7 @@ import { PostCollection } from "../../models/PostSchema.ts";
 // Database
 import { closeDBConnection, connectDB } from "../../db/mongodb.ts";
 import { closeEsConnection, connectEs } from "../../db/elasticsearch.ts";
-import { PostResponse, mongoose } from "../../deps.ts";
+import { PostResponse, generateObjectId, mongoose, } from "../../deps.ts";
 
 // Action
 import { CreatePostCommandHandler } from "../../commands/index.ts";
@@ -46,11 +46,11 @@ describe("Unit Test - Post service", sanitizationOptions, () => {
 
     afterEach(async () => {
         for (const postId of postIds) {
-            await PostCollection.deleteOne({ _id: new mongoose.Types.ObjectId(postId) });
+            await PostCollection.deleteOne({ _id: generateObjectId(postId) });
         }
 
         if (userId) {
-            await UserCollection.deleteOne({ _id: new mongoose.Types.ObjectId(userId) });
+            await UserCollection.deleteOne({ _id: generateObjectId(userId) });
         }
     });
 
@@ -63,7 +63,7 @@ describe("Unit Test - Post service", sanitizationOptions, () => {
         it("givenInvalidPostId_whenFindPost_thenThrowError", async () => {
             const invalidPostId: string = "123";
             const query: GetPostQueryHandler = new GetPostQueryHandler();
-            
+
             const actualRes: PostResponse = await query.handle({ id: invalidPostId });
             const expected: Record<string, boolean | string | unknown> = {
                 success: false,

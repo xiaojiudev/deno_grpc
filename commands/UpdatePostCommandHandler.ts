@@ -1,4 +1,4 @@
-import { mongoose, Post, PostResponse, validObjectId } from "../deps.ts";
+import { generateObjectId, Post, PostResponse, validObjectId } from "../deps.ts";
 import { PostCollection } from "../models/PostSchema.ts";
 import { updateEsDocument } from "../db/elasticsearch.ts";
 
@@ -10,8 +10,8 @@ export class UpdatePostCommandHandler {
 			return checkValidPostRes;
 		}
 
-		const postId = new mongoose.Types.ObjectId(post.id);
-		const userId = new mongoose.Types.ObjectId(post.userId);
+		const postId = generateObjectId(post.id);
+		const userId = generateObjectId(post.userId);
 
 		const filter = { _id: postId, user: userId };
 
