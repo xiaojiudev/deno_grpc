@@ -28,5 +28,5 @@ export const ObjectId = Schema.ObjectId;
 export type ObjectIdType = mongoose.Types.ObjectId;
 
 export const validObjectId = (id: string): boolean => {
-	return mongoose.Types.ObjectId.isValid(id);
+	return mongoose.isValidObjectId(id);
 };
