@@ -48,19 +48,29 @@ export class GetTrendingPostsQueryHandler {
 		});
 
 		if (trendingPosts) {
-			// deno-lint-ignore no-explicit-any
-			const mappedData = trendingPosts.map((postEs: any) => {
-				const post = postEs._source as IPost;
-				// deno-lint-ignore no-unused-vars
-				const { categories, interactions, createdAt, updatedAt, trendingScore, user, ...remainData } = post;
-				const result: Post = {
-					...remainData,
-					id: remainData.id!.toString(),
-					userId: user.toString(),
-				};
+			const mappedData = trendingPosts.map((postEs: unknown) => {
+				if (postEs instanceof Object && "_source" in postEs) {
+					const post = postEs._source as IPost;
+					const {
+						categories: _categories,
+						interactions: _interactions,
+						createdAt: _createdAt,
+						updatedAt: _updatedAt,
+						trendingScore: _trendingScore,
+						user,
+						...remainData
+					} = post;
+					const result: Post = {
+						...remainData,
+						id: remainData.id!.toString(),
+						userId: user.toString(),
+					};
 
-				return result;
-			});
+					return result;
+				} else {
+					return null;
+				}
+			}).filter((post): post is Post => post !== null);
 
 			return { posts: [...mappedData] };
 		}
