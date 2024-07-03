@@ -70,7 +70,6 @@ export class UpdatePostCommandHandler {
 		}
 
 		if (!post.id || !validObjectId(post.id)) {
-			console.log("Not a valid ID");
 			return {
 				success: false,
 				message: "Post Id is invalid",
