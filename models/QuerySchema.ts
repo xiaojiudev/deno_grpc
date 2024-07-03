@@ -43,7 +43,7 @@ export const QueryMapping: MappingTypeMapping = {
 		id: { type: "keyword" },
 		queryString: { type: "text" },
 		queryDate: { type: "date" },
-	}
-}
+	},
+};
 
 export const QueryCollection = mongoose.model("Queries", QuerySchema, "queries");

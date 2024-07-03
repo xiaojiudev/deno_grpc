@@ -90,7 +90,7 @@ export class UpdatePostCommandHandler {
 
 		return {
 			success: true,
-			message: "Post is valid"
-		}
+			message: "Post is valid",
+		};
 	}
 }

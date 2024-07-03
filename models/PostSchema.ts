@@ -72,24 +72,24 @@ PostSchema.set("toJSON", {
 PostSchema.set("toObject", { virtuals: true });
 
 PostSchema.post("save", async function (doc) {
-	console.log('ℹ️  POST SAVE POST HOOK');
+	console.log("ℹ️  POST SAVE POST HOOK");
 
 	if (doc.categories && doc.categories.length > 0) {
 		await CategoryCollection.updateMany(
 			{ _id: { $in: doc.categories } },
-			{ $addToSet: { posts: doc._id } }
+			{ $addToSet: { posts: doc._id } },
 		);
 	}
 });
 
 PostSchema.post("insertMany", async function (docs) {
-	console.log('ℹ️  POST SAVE MANY POSTS HOOK');
-	if(Array.isArray(docs)) {
+	console.log("ℹ️  POST SAVE MANY POSTS HOOK");
+	if (Array.isArray(docs)) {
 		for (const doc of docs) {
 			if (doc.categories && doc.categories.length > 0) {
 				await CategoryCollection.updateMany(
 					{ _id: { $in: doc.categories } },
-					{ $addToSet: { posts: doc._id } }
+					{ $addToSet: { posts: doc._id } },
 				);
 			}
 		}
@@ -113,12 +113,12 @@ export const PostMapping: MappingTypeMapping = {
 				bookmarked: { type: "integer" },
 				photoExpanded: { type: "integer" },
 				videoPlayback: { type: "integer" },
-			}
+			},
 		},
 		trendingScore: { type: "double" },
 		createdAt: { type: "date" },
 		updatedAt: { type: "date" },
-	}
-}
+	},
+};
 
 export const PostCollection = mongoose.model("Posts", PostSchema, "posts");

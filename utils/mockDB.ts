@@ -228,7 +228,7 @@ const shouldMock = async (): Promise<boolean> => {
 	}
 
 	return true;
-}
+};
 
 const clearAllMocks = async () => {
 	await Promise.all([

@@ -54,11 +54,11 @@ export const closeEsConnection = async (): Promise<void> => {
 		esClient = null;
 		console.log("✅ Closed Elasticsearch connection");
 	}
-}
+};
 
 export const isIndicesExist = async (indexName: string): Promise<boolean> => {
 	return await getEs().indices.exists({ index: indexName });
-}
+};
 
 export const createEsIndex = async (
 	indexName: string,
@@ -90,7 +90,7 @@ export const deleteEsIndex = async (indexName: string) => {
 			console.log(`⚠️  ${indexName.toUpperCase()} indices not exists`);
 		}
 	}
-}
+};
 
 export const indexEsDocument = async (
 	index: string,

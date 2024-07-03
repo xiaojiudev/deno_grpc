@@ -26,7 +26,6 @@ export class GetPostsQueryHandler {
 				} else {
 					return null;
 				}
-
 			}).filter((post): post is Post => post !== null);
 
 			return { posts: [...mappedData] };

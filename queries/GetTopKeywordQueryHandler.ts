@@ -8,7 +8,7 @@ export class GetTopKeywordQueryHandler {
 
 		if (!await isIndicesExist(QUERY_INDEX)) {
 			console.log("⚠️  Query indices not exist - Let's search something...");
-			return { keywords: [] }
+			return { keywords: [] };
 		}
 
 		const aggregationData = await esClient.search({

@@ -30,9 +30,9 @@ export class CreatePostCommandHandler {
 				message: "Post created successfully",
 				post: {
 					id: insetDoc.getId(),
-					userId: insetDoc.get('user').toString(),
-					title: insetDoc.get('title'),
-					content: insetDoc.get('content'),
+					userId: insetDoc.get("user").toString(),
+					title: insetDoc.get("title"),
+					content: insetDoc.get("content"),
 				},
 			};
 		}
@@ -71,7 +71,7 @@ export class CreatePostCommandHandler {
 
 		return {
 			success: true,
-			message: "Post is valid"
+			message: "Post is valid",
 		};
 	}
 }

@@ -49,7 +49,7 @@ export const UserMapping: MappingTypeMapping = {
 		password: { type: "keyword" },
 		favCategories: { type: "keyword" },
 		createdAt: { type: "date" },
-	}
-}
+	},
+};
 
 export const UserCollection = mongoose.model("Users", UserSchema, "users");

@@ -40,6 +40,6 @@ export class DeletePostCommandHandler {
 		return {
 			success: true,
 			message: "Post is valid",
-		}
+		};
 	}
 }

@@ -15,7 +15,7 @@ export class CreateQueryCommandHandler {
 		if (searchBeauty === "") {
 			return;
 		}
-		
+
 		const payload: IQuery = {
 			queryString: searchBeauty,
 		};

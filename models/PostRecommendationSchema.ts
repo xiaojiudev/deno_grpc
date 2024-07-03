@@ -2,54 +2,62 @@ import { mongoose, ObjectId, Schema } from "../deps.ts";
 import { MappingTypeMapping } from "../db/elasticsearch.ts";
 
 export interface IPostRecommendation {
-    id?: mongoose.Types.ObjectId;
-    user: mongoose.Types.ObjectId;
-    recommendedPosts: mongoose.Types.ObjectId[];
-    createdAt?: Date;
-    updatedAt?: Date;
+	id?: mongoose.Types.ObjectId;
+	user: mongoose.Types.ObjectId;
+	recommendedPosts: mongoose.Types.ObjectId[];
+	createdAt?: Date;
+	updatedAt?: Date;
 }
 
 interface IPostRecommendationMethods {
-    toClient(): IPostRecommendation;
-    getId(): string;
+	toClient(): IPostRecommendation;
+	getId(): string;
 }
 
 // deno-lint-ignore ban-types
 type PostRecommendationModel = mongoose.Model<IPostRecommendation, {}, IPostRecommendationMethods>;
 
-const PostRecommendationSchema = new Schema<IPostRecommendation, PostRecommendationModel, IPostRecommendationMethods>({
-    id: { type: ObjectId },
-    user: { type: mongoose.Types.ObjectId, ref: "Users" },
-    recommendedPosts: [{ type: mongoose.Types.ObjectId, ref: "Posts" }],
-    createdAt: { type: Date, default: Date.now },
-    updatedAt: { type: Date, default: Date.now },
+const PostRecommendationSchema = new Schema<
+	IPostRecommendation,
+	PostRecommendationModel,
+	IPostRecommendationMethods
+>({
+	id: { type: ObjectId },
+	user: { type: mongoose.Types.ObjectId, ref: "Users" },
+	recommendedPosts: [{ type: mongoose.Types.ObjectId, ref: "Posts" }],
+	createdAt: { type: Date, default: Date.now },
+	updatedAt: { type: Date, default: Date.now },
 });
 
 PostRecommendationSchema.method("toClient", function () {
-    const { _id, ...obj } = this.toObject();
-    const newObj = obj;
-    newObj.id = _id;
-    return newObj;
+	const { _id, ...obj } = this.toObject();
+	const newObj = obj;
+	newObj.id = _id;
+	return newObj;
 });
 
 PostRecommendationSchema.method("getId", function () {
-    return this.toObject()._id.toString();
+	return this.toObject()._id.toString();
 });
 
 PostRecommendationSchema.set("toJSON", {
-    virtuals: true,
+	virtuals: true,
 });
 
 PostRecommendationSchema.set("toObject", { virtuals: true });
 
 export const PostRecommendationMapping: MappingTypeMapping = {
-    properties: {
-        id: { type: "keyword" },
-        user: { type: "keyword" },
-        recommendedPosts: { type: "keyword" },
-        createdAt: { type: "date" },
-        updatedAt: { type: "date" },
-    }
-}
+	properties: {
+		id: { type: "keyword" },
+		user: { type: "keyword" },
+		recommendedPosts: { type: "keyword" },
+		createdAt: { type: "date" },
+		updatedAt: { type: "date" },
+	},
+};
 
-export const PostRecommendationCollection = mongoose.model("PostRecommendation", PostRecommendationSchema, "post_recommendations");
+export const PostRecommendationCollection = mongoose.model(
+	"PostRecommendation",
+	PostRecommendationSchema,
+	"post_recommendations",
+);

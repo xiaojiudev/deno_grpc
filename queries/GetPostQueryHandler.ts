@@ -9,14 +9,14 @@ export class GetPostQueryHandler {
 			/*
 				Deno and grpc_basic haven't supported grpc server error/status response yet!
 				https://github.com/denoland/deno/issues/23714
-				https://github.com/denoland/deno/issues/3326 
+				https://github.com/denoland/deno/issues/3326
 
  				should throw new Error("Invalid ID");
 			*/
 			return {
 				success: false,
 				message: "Invalid ID",
-			}
+			};
 		}
 
 		const postQuery = await queryEs({
@@ -27,11 +27,11 @@ export class GetPostQueryHandler {
 					query: query.id,
 				},
 			},
-		});	
+		});
 
 		if (postQuery && postQuery.length > 0) {
 			const postData = postQuery[0]._source as IPost;
-						
+
 			return {
 				success: true,
 				message: "Post found",
@@ -40,7 +40,7 @@ export class GetPostQueryHandler {
 					userId: postData.user.toString(),
 					title: postData.title,
 					content: postData.content,
-				}
+				},
 			};
 		}
 
