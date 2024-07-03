@@ -104,37 +104,39 @@ describe("Unit Test - Post service", sanitizationOptions, () => {
 		});
 
 		it("givenEmptyTitle_whenSavePost_thenReturnFailedObject", async () => {
-			const validUserId: string = generateObjectId().toString();
-			const postSample: Post = {
-				userId: validUserId,
-				title: "",
-				content: "Content test",
-			};
+			if (userId) {
+				const postSample: Post = {
+					userId: userId.toString(),
+					title: "",
+					content: "Content test",
+				};
 
-			const actualRes: PostResponse = await createPostCommand.handle({ ...postSample });
-			const expected: Record<string, boolean | string | unknown> = {
-				success: false,
-				message: "Title and content are not empty",
-			};
+				const actualRes: PostResponse = await createPostCommand.handle({ ...postSample });
+				const expected: Record<string, boolean | string | unknown> = {
+					success: false,
+					message: "Title and content are not empty",
+				};
 
-			assertObjectMatch(actualRes, expected);
+				assertObjectMatch(actualRes, expected);
+			}
 		});
 
 		it("givenEmptyContent_whenSavePost_thenReturnFailedObject", async () => {
-			const validUserId: string = generateObjectId().toString();
-			const postSample: Post = {
-				userId: validUserId,
-				title: "Title test",
-				content: "",
-			};
+			if (userId) {
+				const postSample: Post = {
+					userId: userId.toString(),
+					title: "Title test",
+					content: "",
+				};
 
-			const actualRes: PostResponse = await createPostCommand.handle({ ...postSample });
-			const expected: Record<string, boolean | string | unknown> = {
-				success: false,
-				message: "Title and content are not empty",
-			};
+				const actualRes: PostResponse = await createPostCommand.handle({ ...postSample });
+				const expected: Record<string, boolean | string | unknown> = {
+					success: false,
+					message: "Title and content are not empty",
+				};
 
-			assertObjectMatch(actualRes, expected);
+				assertObjectMatch(actualRes, expected);
+			}
 		});
 
 		it("givenPostSample_whenSavePost_thenReturnPostObject", async () => {
