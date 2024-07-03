@@ -105,6 +105,7 @@ export const indexEsDocument = async (
 						index,
 						id: doc?.id,
 						document: doc,
+						refresh: true,
 					});
 					console.log(`✅ Indexed document ID: ${result._id}`, result);
 				}
@@ -113,6 +114,7 @@ export const indexEsDocument = async (
 					index,
 					id: document.id as string,
 					document: document,
+					refresh: true,
 				});
 				console.log(`✅ Indexed document ID: ${result._id}`, result);
 			}
