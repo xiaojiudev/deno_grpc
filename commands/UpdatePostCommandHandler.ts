@@ -43,10 +43,7 @@ export class UpdatePostCommandHandler {
 			};
 		}
 
-		console.log(updatedPost);
-
 		const mappedPostData = updatedPost.value?.toClient()!;
-
 
 		await updateEsDocument("posts", postId.toString(), {
 			...mappedPostData,
@@ -91,7 +88,6 @@ export class UpdatePostCommandHandler {
 				message: "Title, content, categories are not empty",
 			};
 		}
-
 
 		return {
 			success: true,

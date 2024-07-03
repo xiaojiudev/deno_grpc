@@ -120,8 +120,7 @@ export const indexEsDocument = async (
 			}
 		}
 	} catch (error) {
-		console.log("❌ Index document failed");
-		console.log(error);
+		console.log("❌ Index document failed", error);
 	}
 };
 

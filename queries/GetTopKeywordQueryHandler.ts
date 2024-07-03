@@ -44,7 +44,6 @@ export class GetTopKeywordQueryHandler {
 
 		// @ts-ignore: Elasticsearch types don't fully capture aggregation structure
 		const buckets = aggregationData.aggregations?.top_query.buckets;
-		console.log(buckets);
 
 		const topKeywords = buckets.map((item: { key: string; doc_count: number }) => {
 			return { keyword: item.key, count: item.doc_count };
